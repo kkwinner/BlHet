@@ -1,0 +1,862 @@
+ 
+<CompuCell3D>
+
+  <Potts>  
+    
+    <!-- <Dimensions x="150" y="150" z="150" /> -->
+    <!-- <Dimensions x="41" y="41" z="41" /> -->
+    <!-- CUBE RUNS -->
+    <Dimensions x="32" y="32" z="12" />
+    <!-- MEDIUM-SIZED TEST RUNS -->
+    <!-- <Dimensions x="33" y="33" z="33" /> -->
+    <!-- <Dimensions x="30" y="30" z="30" /> -->
+    <!-- <Dimensions x="20" y="20" z="20" /> -->
+    <!-- <Dimensions x="10" y="10" z="10" /> -->
+
+    <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
+    <Anneal>5</Anneal> 
+
+    <!-- if 1 MCS = 1 min -->
+    <!-- 1440 MCS = 24 hrs -->
+    <!-- 10080 MCS = 1 week -->
+    <!-- 40320 MCS = 4 weeks -->
+    <!-- <Steps>120</Steps>  -->
+
+    <!-- Cisplatin IV: 6 hours = 1207.183*60*6 = 434585.88-->
+    <!-- D(normal tissue) (Swabb 1974 vis Thurber 2011)
+         = 1 celldiam^2/(1/465.18914889411 min) 
+         = 227911.3489336466 MCS/hour = 55822.6978672932 MCS/2 hours-->
+    <!--  D(VX2 carcinoma xenograft) (Nugent 1984)
+         = 1 cell diam^2 / 1/1207.183 min (= 5.64um^2 (voxel edge) / 1/1207.183min)
+         = 72430.9642372114 MCS/hour = 144861.928474423 2 hours
+         last IV sim time point (IP curve) = 193.044 min = 233039 MCS
+         last IP sim time point (IP curve) = 364.716 min = 440279 MCS-->
+    <!-- Trastuzumab: 1 MCS = 4 h ; 12 steps = 48 h -->
+    <!-- <Steps>145000</Steps> -->
+    <!-- <Steps>112000</Steps> -->
+<!--     <Steps>233039</Steps> -->
+    <Steps>440279</Steps>
+    <!-- <Steps>13</Steps> -->
+    <!-- <Steps>100</Steps>    -->
+    <!--IV CISPLATIN GOES TO 0 @ 190 MINS IN 10^3v (7-22-14)-->
+
+    <CellMotility>
+      <MotilityParameters CellType="IPfluid" Motility="1"/> 
+      <MotilityParameters CellType="VisceralMesothelium" Motility="1"/>         
+      <MotilityParameters CellType="PCancerGFP" Motility="1"/> 
+      <MotilityParameters CellType="PCancerRFP" Motility="1"/> 
+      <MotilityParameters CellType="QCancerGFP" Motility="1"/> 
+      <MotilityParameters CellType="QCancerRFP" Motility="1"/>
+      <MotilityParameters CellType="NCancer" Motility="1"/>
+      <MotilityParameters CellType="Endothelial" Motility="0"/>
+      <MotilityParameters CellType="LatentEndothelial" Motility="0"/> 
+      <MotilityParameters CellType="VesselWall" Motility="0"/>
+      <MotilityParameters CellType="Adipocyte" Motility="1" />
+      <MotilityParameters CellType="ECM" Motility="0" />
+      <MotilityParameters CellType="SmoothMusc" Motility="0" />
+    </CellMotility>
+
+    <!-- spin flip attempts per Monte Carlo Step = flip2dimratio x # lattice sites --> 
+    <Flip2DimRatio>0</Flip2DimRatio> <!-- set to zero since cells frozen -->
+
+    <NeighborOrder>1</NeighborOrder> 
+
+  </Potts> 
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <!--          START PLUGINS          -->	
+
+
+  <!-- <Plugin Name="PlayerSettings"> -->
+  <!-- Uncomment either 2-D or 3-D settings -->
+  <!-- <Project2D XZProj="50"/> -->
+
+  <!-- <View3D> -->
+  <!--    <Plot PlotName="Cell_Field" PlotType="CellField"/> -->
+  <!--     <CameraClippingRange Max="316.298588294" Min="150.14929563"/> -->
+  <!--     <CameraFocalPoint x="20.25" y="20.25" z="50.25"/> -->
+  <!--     <CameraPosition x="-192.143464814" y="-18.5691898425" z="-7.36703508739"/> -->
+  <!--     <CameraViewUp x="0.219658408916" y="0.211669475664" z="-0.952337238831"/> -->
+  <!--     <Size Height="30" Width="100"/> -->
+  <!-- </View3D> -->
+  <!-- <Concentration LegendEnable="true" NumberOfLegendBoxes="1"/> -->
+  <!-- <VisualControl ScreenshotFrequency="10" ScreenUpdateFrequency="1" NoOutput="false" ClosePlayerAfterSimulationDone="false" /> -->
+  <!-- <Border BorderColor="black" BorderOn="true"/> -->
+  <!-- 7-31-2011 CC3D not recognizing color names -->
+  <!-- <Cell Type="1" Color="red"/> -->
+  <!-- <Cell Type="8" Color="yellow"/> -->
+  <!-- <TypesInvisibleIn3D Types="0,2,4,5"/> -->
+  <!-- Note: SaveSettings flag is unimportant for the new Player because whenever settings are changed from XML script they are written by default to disk This seems to be default behavior of most modern applications. We may implement this feature later  -->
+  <!-- <Settings SaveSettings="true"/> -->
+  <!-- </Plugin> -->
+
+
+
+
+  <!-- limit pixels selected for ID switch to those comprising shell of non-frozen cells (shell thickness = NeighborhoodOrder); speedup of 15% on 10^3 lattice w/27 cells
+  -->
+  <Plugin Name="GlobalBoundaryPixelTracker">
+    <NeighborOrder>2</NeighborOrder> 
+  </Plugin> 
+
+
+
+  
+  <Plugin Name="CellType">
+    <CellType TypeName="Medium" TypeId="0" /> 
+    <CellType TypeName="IPfluid" TypeId="12" Freeze=""/> 
+    <CellType TypeName="VisceralMesothelium" TypeId="1" /> 
+    <CellType TypeName="PCancerGFP" TypeId="2" Freeze=""/> 
+    <CellType TypeName="PCancerRFP" TypeId="3" Freeze=""/> 
+    <CellType TypeName="QCancerGFP" TypeId="8" Freeze=""/> 
+    <CellType TypeName="QCancerRFP" TypeId="9" Freeze=""/> 
+    <CellType TypeName="NCancer" TypeId="10" />  
+    <CellType TypeName="Endothelial" TypeId="11" /> 
+    <CellType TypeName="LatentEndothelial" TypeId="4" Freeze=""/> 
+    <CellType TypeName="VesselWall" TypeId="5" Freeze="" />
+    <CellType TypeName="Adipocyte" TypeId="13" />
+    <!-- ECM can include basement membrane -->
+    <CellType TypeName="ECM" TypeId="6" />
+    <CellType TypeName="SmoothMusc" TypeId="7" Freeze=""/>
+
+    <!-- <CellType TypeName="Medium" TypeId="0" />  -->
+    <!-- <CellType TypeName="VisceralMesothelium" TypeId="1" />  -->
+    <!-- <CellType TypeName="PCancerGFP" TypeId="2" />  -->
+    <!-- <CellType TypeName="PCancerRFP" TypeId="3" />  -->
+    <!-- <CellType TypeName="LatentEndothelial" TypeId="4" Freeze=""/>  -->
+    <!-- <CellType TypeName="VesselWall" TypeId="5" Freeze="" /> -->
+    <!-- ECM can include basement membrane -->
+    <!-- <CellType TypeName="ECM" TypeId="6" /> -->
+    <!-- <CellType TypeName="SmoothMusc" TypeId="7" Freeze=""/> -->
+    <!-- <CellType TypeName="QCancerGFP" TypeId="8" />  -->
+    <!-- <CellType TypeName="QCancerRFP" TypeId="9" />  -->
+    <!-- <CellType TypeName="NCancer" TypeId="10" />   -->
+    <!-- <CellType TypeName="Endothelial" TypeId="11" />  -->
+    <!-- <CellType TypeName="IPfluid" TypeId="12" Freeze=""/>  -->
+    <!-- <CellType TypeName="Adipocyte" TypeId="13" /> -->
+
+    <!-- OLD CELL TYPES (PRIOR TO 1-3-2013) -->
+    <!-- <CellType TypeName="Medium" TypeId="0" />  -->
+    <!-- <CellType TypeName="IPfluid" TypeId="1" Freeze=""/>  -->
+    <!-- <CellType TypeName="VisceralMesothelium" TypeId="2" />  -->
+    <!-- <CellType TypeName="PCancerGFP" TypeId="3" />  -->
+    <!-- <CellType TypeName="PCancerRFP" TypeId="11" />  -->
+    <!-- <CellType TypeName="QCancerGFP" TypeId="4" />  -->
+    <!-- <CellType TypeName="QCancerRFP" TypeId="12" />  -->
+    <!-- <CellType TypeName="NCancer" TypeId="5" />   -->
+    <!-- <CellType TypeName="Endothelial" TypeId="6" />  -->
+    <!-- <CellType TypeName="LatentEndothelial" TypeId="13" Freeze=""/>  -->
+    <!-- <CellType TypeName="VesselWall" TypeId="7" Freeze="" /> -->
+    <!-- <CellType TypeName="Adipocyte" TypeId="8" /> -->
+    <!-- <CellType TypeName="ECM" TypeId="9" /> -->
+    <!-- <CellType TypeName="SmoothMusc" TypeId="10" Freeze=""/> -->
+  </Plugin> 
+  
+
+
+
+  <Plugin Name="Contact"> 
+    
+    <!-- add slight attraction for cancer to medium if want outer cells of spheroid to shed -->
+    <Energy Type1="Medium" Type2="Medium">0</Energy> 
+    <Energy Type1="IPfluid" Type2="Medium">10</Energy> 
+    <Energy Type1="VisceralMesothelium" Type2="Medium">10</Energy> 
+    <Energy Type1="PCancerGFP" Type2="Medium">10</Energy>
+    <Energy Type1="PCancerRFP" Type2="Medium">10</Energy>
+    <Energy Type1="QCancerGFP" Type2="Medium">10</Energy> 
+    <Energy Type1="QCancerRFP" Type2="Medium">10</Energy>
+    <Energy Type1="NCancer" Type2="Medium">3</Energy> 
+    <Energy Type1="Endothelial" Type2="Medium">10</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="Medium">10</Energy> 
+    <Energy Type1="VesselWall" Type2="Medium">10</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="Medium">10</Energy> 	  
+    <Energy Type1="ECM" Type2="Medium">10</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="Medium">10</Energy> 	  
+
+    <!-- cancer more attracted to parietal mesothelium than medium -->
+    <Energy Type1="IPfluid" Type2="IPfluid">0</Energy> 
+    <Energy Type1="VisceralMesothelium" Type2="IPfluid">0</Energy> 
+    <Energy Type1="PCancerGFP" Type2="IPfluid">10</Energy>
+    <Energy Type1="PCancerRFP" Type2="IPfluid">10</Energy>
+    <Energy Type1="QCancerGFP" Type2="IPfluid">0</Energy>        
+    <Energy Type1="QCancerRFP" Type2="IPfluid">0</Energy>
+    <Energy Type1="NCancer" Type2="IPfluid">3</Energy>        
+    <Energy Type1="Endothelial" Type2="IPfluid">0</Energy>        
+    <Energy Type1="LatentEndothelial" Type2="IPfluid">0</Energy>       
+    <Energy Type1="VesselWall" Type2="IPfluid">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="IPfluid">0</Energy> 	  
+    <Energy Type1="ECM" Type2="IPfluid">0</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="IPfluid">0</Energy> 	  
+
+    <!-- cancer more attracted to visceral mesothelium than parietal mesothelium -->  
+    <!-- VM-VM: Keep VM together with attraction? -->
+    <!-- PC-VM Jij: 
+         6 = mesothelium pulled along w/chemotxing tumor
+         7 = mesothelium closes behind invading tumor
+         8 = hole remains in mesothelium after tumor invades -->
+    <Energy Type1="VisceralMesothelium" Type2="VisceralMesothelium">0</Energy>
+    <Energy Type1="PCancerGFP" Type2="VisceralMesothelium">20</Energy>
+    <Energy Type1="PCancerRFP" Type2="VisceralMesothelium">20</Energy>
+    <!-- QC and NC more neutral to VM than PC (a non-substantiated choice) -->
+    <Energy Type1="QCancerGFP" Type2="VisceralMesothelium">10</Energy>         
+    <Energy Type1="QCancerRFP" Type2="VisceralMesothelium">10</Energy>         
+    <Energy Type1="NCancer" Type2="VisceralMesothelium">3</Energy>          
+    <Energy Type1="Endothelial" Type2="VisceralMesothelium">22.5</Energy>          
+    <Energy Type1="LatentEndothelial" Type2="VisceralMesothelium">10</Energy>          
+    <Energy Type1="VesselWall" Type2="VisceralMesothelium">10</Energy> 
+    <!-- invading cancer will push VM cells into adipocytes with them unless adipos. repel VM -->
+    <Energy Type1="Adipocyte" Type2="VisceralMesothelium">20</Energy> 	  
+    <!-- VM sticks to ECM less than sticks to self, so will not invade -->
+    <Energy Type1="ECM" Type2="VisceralMesothelium">0</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="VisceralMesothelium">10</Energy> 	  
+
+    <!-- cancer sticks to self most strongly (compactness of spheroid = aggressive, images show nests or columns of invasive cells in omental fat) -->
+    <!-- proliferating cancer sticks better to ECM than anything but PCancer and QCancerGFP -->
+    <Energy Type1="QCancerGFP" Type2="QCancerGFP">0</Energy> 
+    <Energy Type1="QCancerRFP" Type2="QCancerGFP">0</Energy> 
+    <Energy Type1="PCancerGFP" Type2="QCancerGFP">0</Energy> 
+    <Energy Type1="PCancerRFP" Type2="QCancerGFP">0</Energy> 
+    <Energy Type1="NCancer" Type2="QCancerGFP">3</Energy> 
+    <Energy Type1="Endothelial" Type2="QCancerGFP">0</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="QCancerGFP">0</Energy> 
+    <Energy Type1="VesselWall" Type2="QCancerGFP">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="QCancerGFP">0</Energy> 	  
+    <Energy Type1="ECM" Type2="QCancerGFP">0</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="QCancerGFP">3</Energy> 	  
+
+    <Energy Type1="QCancerRFP" Type2="QCancerRFP">0</Energy> 
+    <Energy Type1="PCancerGFP" Type2="QCancerRFP">0</Energy> 
+    <Energy Type1="PCancerRFP" Type2="QCancerRFP">0</Energy> 
+    <Energy Type1="NCancer" Type2="QCancerRFP">3</Energy> 
+    <Energy Type1="Endothelial" Type2="QCancerRFP">0</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="QCancerRFP">0</Energy> 
+    <Energy Type1="VesselWall" Type2="QCancerRFP">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="QCancerRFP">0</Energy> 	  
+    <Energy Type1="ECM" Type2="QCancerRFP">0</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="QCancerRFP">3</Energy> 
+
+    <!-- cancer sticks to self most strongly (compactness of spheroid = aggressive, images show nests or columns of invasive cells in omental fat) -->
+    <!-- proliferating cancer sticks to ECM and A better than anything but PCancerGFP and QCancerGFP -->
+    <Energy Type1="PCancerGFP" Type2="PCancerGFP">0</Energy> 
+    <Energy Type1="PCancerRFP" Type2="PCancerGFP">0</Energy> 
+    <Energy Type1="NCancer" Type2="PCancerGFP">3</Energy> 
+    <Energy Type1="Endothelial" Type2="PCancerGFP">3</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="PCancerGFP">0</Energy> 
+    <Energy Type1="VesselWall" Type2="PCancerGFP">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="PCancerGFP">3</Energy> 	  
+    <Energy Type1="ECM" Type2="PCancerGFP">0</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="PCancerGFP">3</Energy> 	  
+
+    <Energy Type1="PCancerRFP" Type2="PCancerRFP">0</Energy> 
+    <Energy Type1="NCancer" Type2="PCancerRFP">3</Energy> 
+    <Energy Type1="Endothelial" Type2="PCancerRFP">3</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="PCancerRFP">0</Energy> 
+    <Energy Type1="VesselWall" Type2="PCancerRFP">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="PCancerRFP">3</Energy> 	  
+    <Energy Type1="ECM" Type2="PCancerRFP">0</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="PCancerRFP">3</Energy> 	  
+
+    <!-- Jij NC-all = 3; neutral to all cell types and medium -->
+    <Energy Type1="NCancer" Type2="NCancer">3</Energy> 
+    <Energy Type1="Endothelial" Type2="NCancer">3</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="NCancer">3</Energy> 
+    <Energy Type1="VesselWall" Type2="NCancer">3</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="NCancer">3</Energy> 	  
+    <Energy Type1="ECM" Type2="NCancer">3</Energy>
+    <Energy Type1="SmoothMusc" Type2="NCancer">3</Energy> 	  
+
+    <!-- adhesions of vessels to other components are unknown -->
+    <Energy Type1="Endothelial" Type2="Endothelial">1</Energy> 
+    <Energy Type1="LatentEndothelial" Type2="Endothelial">0</Energy> 
+    <Energy Type1="VesselWall" Type2="Endothelial">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="Endothelial">13</Energy> 	  
+    <Energy Type1="ECM" Type2="Endothelial">5.5</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="Endothelial">2.5</Energy> 	  
+
+    <Energy Type1="LatentEndothelial" Type2="LatentEndothelial">0</Energy> 
+    <Energy Type1="VesselWall" Type2="LatentEndothelial">0</Energy> 	  
+    <Energy Type1="Adipocyte" Type2="LatentEndothelial">13</Energy> 	  
+    <Energy Type1="ECM" Type2="LatentEndothelial">1</Energy> 	  
+    <Energy Type1="SmoothMusc" Type2="LatentEndothelial">0</Energy> 
+
+    <!-- adhesions of vessels to other components are unknown -->	    
+    <!-- VesselWall adheres strongly to keep vessel integrity (cells also frozen) -->	    
+    <Energy Type1="VesselWall" Type2="VesselWall">0</Energy> 	  	  
+    <Energy Type1="Adipocyte" Type2="VesselWall">13</Energy> 	  	  
+    <Energy Type1="ECM" Type2="VesselWall">0</Energy> 	  	  
+    <Energy Type1="SmoothMusc" Type2="VesselWall">0</Energy> 
+
+    <!-- Adipocytes self-adhesion < cancer self-adhesion (images show nests or columns of invasive cells in omental fat) -->
+    <Energy Type1="Adipocyte" Type2="Adipocyte">13</Energy> 	
+
+    <!-- ECM sticks to Adipocyte, less than cancer (adipocytes sit in nets of collagen) -->
+    <Energy Type1="ECM" Type2="Adipocyte">1</Energy> 	  	  
+    <Energy Type1="SmoothMusc" Type2="Adipocyte">0</Energy>
+
+    <!-- ECM-ECM adhesion unknown - set to allow PCancer to dissolve it when penetrating tissue -->
+    <Energy Type1="ECM" Type2="ECM">1</Energy>
+    <Energy Type1="SmoothMusc" Type2="ECM">0</Energy> 
+    
+    <Energy Type1="SmoothMusc" Type2="SmoothMusc">0</Energy>
+
+  </Plugin> 
+
+
+
+  <!-- REFERENCE POINT WITHIN CELL FOR CONCENTRATIONS of O2, VEGF, other measurements, etc. --> 
+  <Plugin Name="CenterOfMass"/>
+
+  <!-- CHEMICAL FIELDS THAT WILL BE ACCESSED FROM PYTHON -->
+  <Plugin Name="Secretion">
+    <Field Name="Cisplatin" >
+    </Field>
+    <!-- <Field Name="Trastuzumab" > -->
+    <!-- </Field>  -->
+  </Plugin>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--          START STEPPABLES          -->	
+
+
+  <!-- <Steppable Type="PIFDumper" Frequency="3018"> -->
+<!--       <PIFName>Cisp_IV_0pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IV_2pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IV_4pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IV_10pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IP_0pctA.txt</PIFName> -->
+<!--       <PIFName>Cisp_IP_2pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IP_4pctA.txt</PIFName> -->
+<!--       <PIFName>Cisp_IP_10pctA.txt</PIFName> -->
+<!--       <PIFName>Cisp_IV_0pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IV_2pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IV_4pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IV_10pctA.txt</PIFName> -->
+
+<!--             <PIFName>Cisp_IPinfus_0pctA.txt</PIFName> -->
+<!--       <PIFName>Cisp_IPinfus_2pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IPinfus_4pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IPinfus_10pctA.txt</PIFName> -->
+
+<!--       <PIFName>Cisp_IVinfus_0pctA.txt</PIFName> -->
+<!--       <PIFName>Cisp_IVinfus_2pctA.txt</PIFName> -->
+      <!-- <PIFName>Cisp_IVinfus_4pctA.txt</PIFName> -->
+<!--       <PIFName>Cisp_IVinfus_10pctA.txt</PIFName> -->
+  <!-- </Steppable> -->
+
+
+  <!-- DIFFUSION FIELDS -->  
+
+  <!-- <Plugin Name="PDESolverCaller"> -->
+  <!--       <CallPDE PDESolverName="FlexibleDiffusionSolverFE" ExtraTimesPerMC="1"/> -->
+  <!-- </Plugin> -->
+
+  <Steppable Type="DiffusionSolverFE">
+    <DoNotScaleSecretion/>
+
+    <!-- <Steppable Type="FlexibleDiffusionSolverFE"> -->
+    <!-- Serialize Frequency="100"/ -->
+
+
+
+    <!-- TRASTUZUMAB -->
+    <!-- CAN RUN FROM PYTHON - XML CODE HERE -->
+
+    <!-- http://www.druglib.com/druginfo/herceptin/description_pharmacology/
+         In a study of women receiving adjuvant therapy for breast cancer, a mean half‑life of trastuzumab of 16 days (range: 11—23 days) was observed after an initial dose of 8 mg/kg followed by a dose of 6 mg/kg every three weeks. Between weeks 6 and 37, trastuzumab serum concentrations reached a steady‑state with mean trough and peak concentrations of 63 mcg/mL and 216 mcg/mL, respectively. 
+         mean of trough and peak plasma conc = (63+216)/2 = 139.5 mcg/ml
+         half-life = 1/(16days * 24h/day * 60min/h) = 0.0000434/min -->
+    <!-- A Systems Approach for Tumor Pharmacokinetics; Greg Michael Thurber, Ralph Weissleder; 2011
+         antibody diffusion 
+         = 10um^2/s 
+         = 600 um^2/min 
+         = 188.622 (SKOV3.ip1 cell diameter)^2 / (10 min) -->
+    <!-- Leveque, 2008
+         half life = 0.000248 / 10 min
+         decay rate = ln(2)/half life = 0.00017 / 10 min-->
+    <!-- absorption unknown - guessing 1% of min effective conc-->
+    <!-- peritoneal concentration unknown - guessing 10% less than plasma -->
+    
+    <!-- <DiffusionField> -->
+    <!--   <DiffusionData> -->
+    <!--     <FieldName>Trastuzumab</FieldName> -->
+        <!-- <ConcentrationFileName></ConcentrationFileName> -->
+        <!-- IN H20 CORR TO 37 DEGC: cell diams/4h (speed test)-->
+        <!-- <GlobalDiffusionConstant>23032.949</GlobalDiffusionConstant> -->
+        <!-- IN H20 CORR TO 37 DEGC: cell diams/1h-->
+        <!-- <GlobalDiffusionConstant>5758.237</GlobalDiffusionConstant> -->
+        <!-- <GlobalDiffusionConstant>1.0</GlobalDiffusionConstant> -->
+        <!-- in IN VITRO SPHEROID: cell diams/1h-->
+        <!-- <GlobalDiffusionConstant>3.076</GlobalDiffusionConstant> -->
+        <!-- DECAY IN THE BODY BASED ON HALF-LIFE /1 hr -->
+        <!-- <GlobalDecayConstant>0.0010315</GlobalDecayConstant> -->
+        <!-- DECAY WHEN USING EFFFECTIVE DIFFUSION FROM FLUORESCENCE EXPERIMENTS -->
+        <!-- <GlobalDecayConstant>0.0</GlobalDecayConstant> -->
+        <!-- <DiffusionCoefficient CellType="PCancerGFP">5758.237</DiffusionCoefficient> -->
+        <!-- 1 cell diam ^2 / 1/5758.237 hours -->
+        <!-- <DiffusionCoefficient CellType="PCancerGFP">1.0</DiffusionCoefficient> -->
+        <!-- <DiffusionCoefficient CellType="Medium">0.0</DiffusionCoefficient> -->
+        <!-- <DeltaT>1</DeltaT> -->
+        <!-- <DeltaX>1.0</DeltaX> -->
+        <!-- params from FlexibleDiffusionSolverFE -->
+        <!-- <DoNotDecayIn>VesselWall</DoNotDecayIn> -->
+        <!-- <DoNotDiffuseTo>PCancerGFP</DoNotDiffuseTo> -->
+      <!-- </DiffusionData> -->
+      <!-- <SecretionData> -->
+        <!-- <Secretion Type="PCancerGFP">0.0</Secretion> -->
+        <!-- <Secretion Type="PCancerRFP">-1.395</Secretion>        -->
+        <!-- <Secretion Type="VesselWall">1395</Secretion> -->
+        <!-- <Secretion Type='Medium'>0.023648</Secretion> -->
+        <!-- <Secretion Type='Medium'>0.0</Secretion> -->
+        <!-- <ConstantConcentration Type='Medium'>6696</ConstantConcentration> -->
+        <!-- <ConstantConcentration Type='VesselWall'>8370</ConstantConcentration> -->
+        <!-- MICROMOLAR CONCENTRATION IN VITRO (=3.5mcg/ml)-->
+      <!--   <ConstantConcentration Type='Medium'>0.023648</ConstantConcentration> -->
+      <!-- </SecretionData> -->
+
+      <!-- <BoundaryConditions> -->
+      <!--   <Plane Axis="X"> -->
+      <!--         <ConstantValue PlanePosition="Min" Value="0.023648"/> -->
+      <!--         <ConstantValue PlanePosition="Max"  Value="0.023648"/> -->
+      <!--     </Plane> -->
+      <!--     <Plane Axis="Y"> -->
+      <!--         <ConstantValue PlanePosition="Min" Value="0.023648"/> -->
+      <!--         <ConstantValue PlanePosition="Max"  Value="0.023648"/> -->
+      <!--     </Plane> -->
+      <!--     <Plane Axis="Z"> -->
+      <!--         <ConstantValue PlanePosition="Min" Value="0.023648"/> -->
+      <!--         <ConstantValue PlanePosition="Max"  Value="0.023648"/> -->
+      <!--     </Plane> -->
+      <!-- </BoundaryConditions> -->
+
+    <!--   <BoundaryConditions> -->
+    <!--     <Plane Axis="X"> -->
+    <!--       <ConstantDerivative PlanePosition="Min" Value="0"/> -->
+    <!--       <ConstantDerivative PlanePosition="Max"  Value="0"/> -->
+    <!--     </Plane> -->
+    <!--     <Plane Axis="Y"> -->
+    <!--       <ConstantDerivative PlanePosition="Min" Value="0"/> -->
+    <!--       <ConstantDerivative PlanePosition="Max"  Value="0"/> -->
+    <!--     </Plane> -->
+    <!--     <Plane Axis="Z"> -->
+    <!--       <ConstantDerivative PlanePosition="Min" Value="0"/> -->
+    <!--       <ConstantDerivative PlanePosition="Max"  Value="0"/> -->
+    <!--     </Plane> -->
+    <!--   </BoundaryConditions> -->
+    <!-- </DiffusionField> -->
+  <!-- </Steppable> -->
+
+
+
+
+  <!-- CISPLATIN -->
+  <!-- CAN RUN FROM PYTHON - XML CODE HERE -->
+
+  <!-- (DIFFUSION COEFFICIENT OF CREATININE (USED AS PROXY FOR CISPLATIN in Morrison, 1986) = 1.9 x 10^- 6 cm^2/s = 0.000114 cm^2/min = 11400 um^2/min = ) -->
+  <!-- D_{NORMAL TISSUE}  (Swabb 1974 via Thurber 2011)
+       = 1.778 x 10^{-4} (300.5)^{-0.75} = 0.000002466246792 cm^2/s = 246.624679177701 um^2/s
+       = 4652 (SKOV3.ip1 cell diameter)^2 / (10 min)
+       = 1 celldiam^2/(1/465.18914889411 min) = 227911.3489336466 MCS/hour = 55822.6978672932 MCS/2 hours 
+       D(VX2 carcinoma for sodium fluorescein, MW376 (Nugent 1984)
+       = 1207.18273728686 cell diam^2 / 1 min (= 5.64um^2 (voxel edge) / 1/60hr)
+       = 1 cell diam^2 / 1/1207.183 min (= 5.64um^2 (voxel edge) / 1/1207.183min) = 72430.9642372114 MCS/hour = 144861.928474423 2 hours
+       -->
+  <!-- CISPLATIN (PT) ACCUMULATION AT 5 $\MU$M IN SKOV3  (Fig.3, Mistry, 1992)
+       = 9.4E-15 $\mu$M/cell/min = 1.57E-16 muM/cell/sec = 9.4E-14 $\mu$M/cell/10 min -->
+  <!-- ACCUMULATION at 100 micromolar for 50min in SKOV3 
+       = 8 +/- 0.8 nmol/mg protein/50 mins: 8 +/- 0.8 nM * 1e-3uM/nM /mg protein * 0.21mg protein/uL * 1uL/10^9um^3 * 179.1 um^3/ SKOV3 cell /50min = 6.02E-12 uM Pt/SKOV3 cell/min = 1.00E-13 uM Pt/SKOV3 cell/s -->
+  <!-- PEAK AVE INTRAPERITONEAL
+       (90mg/m^2 IP for 4 hour dwell = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; Howell, 1982): 
+       40.5mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol = 134.977503749375 muM = 8098.65022496251 (concentration * 60 sec/MCS)-->
+  <!-- PEAK VALUES IV
+       (90mg/m^2 IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; 1.6mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol =  5.3324445925679 uM,  
+       = 319.946675554074 (concentration * 60 sec/MCS) -->
+  <!-- MINIMUM EFFECTIVE CONCENTRATION OF CISPLATIN (BASED ON DNA DAMAGING LEVELS in clear cell ovarian carcinoma, Takatori, 2012)
+       = 1 mug/mL; 1ug/ml*1000ml/L*1g/10^6ug* 1/300.5g/mol*10^6umol/mol = 3.33 muM-->
+  <!-- MINIMUM EFFECTIVE CONCENTRATION OF CISPLATIN (IN SERUM, clinical trials, lung cancer, Nakano, 1997)
+       = 0.3micrograms/ml; 0.3ug/ml*1000ml/L*1g/10^6ug* 1/300.05g/mol*10^6umol/mol = 0.999833361106482 muM -->
+  <!-- IC50 for SKOV3.ip1 cells (Xu, W, B Cai, J L Chen, L X Li, J R Zhang, Y Y Sun, and X P Wan. “ATP7B Antisense Oligodeoxynucleotides Increase the Cisplatin Sensitivity of Human Ovarian Cancer Cell Line SKOV3ipl.” International Journal of Gynecological Cancer)  -->
+  <!-- SECRETION = micromolar = umol/
+       (90mg/m^2IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL	1.6	1.6mug/mL*1g/10^6mug*1000mL/L/Xg/mol cisplatin*10^6umol/mol	5.3324445925679	uM	319.946675554074	(concentration * 60 sec/MCS) -->
+  <!-- DECAY RATE = ln(2)/half life = 0.23 / 10 min = 000049667766485 /(1/465.189min) (Go, Ata, RXMed:Platinol) -->
+  <DiffusionField Name='Cisplatin'>
+    <DoNotScaleSecretion/>
+    <DiffusionData>
+      <!-- <FieldName>Cisplatin</FieldName> -->
+      <!-- test ConstantConcentration -->
+      <!-- <GlobalDiffusionConstant>0</GlobalDiffusionConstant> -->
+      <GlobalDiffusionConstant>1.0</GlobalDiffusionConstant>
+      <!-- <GlobalDiffusionConstant>247</GlobalDiffusionConstant> -->
+      <!-- <GlobalDiffusionConstant>4652</GlobalDiffusionConstant> -->
+      <!-- test ConstantConcentration -->
+      <!-- or decay is included in effective diffusion or concentration fits -->
+      <GlobalDecayConstant>0</GlobalDecayConstant>
+      <!-- /(1/465.189min) diffusion in normal tissue -->
+      <!-- <GlobalDecayConstant>0.0000497</GlobalDecayConstant> -->
+      <!-- <GlobalDecayConstant>0.023</GlobalDecayConstant> -->
+      <!-- <GlobalDecayConstant>0.23</GlobalDecayConstant> -->
+    </DiffusionData>
+    <SecretionData>
+      <!--   <Secretion Type="VesselWall">126.6</Secretion> -->
+      <!--   <Secretion Type="Medium">135</Secretion> -->
+      <!--   <Secretion Type="PCancerGFP">-1.57E-16</Secretion> -->
+      <!--   <Secretion Type="PCancerRFP">-1.57E-16</Secretion> -->
+      <!--   <Secretion Type="PCancerGFP">-1.0E-13</Secretion> -->
+      <!--   <Secretion Type="PCancerRFP">-1.0E-13</Secretion> -->
+      <!--   <Secretion Type="QCancerGFP">-0.1266</Secretion> -->
+      <!--   <Secretion Type="PCancerGFP">-9.4E-14</Secretion> -->
+      <!--   <ConstantConcentration Type="Medium">135.0</ConstantConcentration> -->
+      <!--   <ConstantConcentration Type="Medium">8098.7</ConstantConcentration> --> 
+      <!--   <ConstantConcentration Type="VesselWall">320</ConstantConcentration> -->
+      <!--   <ConstantConcentration Type="VesselWall">3.33</ConstantConcentration> -->
+      <!--   <ConstantConcentration Type="VesselWall">1</ConstantConcentration> -->
+      <ConstantConcentration Type="VesselWall">0.0</ConstantConcentration>
+      <ConstantConcentration Type="Medium">0.0</ConstantConcentration>
+    </SecretionData>
+    <BoundaryConditions>
+      <!-- <Plane Axis="X"> <Periodic/></Plane> <Plane Axis="Y"><Periodic/> </Plane> -->
+      <!-- <Plane Axis="X"> -->
+      <!--   <ConstantValue PlanePosition="Min" Value="0"/> -->
+      <!--   <ConstantValue PlanePosition="Max" Value="0"/> -->
+      <!-- </Plane> -->
+      <!-- <Plane Axis="Y"> -->
+      <!--   <ConstantValue PlanePosition="Min" Value="0"/> -->
+      <!--   <ConstantValue PlanePosition="Max" Value="0"/> -->
+      <!-- </Plane> -->
+      <!-- <Plane Axis="Z"> -->
+      <!--   <ConstantValue PlanePosition="Min" Value="0"/> -->
+      <!--   <ConstantValue PlanePosition="Max" Value="0"/> -->
+      <!-- </Plane> -->
+      <Plane Axis="X">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+      <Plane Axis="Y">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+      <Plane Axis="Z">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+    </BoundaryConditions>
+  </DiffusionField>
+
+</Steppable>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--           CELL INITIALIZATION           -->
+
+  <!-- NOTES ON CC3D: -->
+  <!-- "WIDTH" = 1 SIDE OF SQUARE OR CUBE -->
+  <!-- MIN GAP FOR CC3D = 1 -->
+  <!-- UNIFORMINITIALIZER: CELL INITIALIZATIOn CANNOT FALL OUTSIDE SIMULATION BOUNDARIES, BUT CAN EQUAL THEM.  
+       e.g., cells 20 pixels wide cannot be placed closer than 40 pixels to sim boundary-->
+
+  <!-- SCALE: 1 VOXEL  = 1 CANCER OR VESSEL (ENDOTHELIAL) CELL -->
+
+  <!-- CELL DATA: -->
+  <!-- LAB DATA: MOUSE ADIPOCYTE = ave. 20um diameter = 4189um^3 volume; side of cube = 16.12 um -->
+  <!-- OTHER DATA: ADIPOCYTES range from 25-150um diameter, 
+       (p. 163, Growth, maturation, and physical activity By Robert M. Malina, Claude Bouchard, Oded Bar-Or).  
+       Other references also show ranges from 50-100 um;
+       will average as 75um; 37um radius -->
+  <!-- LAB DATA: SKOV3-IP OVARIAN CANCER CELL: 
+vesselball_vessnum19_cylR1_cylRv2_spherR15_COM_16_16_16_rep22.txt       R = 3.45; V = 179.50; cube edge = 5.64 -->
+  <!-- LAB DATA: GAPS IN MESENTERY ADIPO-ADIPO = ave. 0.2um; -->
+  <!-- BLOOD VESSEL ENDOTHELIAL CELLS, PROLIFERATING:
+       Yi: diam = 10um; V = 523.598775598um^3; cube edge = 8.05 -->
+
+  <!-- OTHER DATA: -->
+  <!-- parietal mesothelial cells: Radius Ave=10um(Human), 
+       Height Ave=0.7um (rabbit); polygonal, will estimate as cylindrical; V=Pi*0.7*10^2=219um^3 -->
+  <!-- distance between visceral and peripheral mesothelia: 
+       6-25 um (will initialize in this range)  -->
+  <!-- SKOV3 cancer cell = 11um diameter -->
+  <!-- = 4/3 * pi * R pixels^3 =  180pixels^3 -->
+  <!-- mouse mesentery adipocyte surface area = 4*Pi*Ave.Radius^2 = 4*Pi*3.46^2 =~ 150 um^2 
+       or 4*Pi*3.5^2 (3.5=est. for vol calcs.)= 153.93-->
+
+
+
+  <!-- SPHEROID AND VESSELS ON MUSCLE FOR DRUG DELIVERY -->
+
+  <!-- FINAL DRUG DELIVERY TISSUES -->
+  <!-- TEST-SIZED SPHEROIDS -->
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--    <Region> -->
+  <!-- 10 x 10 x 10 TEST -->
+  <!--     <BoxMin x="0" y="0" z="0"/> -->
+  <!--     <BoxMax x="10" y="10" z="10"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types>IPfluid</Types> -->
+  <!--    </Region> -->
+  <!-- </Steppable> -->
+
+  <!-- <Steppable Type="BlobInitializer"> -->
+  <!--   <Region> -->
+
+  <!-- 10 x 10 x 10 TEST -->
+  <!-- <Gap>0</Gap> -->
+  <!-- <Width>1</Width> -->
+  <!-- <Radius>2</Radius> -->
+  <!-- <Center x="5" y="5" z="5"/> -->
+  <!-- <Types>PCancerGFP</Types> -->
+  <!-- <Types>PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,PCancerGFP,VesselWall</Types> -->
+  <!-- <Types>PCancerGFP,PCancerRFP,VesselWall</Types> -->
+  <!-- <Types>VesselWall</Types> -->
+
+  <!-- 20 x 20 x 20 TEST -->
+  <!-- <Gap>0</Gap> -->
+  <!-- <Width>1</Width> -->
+  <!-- <Radius>5</Radius> -->
+  <!-- <Center x="10" y="10" z="10"/> -->
+  <!-- <Types>PCancerGFP,PCancerRFP,VesselWall</Types> -->
+  <!-- <Types>PCancerGFP,PCancerRFP</Types> -->
+
+  <!-- 30 x 30 x 30 TEST -->
+  <!-- <Gap>0</Gap> -->
+  <!-- <Width>1</Width> -->
+  <!-- <Radius>5</Radius> -->
+  <!-- <Center x="15" y="15" z="15"/> -->
+  <!-- <Types>VesselWall</Types> -->
+  <!-- <Types>PCancerGFP,PCancerRFP,VesselWall</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+
+  <!-- 40 X 40 X 40 IN VITRO SPHEROID SIMULATION, (20579.526 cells total)-->
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--    <Region> -->
+  <!--     <BoxMin x="0" y="0" z="0"/> -->
+  <!--     <BoxMax x="40" y="40" z="40"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types>IPfluid</Types> -->
+  <!--    </Region> -->
+  <!-- </Steppable> -->
+  <!-- <Steppable Type="BlobInitializer"> -->
+  <!--   <Region> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Radius>17.0</Radius> -->
+  <!--     <Center x="20" y="20" z="20"/> -->
+  <!--     <Types>PCancerGFP</Types> -->
+  <!--   </Region> -->
+  <!--   <Region> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Radius>14.0</Radius> -->
+  <!--     <Center x="20" y="20" z="20"/> -->
+  <!--     <Types>QCancerGFP</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+  <!-- TEST SPHEROID -->
+  <!-- <Steppable Type="BlobInitializer"> -->
+  <!--   <Region> -->
+  <!--       <Gap>0</Gap> -->
+  <!--       <Width>1</Width> -->
+  <!--       <Radius>3.0</Radius> -->
+  <!--       <Center x="20" y="20" z="20"/> -->
+  <!--       <Types>PCancerGFP</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+
+
+  <!-- 32 X 32 X 32 PRELIMINARY VASCULAR TESTS -->
+  <!-- <Steppable Type="BlobInitializer"> -->
+  <!--   <Region> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Radius>15</Radius> -->
+<!--       <Radius>1</Radius> -->
+  <!--     <Center x="16" y="16" z="16"/> -->
+  <!--     <Types>PCancerGFP</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--   <Region> -->
+  <!--     <BoxMin x="0" y="0" z="0"/> -->
+  <!--     <BoxMax x="150" y="150" z="20"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>2</Width> -->
+  <!--     <Types>SmoothMusc</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+
+  <!-- <Steppable Type="PIFInitializer"> -->
+
+   <!-- fileName|  #ves|  rep|  totVoxels|  %vSphere|  %vSphere+shell|  aveVox/vess|  vAreaCentrplane|  %vAreaCentrplane -->
+
+    <!-- vesselball_vessnum18_cylR1_cylRv0_spherR15_COM_16_16_16_rep1.txt 18 1 1213 0.085802 0.085802 67.388889 16 0.022635  -->
+    <!-- <PIFName>Simulation/vesselball_vessnum18_cylR1_cylRv0_spherR15_COM_16_16_16_rep1.txt</PIFName> -->
+    <!-- vesselball_vessnum17_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt 17 8 1142 0.080780 0.080780 67.176471 75 0.106103  -->
+    <!-- <PIFName>Simulation/vesselball_vessnum17_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt</PIFName> -->
+    <!-- vesselball_vessnum16_cylR1_cylRv0_spherR15_COM_16_16_16_rep7.txt 16 7 976 0.069038 0.069038 61.000000 54 0.076394  -->
+        <!-- <PIFName>Simulation/vesselball_vessnum16_cylR1_cylRv0_spherR15_COM_16_16_16_rep7.txt</PIFName> -->
+    <!-- vesselball_vessnum11_cylR1_cylRv0_spherR15_COM_16_16_16_rep1.txt 11 1 954 0.067482 0.067482 86.727273 77 0.108933  -->
+    <!-- <PIFName>Simulation/vesselball_vessnum11_cylR1_cylRv0_spherR15_COM_16_16_16_rep1.txt</PIFName> -->
+    <!-- vesselball_vessnum11_cylR1_cylRv0_spherR15_COM_16_16_16_rep10.txt 11 10 812 0.057437 0.057437 73.818182 47 0.066491  -->
+        <!-- <PIFName>Simulation/vesselball_vessnum11_cylR1_cylRv0_spherR15_COM_16_16_16_rep10.txt</PIFName> -->
+    <!-- vesselball_vessnum11_cylR1_cylRv0_spherR15_COM_16_16_16_rep4.txt 11 4 743 0.052556 0.052556 67.545455 32 0.045271  -->
+        <!-- <PIFName>Simulation/vesselball_vessnum11_cylR1_cylRv0_spherR15_COM_16_16_16_rep4.txt</PIFName> -->
+    <!-- vesselball_vessnum10_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt 10 8 620 0.043856 0.043856 62.000000 16 0.022635  -->
+    <!-- <PIFName>Simulation/vesselball_vessnum10_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt</PIFName> -->
+    <!-- vesselball_vessnum8_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt 8 8 517 0.036570 0.036570 64.625000 31 0.043856  -->
+        <!-- <PIFName>Simulation/vesselball_vessnum8_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt </PIFName> -->
+    <!-- vesselball_vessnum6_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt 6 8 370 0.026172 0.026172 61.666667 27 0.038197  -->
+        <!-- <PIFName>Simulation/vesselball_vessnum6_cylR1_cylRv0_spherR15_COM_16_16_16_rep8.txt</PIFName> -->
+    <!-- vesselball_vessnum3_cylR1_cylRv0_spherR15_COM_16_16_16_rep5.txt 3 5 235 0.016623 0.016623 78.333333 71 0.100444  -->
+    <!-- <PIFName>Simulation/vesselball_vessnum3_cylR1_cylRv0_spherR15_COM_16_16_16_rep5.txt</PIFName> -->
+    <!-- vesselball_vessnum2_cylR1_cylRv0_spherR15_COM_16_16_16_rep3.txt 2 3 173 0.012237 0.012237 86.500000 9 0.012732  -->
+    <!-- <PIFName>Simulation/vesselball_vessnum2_cylR1_cylRv0_spherR15_COM_16_16_16_rep3.txt</PIFName> -->
+
+
+    <!-- roundable to integers defining/within range of experimental data -->
+    <!-- vesselball_vessnum1_cylR1_cylRv2_spherR15_COM_16_16_16_rep2.txt 1 2 371 0.026243 0.026243 1.325 371 14 0.019806 -->
+<!--     <PIFName>Simulation/vesselball_vessnum1_cylR1_cylRv2_spherR15_COM_16_16_16_rep2.txt</PIFName> -->
+<!-- vesselball_vessnum11_cylR1_cylRv2_spherR15_COM_16_16_16_rep29.txt 11 29 750 0.053052 0.053052 1.339286 68.181818 28 0.039612 -->
+<!--     <PIFName>Simulation/vesselball_vessnum11_cylR1_cylRv2_spherR15_COM_16_16_16_rep29.txt</PIFName> -->
+    <!-- vesselball_vessnum6_cylR1_cylRv2_spherR15_COM_16_16_16_rep13.txt 6 13 1062 0.075121 0.075121 1.234884 177 43 0.060833 -->
+<!--     <PIFName>Simulation/vesselball_vessnum6_cylR1_cylRv2_spherR15_COM_16_16_16_rep13.txt</PIFName> -->
+<!-- vesselball_vessnum15_cylR1_cylRv2_spherR15_COM_16_16_16_rep17.txt 15 17 1390 0.098322 0.098322 1.241071 92.666667 56 0.079224 -->
+<!-- <PIFName>Simulation/vesselball_vessnum15_cylR1_cylRv2_spherR15_COM_16_16_16_rep17.txt</PIFName> -->
+    <!-- vesselball_vessnum19_cylR1_cylRv2_spherR15_COM_16_16_16_rep22.txt 19 22 1742 0.123221 0.123221 1.244286 91.684211 70 0.09903 -->
+    <!-- <PIFName>Simulation/vesselball_vessnum19_cylR1_cylRv2_spherR15_COM_16_16_16_rep22.txt</PIFName> -->
+
+
+
+    <!-- previous 4% and 8% area, ~= volume of 10% area; replaced with lower-vol sample -->
+    <!-- vesselball_vessnum20_cylR1_cylRv2_spherR15_COM_16_16_16_rep16.txt 20 16 1667 0.117916 0.117916 1.462281 83.35 57 0.080639 -->
+    <!-- <PIFName>Simulation/vesselball_vessnum20_cylR1_cylRv2_spherR15_COM_16_16_16_rep16.txt</PIFName> -->
+    <!-- vesselball_vessnum7_cylR1_cylRv2_spherR15_COM_16_16_16_rep12.txt 7 12 1380 0.097615 0.097615 2.464286 197.142857 28 0.039612 -->
+    <!-- <PIFName>Simulation/vesselball_vessnum7_cylR1_cylRv2_spherR15_COM_16_16_16_rep12.txt</PIFName> -->
+  <!-- </Steppable> -->
+
+
+  <!-- 30 X 30 X 10 CUBES FROM GAUSSIAN EMPIRICAL VESSEL DISTRIBUTION -->
+
+  <Steppable Type="UniformInitializer">
+    <Region>
+      <BoxMin x="0" y="0" z="0"/>
+      <BoxMax x="32" y="32" z="12"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types>PCancerGFP</Types>
+    </Region>
+  </Steppable>
+
+  <!-- Empirical Gaussian for center and edge of large (R=140 cells) tumor; simulated in OvTM paper, Ch. 2 -->
+  <Steppable Type="PIFInitializer">
+    <PIFName>Simulation/vessOvCaGauss_10pct_Cube_x93to123_y94to124_z140to150_CLOSETOCENTER150_R140SPHERE.txt</PIFName>
+    <!-- <PIFName>Simulation/vessOvCaGauss_10pct_Cube_x93to123_y94to124_z140to150_EDGE_R140SPHERE.txt</PIFName> -->
+  </Steppable>
+
+
+  <!-- 150 X 150 X 150 FINAL SIZE (LARGEST RUNNABLE IN WIN 7, MAC OSX 10.8) -->
+<!--     <Steppable Type="UniformInitializer"> -->
+<!--     <Region> -->
+<!--       <BoxMin x="0" y="0" z="0"/> -->
+<!--       <BoxMax x="150" y="150" z="20"/> -->
+<!--       <Gap>0</Gap> -->
+<!--       <Width>2</Width> -->
+<!--       <Types>SmoothMusc</Types> -->
+<!--     </Region> -->
+<!--   </Steppable> -->
+<!-- <Steppable Type="BlobInitializer"> -->
+<!--     <Region> -->
+<!--         <Gap>0</Gap> -->
+<!--         <Width>1</Width> -->
+        <!-- <Radius>65</Radius> -->
+        <!-- <Radius>3</Radius> -->
+        <!-- <Center x="75" y="75" z="75"/> -->
+        <!-- <Types>PCancerGFP</Types> -->
+  <!-- <Types>PCancerGFP,VesselWall</Types> -->
+  <!-- <Types>PCancerGFP,PCancerRFP</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+  <!-- <Steppable Type="PIFInitializer"> -->
+  <!-- fileName|  #ves|  rep|  totVoxels|  %vSphere|  %vSphere+shell|  aveVox/vess|  vAreaCentrplane|  %vAreaCentrplane -->
+
+  <!-- <PIFName>CurrentSimulations/vesselball_vess10_diam5_vardiam1_radius200_COM_100_200_300.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum30_cylR1_cylRv1_spherR50_COM_100_100_100.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum30_cylR10_cylRv5_spherR50_COM_100_100_100.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum30_cylR5_cylRv1_spherR50_COM_70_70_70.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum10_cylR5_cylRv1_spherR50_COM_70_70_70.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum10_cylR1_cylRv0_spherR50_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum10_cylR1_cylRv0_spherR40_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum36_cylR15_cylRv10_spherR50_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum36_cylR3_cylRv1_spherR50_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum36_cylR3_cylRv1_spherR40_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum36_cylR2_cylRv1_spherR40_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum36_cylR1_cylRv1_spherR40_COM_70_70_70.txt</PIFName></Steppable> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum36_cylR1_cylRv0_spherR40_COM_70_70_70.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum72_cylR1_cylRv0_spherR45_COM_70_70_70.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum1000_cylR1_cylRv1_spherR50_COM_70_70_70.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum10000_cylR1_cylRv1_spherR50_COM_70_70_70.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum10000_cylR1_cylRv1_spherR50_COM_70_70_70_filledZdim.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum1000_cylR1_cylRv1_spherR50_COM_70_70_70_filledZdim.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum100_cylR1_cylRv1_spherR60_COM_75_75_75.txt</PIFName> -->
+  <!-- <PIFName>CurrentSimulations/vesselball_vessnum100_cylR1_cylRv0_spherR60_COM_75_75_75.txt</PIFName> -->
+  <!-- 1.1% vascular area in central slice -->
+  <!-- <PIFName>Simulation/vesselball_vessnum200_cylR1_cylRv0_spherR60_COM_75_75_75_rep9.txt</PIFName> -->
+  <!-- 10.2% vascular area in central slice -->
+  <!-- <PIFName>Simulation/vesselball_vessnum700_cylR1_cylRv0_spherR60_COM_75_75_75_rep1.txt</PIFName> -->
+  <!-- vesselball_vessnum151_cylR1_cylRv2_spherR65_COM_75_75_75_rep6.txt 151 6 17272 0.015015 0.015015 114.384106 288 0.021698 -->
+  <!-- <PIFName>Simulation/vesselball_vessnum151_cylR1_cylRv2_spherR65_COM_75_75_75_rep6.txt</PIFName> -->
+
+  <!-- vesselball_vessnum451_cylR1_cylRv2_spherR65_COM_75_75_75_rep5.txt 451 5 133839 0.116347 0.116347 296.760532 1311 0.098770 -->
+  <!-- <PIFName>Simulation/vesselball_vessnum451_cylR1_cylRv2_spherR65_COM_75_75_75_rep5.txt</PIFName> -->
+  <!-- </Steppable> -->
+    <!-- END DRUG SPHEROID INITIALIZATIONS -->
+
+</CompuCell3D>

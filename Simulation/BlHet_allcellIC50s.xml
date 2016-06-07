@@ -1,0 +1,748 @@
+ 
+<CompuCell3D>
+
+  <Potts>  
+    
+    <!-- <Dimensions x="150" y="150" z="150" /> -->
+    <!-- <Dimensions x="41" y="41" z="41" /> -->
+    <!-- MEDIUM-SIZED TEST RUNS -->
+    <Dimensions x="33" y="33" z="33" />
+    <!-- <Dimensions x="30" y="30" z="30" /> -->
+    <!-- <Dimensions x="20" y="20" z="20" /> -->
+    <!-- <Dimensions x="10" y="10" z="10" /> -->
+
+    <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
+    <Anneal>5</Anneal> 
+
+    <!-- Cisplatin IV to bladder cancer cells, diam = T24 line: 6 hours = 3940.707651 MCS/h *6 = 23644.24591 MCS -->
+    <!--  D(VX2 carcinoma xenograft) (Nugent 1984)
+         = 1 cell diam^2 cell diam^2 / 1.10s (= 24.18um^2 (voxel edge) / 1/65.68hr) (?) -->
+    <!--IV CISPLATIN GOES TO 0 @ 190 MINS IN 10^3v (7-22-14)-->
+    <Steps>23644</Steps>
+
+    <Temperature>1.0</Temperature>
+
+
+    <!-- CELL TYPES
+	 Vessel - one cell type for wall and lumen
+	 LungNormal - any normal tissue added
+	 
+	 SCSG_BFTC_905 (sens cis and gem)
+	 SCSG_J82 (sens cis and gem)
+	 RCRG_RT4 (resist cis and gem)
+	 RCRG_HT_1197 (resist cis and gem)
+	 SCRG_SW780 (sens cis resist gem)
+	 SCRG_KU_19_19  (sens cis resist gem)
+	 RCSG_LB831_BLC (resist cis sens gem)
+	 RCSG_DSH1 (resist cis sens gem)	
+	 
+	 Medium - will represent interstitial fluid in the model
+
+list for cut and paste
+Vessel
+LungNormal
+SCSG_BFTC_905
+SCSG_J82
+RCRG_RT4
+RCRG_HT_1197
+SCRG_SW780
+SCRG_KU_19_19
+RCSG_LB831_BLC
+RCSG_DSH1
+IC50_SCSG_BFTC_905
+IC50_SCSG_J82
+IC50_RCRG_RT4
+IC50_RCRG_HT_1197
+IC50_SCRG_SW780
+IC50_SCRG_KU_19_19
+IC50_RCSG_LB831_BLC
+IC50_RCSG_DSH1
+Dead
+    -->
+
+
+    
+    <!-- <CellMotility> -->
+    <!--   <MotilityParameters CellType="Vessel" Motility="0"/> -->
+    <!--   <MotilityParameters CellType="LungNormal" Motility="1"/> -->
+      
+    <!--   <MotilityParameters CellType="SCSG_BFTC_905" Motility="1"/>          -->
+    <!--   <MotilityParameters CellType="SCSG_J82" Motility="1"/>  -->
+    <!--   <MotilityParameters CellType="RCRG_RT4" Motility="1"/>  -->
+    <!--   <MotilityParameters CellType="RCRG_HT_1197" Motility="1"/>  -->
+    <!--   <MotilityParameters CellType="SCRG_SW780" Motility="1"/> -->
+    <!--   <MotilityParameters CellType="SCRG_KU_19_19" Motility="1"/> -->
+    <!--   <MotilityParameters CellType="RCSG_LB831_BLC" Motility="1"/> -->
+    <!--   <MotilityParameters CellType="RCSG_DSH1" Motility="1"/>       -->
+
+    <!--   <MotilityParameters CellType="IC50_SCSG_BFTC_905" Motility="1"/>          -->
+    <!--   <MotilityParameters CellType="IC50_SCSG_J82" Motility="1"/>  -->
+    <!--   <MotilityParameters CellType="IC50_RCRG_RT4" Motility="1"/>  -->
+    <!--   <MotilityParameters CellType="IC50_RCRG_HT_1197" Motility="1"/>  -->
+    <!--   <MotilityParameters CellType="IC50_SCRG_SW780" Motility="1"/> -->
+    <!--   <MotilityParameters CellType="IC50_SCRG_KU_19_19" Motility="1"/> -->
+    <!--   <MotilityParameters CellType="IC50_RCSG_LB831_BLC" Motility="1"/> -->
+    <!--   <MotilityParameters CellType="IC50_RCSG_DSH1" Motility="1"/> -->
+
+    <!--   <MotilityParameters CellType="Dead" Motility="0"/> -->
+    <!-- </CellMotility> -->
+
+    
+    
+    <!-- spin flip attempts per Monte Carlo Step = flip2dimratio x # lattice sites --> 
+    <Flip2DimRatio>0</Flip2DimRatio> <!-- set to zero since cells frozen -->
+
+
+    
+    <NeighborOrder>1</NeighborOrder> 
+
+
+    
+  </Potts> 
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <!--          START PLUGINS          -->	
+
+
+  <!-- <Plugin Name="PlayerSettings"> -->
+  <!-- Uncomment either 2-D or 3-D settings -->
+  <!-- <Project2D XZProj="50"/> -->
+
+  <!-- <View3D> -->
+  <!--    <Plot PlotName="Cell_Field" PlotType="CellField"/> -->
+  <!--     <CameraClippingRange Max="316.298588294" Min="150.14929563"/> -->
+  <!--     <CameraFocalPoint x="20.25" y="20.25" z="50.25"/> -->
+  <!--     <CameraPosition x="-192.143464814" y="-18.5691898425" z="-7.36703508739"/> -->
+  <!--     <CameraViewUp x="0.219658408916" y="0.211669475664" z="-0.952337238831"/> -->
+  <!--     <Size Height="30" Width="100"/> -->
+  <!-- </View3D> -->
+  <!-- <Concentration LegendEnable="true" NumberOfLegendBoxes="1"/> -->
+  <!-- <VisualControl ScreenshotFrequency="10" ScreenUpdateFrequency="1" NoOutput="false" ClosePlayerAfterSimulationDone="false" /> -->
+  <!-- <Border BorderColor="black" BorderOn="true"/> -->
+  <!-- 7-31-2011 CC3D not recognizing color names -->
+  <!-- <Cell Type="1" Color="red"/> -->
+  <!-- <Cell Type="8" Color="yellow"/> -->
+  <!-- <TypesInvisibleIn3D Types="0,2,4,5"/> -->
+  <!-- Note: SaveSettings flag is unimportant for the new Player because whenever settings are changed from XML script they are written by default to disk This seems to be default behavior of most modern applications. We may implement this feature later  -->
+  <!-- <Settings SaveSettings="true"/> -->
+  <!-- </Plugin> -->
+
+
+
+
+  <!-- limit pixels selected for ID switch to those comprising shell of non-frozen cells (shell thickness = NeighborhoodOrder); speedup of 15% on 10^3 lattice w/27 cells
+  -->
+  <Plugin Name="GlobalBoundaryPixelTracker">
+    <NeighborOrder>2</NeighborOrder> 
+  </Plugin> 
+
+
+
+  
+  <Plugin Name="CellType">
+    <CellType TypeId="0" TypeName="Medium" />
+    
+    <CellType TypeId="1" TypeName="Vessel" Freeze=""/>
+    <CellType TypeId="2"  TypeName="LungNormal" Freeze=""/>
+    
+    <CellType TypeId="3" TypeName="SCSG_BFTC_905" />
+    <CellType TypeId="4" TypeName="SCSG_J82" />
+    <CellType TypeId="5" TypeName="RCRG_RT4" />
+    <CellType TypeId="6" TypeName="RCRG_HT_1197" />
+    <CellType TypeId="7" TypeName="SCRG_SW780" />
+    <CellType TypeId="8" TypeName="SCRG_KU_19_19" />
+    <CellType TypeId="9" TypeName="RCSG_LB831_BLC" />
+    <CellType TypeId="10" TypeName="RCSG_DSH1" />
+
+    <CellType TypeId="11" TypeName="IC50_SCSG_BFTC_905" />
+    <CellType TypeId="12" TypeName="IC50_SCSG_J82" />
+    <CellType TypeId="13" TypeName="IC50_RCRG_RT4" />
+    <CellType TypeId="14" TypeName="IC50_RCRG_HT_1197" />
+    <CellType TypeId="15" TypeName="IC50_SCRG_SW780" />
+    <CellType TypeId="16" TypeName="IC50_SCRG_KU_19_19" />
+    <CellType TypeId="17" TypeName="IC50_RCSG_LB831_BLC" />
+    <CellType TypeId="18" TypeName="IC50_RCSG_DSH1" />
+
+    <CellType TypeId="19" TypeName="Dead" />
+  </Plugin> 
+  
+
+
+
+  <Plugin Name="Contact">
+    <!-- <Energy Type1="Medium" Type2="Medium">0</Energy>  -->
+    <!-- <Energy Type1="SCRG_SW780" Type2="Medium">0</Energy>  -->
+    <!-- <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">5</Energy> -->
+    <!-- <Energy Type1="Vessel" Type2="Vessel">0</Energy> -->
+    <!-- <Energy Type1="SCRG_SW780" Type2="Vessel">0</Energy> -->
+
+
+
+    
+    <!-- add slight attraction for cancer to medium if want outer cells of spheroid to shed -->
+    <!-- current settings assume attraction between cancer cells, with necrotic cells less adhesive -->
+    <Energy Type1="Medium" Type2="Medium">0</Energy>
+    <Energy Type1="Vessel" Type2="Medium">0</Energy>
+    <Energy Type1="LungNormal" Type2="Medium">0</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="Medium">10</Energy>
+    <Energy Type1="SCSG_J82" Type2="Medium">10</Energy>
+    <Energy Type1="RCRG_RT4" Type2="Medium">10</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="Medium">10</Energy>
+    <Energy Type1="SCRG_SW780" Type2="Medium">10</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="Medium">10</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="Medium">10</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="Medium">10</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="Medium">10</Energy>
+    <Energy Type1="Dead" Type2="Medium">5</Energy>
+
+    <!-- tumor and normal lung stick to vessel with same adhesion as tumor-tumor -->
+    <Energy Type1="Vessel" Type2="Vessel">0</Energy>
+    <Energy Type1="LungNormal" Type2="Vessel">0</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="Vessel">0</Energy>
+    <Energy Type1="SCSG_J82" Type2="Vessel">0</Energy>
+    <Energy Type1="RCRG_RT4" Type2="Vessel">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="Vessel">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="Vessel">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="Vessel">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="Vessel">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="Vessel">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="Vessel">0</Energy>
+    <Energy Type1="Dead" Type2="Vessel">5</Energy>
+
+    <!-- tumor sticks to normal lung with same adhesion as tumor-tumor -->
+    <Energy Type1="LungNormal" Type2="LungNormal">0</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="LungNormal">0</Energy>
+    <Energy Type1="SCSG_J82" Type2="LungNormal">0</Energy>
+    <Energy Type1="RCRG_RT4" Type2="LungNormal">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="LungNormal">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="LungNormal">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="LungNormal">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="LungNormal">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="LungNormal">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="LungNormal">0</Energy>
+    <!-- <Energy Type1="Dead" Type2="LungNormal">5</Energy> -->
+
+    <!-- tumor-tumor ahdesion same in all cases, dead cells stick less -->
+    <Energy Type1="SCSG_BFTC_905" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="SCSG_J82" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="RCRG_RT4" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="SCSG_BFTC_905">0</Energy>
+    <Energy Type1="Dead" Type2="SCSG_BFTC_905">5</Energy>
+
+    <Energy Type1="SCSG_J82" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="RCRG_RT4" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="SCSG_J82">0</Energy>
+    <Energy Type1="Dead" Type2="SCSG_J82">5</Energy>
+
+    <Energy Type1="RCRG_RT4" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="RCRG_RT4">0</Energy>
+    <Energy Type1="Dead" Type2="RCRG_RT4">5</Energy>
+
+    <Energy Type1="RCRG_HT_1197" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="RCRG_HT_1197">0</Energy>
+    <Energy Type1="Dead" Type2="RCRG_HT_1197">5</Energy>
+    
+    <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="SCRG_SW780">0</Energy>
+    <Energy Type1="Dead" Type2="SCRG_SW780">5</Energy>
+
+    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="SCRG_KU_19_19">0</Energy>
+    <Energy Type1="Dead" Type2="SCRG_KU_19_19">5</Energy>
+    
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="Dead" Type2="RCSG_LB831_BLC">5</Energy>
+    
+    <Energy Type1="RCSG_DSH1" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="RCSG_DSH1">0</Energy>
+    <Energy Type1="Dead" Type2="RCSG_DSH1">5</Energy>
+    
+    <Energy Type1="IC50_SCSG_BFTC_905" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCSG_J82" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_SCSG_BFTC_905">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_SCSG_BFTC_905">5</Energy>
+    
+    <Energy Type1="IC50_SCSG_J82" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCRG_RT4" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_SCSG_J82">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_SCSG_J82">5</Energy>
+    
+    <Energy Type1="IC50_RCRG_RT4" Type2="IC50_RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="IC50_RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="IC50_RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="IC50_RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_RCRG_RT4">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_RCRG_RT4">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_RCRG_RT4">5</Energy>
+    
+    <Energy Type1="IC50_RCRG_HT_1197" Type2="IC50_RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_SCRG_SW780" Type2="IC50_RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="IC50_RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_RCRG_HT_1197">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_RCRG_HT_1197">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_RCRG_HT_1197">5</Energy>
+    
+    <Energy Type1="IC50_SCRG_SW780" Type2="IC50_SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="IC50_SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_SCRG_SW780">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_SCRG_SW780">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_SCRG_SW780">5</Energy>
+    
+    <Energy Type1="IC50_SCRG_KU_19_19" Type2="IC50_SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_SCRG_KU_19_19">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_SCRG_KU_19_19">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_SCRG_KU_19_19">5</Energy>
+    
+    <Energy Type1="IC50_RCSG_LB831_BLC" Type2="IC50_RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_RCSG_LB831_BLC">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_RCSG_LB831_BLC">5</Energy>
+    
+    <Energy Type1="IC50_RCSG_DSH1" Type2="IC50_RCSG_DSH1">0</Energy>
+    <Energy Type1="Dead" Type2="IC50_RCSG_DSH1">5</Energy>
+    
+    <Energy Type1="Dead" Type2="Dead">5</Energy>
+
+    
+    <!-- old notes on cancer (PC) invasion through mesothelium (VC) and adipose - see old code on adhesions -->
+
+    <NeighborOrder>2</NeighborOrder>
+    
+  </Plugin> 
+
+
+    
+
+  <!-- REFERENCE POINT WITHIN CELL FOR CONCENTRATIONS of O2, VEGF, other measurements, etc. --> 
+  <Plugin Name="CenterOfMass"/>
+
+
+
+  
+  <!-- CHEMICAL FIELDS THAT WILL BE ACCESSED FROM PYTHON -->
+  <Plugin Name="Secretion">
+      
+      <!-- Specification of secretion properties of select cell types. -->
+      <!-- You may repeat Field element for each chemical field declared in the PDE solvers -->
+      <!-- Specification of secretion properties of individual cells can be done in Python -->
+      <Field Name="Cisplatin">
+         <ConstantConcentration Type="Vessel">30.0</ConstantConcentration>
+      </Field>
+      <Field Name="Gemcitabine">
+         <ConstantConcentration Type="Vessel">30.0</ConstantConcentration>
+      </Field>
+   </Plugin>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--          START STEPPABLES          -->	
+
+
+  <!-- <Steppable Type="PIFDumper" Frequency="3018"> -->
+<!--       <PIFName>Cisp_IV_0pctA.txt</PIFName> -->
+  <!-- </Steppable> -->
+
+
+  <!-- DIFFUSION FIELDS -->  
+
+  <!-- <Plugin Name="PDESolverCaller"> -->
+  <!--       <CallPDE PDESolverName="FlexibleDiffusionSolverFE" ExtraTimesPerMC="1"/> -->
+  <!-- </Plugin> -->
+
+  <!-- <Steppable Type="FlexibleDiffusionSolverFE"> -->
+  <!-- Serialize Frequency="100"/ -->
+  
+  <Steppable Type="DiffusionSolverFE">
+    <DoNotScaleSecretion/>
+
+    <!-- A Systems Approach for Tumor Pharmacokinetics; Greg Michael Thurber, Ralph Weissleder; 2011
+         antibody diffusion 
+         = 10um^2/s 
+         = 600 um^2/min 
+         = 188.622 (SKOV3.ip1 cell diameter)^2 / (10 min) -->
+    <!-- Leveque, 2008
+         half life = 0.000248 / 10 min
+         decay rate = ln(2)/half life = 0.00017 / 10 min-->
+    <!--     <FieldName>Trastuzumab</FieldName> -->
+        <!-- IN H20 CORR TO 37 DEGC: cell diams/4h (speed test)-->
+        <!-- <GlobalDiffusionConstant>23032.949</GlobalDiffusionConstant> -->
+        <!-- IN H20 CORR TO 37 DEGC: cell diams/1h-->
+        <!-- <GlobalDiffusionConstant>5758.237</GlobalDiffusionConstant> -->
+        <!-- in IN VITRO SPHEROID: cell diams/1h-->
+        <!-- <GlobalDiffusionConstant>3.076</GlobalDiffusionConstant> -->
+        <!-- DECAY IN THE BODY BASED ON HALF-LIFE /1 hr -->
+        <!-- <GlobalDecayConstant>0.0010315</GlobalDecayConstant> -->
+        <!-- DECAY WHEN USING EFFFECTIVE DIFFUSION FROM FLUORESCENCE EXPERIMENTS -->
+        <!-- <GlobalDecayConstant>0.0</GlobalDecayConstant> -->
+        <!-- <DiffusionCoefficient CellType="PCancerGFP">5758.237</DiffusionCoefficient> -->
+        <!-- 1 cell diam ^2 / 1/5758.237 hours -->
+        <!-- params from FlexibleDiffusionSolverFE -->
+        <!-- <DoNotDecayIn>VesselWall</DoNotDecayIn> -->
+        <!-- <DoNotDiffuseTo>PCancerGFP</DoNotDiffuseTo> -->
+
+
+  <!-- CISPLATIN -->
+  <!-- CAN RUN FROM PYTHON - XML CODE HERE -->
+
+  <!-- (DIFFUSION COEFFICIENT OF CREATININE (USED AS PROXY FOR CISPLATIN in Morrison, 1986) = 1.9 x 10^- 6 cm^2/s = 0.000114 cm^2/min = 11400 um^2/min = ) -->
+
+  <!-- D_{NORMAL TISSUE}  (Swabb 1974 via Thurber 2011)
+       = 1.778 x 10^{-4} (300.5)^{-0.75} = 0.000002466246792 cm^2/s = 246.624679177701 um^2/s
+       = 4652 (SKOV3.ip1 cell diameter)^2 / (10 min)
+
+       = 1 celldiam^2/(1/465.18914889411 min) = 227911.3489336466 MCS/hour = 55822.6978672932 MCS/2 hours 
+       D(VX2 carcinoma for sodium fluorescein, MW376 (Nugent 1984)
+       = 1207.18273728686 cell diam^2 / 1 min (= 5.64um^2 (voxel edge) / 1/60hr)
+       = 1 cell diam^2 / 1/1207.183 min (= 5.64um^2 (voxel edge) / 1/1207.183min) = 72430.9642372114 MCS/hour = 144861.928474423 2 hours
+       -->
+
+  <!-- CISPLATIN (PT) ACCUMULATION AT 5 $\MU$M IN SKOV3  (Fig.3, Mistry, 1992)
+       = 9.4E-15 $\mu$M/cell/min = 1.57E-16 muM/cell/sec = 9.4E-14 $\mu$M/cell/10 min -->
+  <!-- ACCUMULATION at 100 micromolar for 50min in SKOV3 
+       = 8 +/- 0.8 nmol/mg protein/50 mins: 8 +/- 0.8 nM * 1e-3uM/nM /mg protein * 0.21mg protein/uL * 1uL/10^9um^3 * 179.1 um^3/ SKOV3 cell /50min = 6.02E-12 uM Pt/SKOV3 cell/min = 1.00E-13 uM Pt/SKOV3 cell/s -->
+  <!-- PEAK AVE INTRAPERITONEAL
+       (90mg/m^2 IP for 4 hour dwell = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; Howell, 1982): 
+       40.5mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol = 134.977503749375 muM = 8098.65022496251 (concentration * 60 sec/MCS)-->
+  <!-- PEAK VALUES IV
+       (90mg/m^2 IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; 1.6mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol =  5.3324445925679 uM,  
+       = 319.946675554074 (concentration * 60 sec/MCS) -->
+  <!-- MINIMUM EFFECTIVE CONCENTRATION OF CISPLATIN (BASED ON DNA DAMAGING LEVELS in clear cell ovarian carcinoma, Takatori, 2012)
+       = 1 mug/mL; 1ug/ml*1000ml/L*1g/10^6ug* 1/300.5g/mol*10^6umol/mol = 3.33 muM-->
+  <!-- MINIMUM EFFECTIVE CONCENTRATION OF CISPLATIN (IN SERUM, clinical trials, lung cancer, Nakano, 1997)
+       = 0.3micrograms/ml; 0.3ug/ml*1000ml/L*1g/10^6ug* 1/300.05g/mol*10^6umol/mol = 0.999833361106482 muM -->
+  <!-- IC50 for SKOV3.ip1 cells (Xu, W, B Cai, J L Chen, L X Li, J R Zhang, Y Y Sun, and X P Wan. “ATP7B Antisense Oligodeoxynucleotides Increase the Cisplatin Sensitivity of Human Ovarian Cancer Cell Line SKOV3ipl.” International Journal of Gynecological Cancer)  -->
+  <!-- SECRETION = micromolar = umol/
+       (90mg/m^2IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL	1.6	1.6mug/mL*1g/10^6mug*1000mL/L/Xg/mol cisplatin*10^6umol/mol	5.3324445925679	uM	319.946675554074	(concentration * 60 sec/MCS) -->
+  <!-- DECAY RATE = ln(2)/half life = 0.23 / 10 min = 000049667766485 /(1/465.189min) (Go, Ata, RXMed:Platinol) -->
+
+  
+  <DiffusionField Name='Gemcitabine'>
+    <DoNotScaleSecretion/>
+    <DiffusionData>
+      <GlobalDiffusionConstant>1.0</GlobalDiffusionConstant>
+      <GlobalDecayConstant>0</GlobalDecayConstant>
+    </DiffusionData>
+    <SecretionData>
+      <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
+      <ConstantConcentration Type="Medium">0.0</ConstantConcentration>
+    </SecretionData>
+    <BoundaryConditions>
+      <!-- <Plane Axis="X"> <Periodic/></Plane> <Plane Axis="Y"><Periodic/> </Plane> -->
+      <!-- <Plane Axis="X"> -->
+      <!--   <ConstantValue PlanePosition="Min" Value="0"/> -->
+      <!--   <ConstantValue PlanePosition="Max" Value="0"/> -->
+      <!-- </Plane> -->
+      <!-- <Plane Axis="Y"> -->
+      <!--   <ConstantValue PlanePosition="Min" Value="0"/> -->
+      <!--   <ConstantValue PlanePosition="Max" Value="0"/> -->
+      <!-- </Plane> -->
+      <!-- <Plane Axis="Z"> -->
+      <!--   <ConstantValue PlanePosition="Min" Value="0"/> -->
+      <!--   <ConstantValue PlanePosition="Max" Value="0"/> -->
+      <!-- </Plane> -->
+      <Plane Axis="X">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+      <Plane Axis="Y">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+      <Plane Axis="Z">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+    </BoundaryConditions>
+  </DiffusionField>
+
+
+  <DiffusionField Name='Cisplatin'>
+    <DoNotScaleSecretion/>
+    <DiffusionData>
+      <GlobalDiffusionConstant>1.0</GlobalDiffusionConstant>
+      <GlobalDecayConstant>0</GlobalDecayConstant>
+    </DiffusionData>
+    <SecretionData>
+      <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
+      <ConstantConcentration Type="Medium">0.0</ConstantConcentration>
+    </SecretionData>
+    <BoundaryConditions>
+      <Plane Axis="X">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+      <Plane Axis="Y">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+      <Plane Axis="Z">
+        <ConstantDerivative PlanePosition="Min" Value="0"/>
+        <ConstantDerivative PlanePosition="Max" Value="0"/>
+      </Plane>
+    </BoundaryConditions>
+  </DiffusionField>
+</Steppable>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--           CELL INITIALIZATION           -->
+
+  <!-- NOTES ON CC3D: -->
+  <!-- "WIDTH" = 1 SIDE OF SQUARE OR CUBE -->
+  <!-- MIN GAP FOR CC3D = 1 -->
+  <!-- UNIFORMINITIALIZER: CELL INITIALIZATIOn CANNOT FALL OUTSIDE SIMULATION BOUNDARIES, BUT CAN EQUAL THEM.  
+       e.g., cells 20 pixels wide cannot be placed closer than 40 pixels to sim boundary-->
+
+  <!-- SCALE: 1 VOXEL  = 1 CANCER OR VESSEL (ENDOTHELIAL) CELL -->
+
+  <!-- CELL DATA: -->
+  <!-- LAB DATA: MOUSE ADIPOCYTE = ave. 20um diameter = 4189um^3 volume; side of cube = 16.12 um -->
+  <!-- OTHER DATA: ADIPOCYTES range from 25-150um diameter, 
+       (p. 163, Growth, maturation, and physical activity By Robert M. Malina, Claude Bouchard, Oded Bar-Or).  
+       Other references also show ranges from 50-100 um;
+       will average as 75um; 37um radius
+       mouse mesentery adipocyte surface area = 4*Pi*Ave.Radius^2 = 4*Pi*3.46^2 =~ 150 um^2 
+    or 4*Pi*3.5^2 (3.5=est. for vol calcs.)= 153.93-->
+
+  <!-- LAB DATA: SKOV3-IP OVARIAN CANCER CELL: 
+       vesselball_vessnum19_cylR1_cylRv2_spherR15_COM_16_16_16_rep22.txt       R = 3.45; V = 179.50; cube
+       edge = 5.64 -->
+  <!-- LAB DATA: GAPS IN MESENTERY ADIPO-ADIPO = ave. 0.2um; -->
+  <!-- BLOOD VESSEL ENDOTHELIAL CELLS, PROLIFERATING:
+       Yi: diam = 10um; V = 523.598775598um^3; cube edge = 8.05 -->
+
+  <!-- OTHER DATA: -->
+  <!-- parietal mesothelial cells: Radius Ave=10um(Human), 
+       Height Ave=0.7um (rabbit); polygonal, will estimate as cylindrical; V=Pi*0.7*10^2=219um^3 -->
+  <!-- distance between visceral and peripheral mesothelia: 
+       6-25 um (will initialize in this range)  -->
+  <!-- SKOV3 cancer cell = 11um diameter -->
+  <!-- = 4/3 * pi * R pixels^3 =  180pixels^3 -->
+
+
+
+
+  <!-- SPHEROID AND VESSELS ON MUSCLE FOR DRUG DELIVERY -->
+
+  <!-- FINAL DRUG DELIVERY TISSUES -->
+  <!-- TEST-SIZED SPHEROIDS -->
+  <Steppable Type="UniformInitializer">
+     <Region>
+  <!-- 10 x 10 x 10 TEST -->
+      <BoxMin x="0" y="0" z="0"/>
+      <BoxMax x="33" y="33" z="33"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+  <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
+<Types>Vessel</Types>
+     </Region>
+  </Steppable>
+
+  <!-- <Steppable Type="BlobInitializer"> -->
+  <!--   <Region> -->
+
+  <!-- 40 X 40 X 40 IN VITRO SPHEROID SIMULATION, (20579.526 cells total)-->
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--    <Region> -->
+  <!--     <BoxMin x="0" y="0" z="0"/> -->
+  <!--     <BoxMax x="40" y="40" z="40"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types>IPfluid</Types> -->
+  <!--    </Region> -->
+  <!-- </Steppable> -->
+
+
+  <!-- <Steppable Type="PIFInitializer"> -->
+
+   <!-- fileName|  #ves|  rep|  totVoxels|  %vSphere|  %vSphere+shell|  aveVox/vess|  vAreaCentrplane|  %vAreaCentrplane -->
+    <!-- roundable to integers defining/within range of experimental data -->
+    <!-- vesselball_vessnum1_cylR1_cylRv2_spherR15_COM_16_16_16_rep2.txt 1 2 371 0.026243 0.026243 1.325 371 14 0.019806 -->
+<!--     <PIFName>Simulation/vesselball_vessnum1_cylR1_cylRv2_spherR15_COM_16_16_16_rep2.txt</PIFName> -->
+  <!-- </Steppable> -->
+
+
+  <!-- 150 X 150 X 150 FINAL SIZE (LARGEST RUNNABLE IN WIN 7, MAC OSX 10.8) -->
+<!--     <Steppable Type="UniformInitializer"> -->
+<!--     <Region> -->
+<!--       <BoxMin x="0" y="0" z="0"/> -->
+<!--       <BoxMax x="150" y="150" z="20"/> -->
+<!--       <Gap>0</Gap> -->
+<!--       <Width>2</Width> -->
+<!--       <Types>SmoothMusc</Types> -->
+<!--     </Region> -->
+<!--   </Steppable> -->
+<!-- <Steppable Type="BlobInitializer"> -->
+<!--     <Region> -->
+<!--         <Gap>0</Gap> -->
+<!--         <Width>1</Width> -->
+        <!-- <Radius>65</Radius> -->
+        <!-- <Radius>3</Radius> -->
+        <!-- <Center x="75" y="75" z="75"/> -->
+        <!-- <Types>PCancerGFP</Types> -->
+  <!-- <Types>PCancerGFP,VesselWall</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+
+    <!-- END DRUG SPHEROID INITIALIZATIONS -->
+
+</CompuCell3D>

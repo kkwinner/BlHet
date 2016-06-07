@@ -1,0 +1,7 @@
+<Simulation version="3.7.2">
+
+    <XMLScript Type="XMLScript">Simulation/OvTMdrugs_test.xml</XMLScript>
+    <PythonScript>Simulation/OvTMdrugs_test_IP.py</PythonScript>
+    <Resource Type="Python">Simulation/steppables_drugspheroid.py</Resource>
+
+</Simulation>
