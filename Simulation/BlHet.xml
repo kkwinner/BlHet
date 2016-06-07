@@ -96,11 +96,11 @@ IC50_RCSG_DSH1
     
     
     <!-- spin flip attempts per Monte Carlo Step = flip2dimratio x # lattice sites --> 
-    <Flip2DimRatio>0</Flip2DimRatio> <!-- set to zero since cells frozen -->
+    <Flip2DimRatio>1</Flip2DimRatio> <!-- set to zero since cells frozen -->
 
 
-    
-    <NeighborOrder>1</NeighborOrder> 
+    <!-- Also set in Contact????  -->
+    <!-- <NeighborOrder>1</NeighborOrder>  -->
 
 
     
@@ -574,8 +574,9 @@ IC50_RCSG_DSH1
       <BoxMax x="33" y="33" z="33"/>
       <Gap>0</Gap>
       <Width>1</Width>
-  <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types>
-<!-- <Types>Vessel</Types> -->
+      <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
+      <!-- <Types>Vessel</Types> -->
+      <Types>Vessel,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1,LungNormal</Types>
      </Region>
   </Steppable>
 
