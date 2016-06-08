@@ -2,6 +2,6 @@
 
     <XMLScript Type="XMLScript">Simulation/BlHet.xml</XMLScript>
     <PythonScript>Simulation/BlHet.py</PythonScript>
-    <Resource Type="Python">Simulation/steppables_hetero.py</Resource>
+    <Resource Type="Python">Simulation/steppablesBlHet.py</Resource>
 
 </Simulation>
