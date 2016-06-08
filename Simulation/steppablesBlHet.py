@@ -102,26 +102,26 @@ cIPFirstPtPlus15=(7.386+15.0)*1207.183 #= 27023.998638 MCS = 7.386 min, first ti
 Cisp1Min = 65.678 # 65.678 mcs = 1 min for cells of diameter T24 bladder cancer cell line
 
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
-## also = concentration removed from voxel; µM/MCS * siteConcCis(µM)
-cispAccumFrac_SCSG_BFTC_905 = 0.3147446166  # (sens cis and gem)	2.575477619	IC50 µM	cisplatin			
-cispAccumFrac_SCSG_J82 = 0.3033715255	    # (sens cis and gem)	5.42972235	IC50 µM	cisplatin				
-cispAccumFrac_RCRG_RT4 = 0.2154448963	    # (resist cis and gem)	27.49620513	IC50 µM	cisplatin				
-cispAccumFrac_RCRG_HT_1197 = 0.1498013738   # (resist cis and gem)	43.97041406	IC50 µM	cisplatin				
-cispAccumFrac_SCRG_SW780 = 0.2691142767     # (sens cis resist gem)	14.02708355	IC50 µM	cisplatin					
-cispAccumFrac_SCRG_KU_19_19 = 0.2847440491  # (sens cis resist gem)	10.10456195	IC50 µM	cisplatin
-cispAccumFrac_RCSG_LB831_BLC = 0.02925373453# (resist cis sens gem)	225.1619678	IC50 µM	cisplatin
-cispAccumFrac_RCSG_DSH1 = 0.04556319402     # (resist cis sens gem)	144.5646771	IC50 µM	cisplatin				
+## also = concentration removed from voxel; microM/MCS * siteConcCis(microM)
+cispAccumFrac_SCSG_BFTC_905 = 0.3147446166  # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
+cispAccumFrac_SCSG_J82 = 0.3033715255	    # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_RT4 = 0.2154448963	    # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_HT_1197 = 0.1498013738   # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
+cispAccumFrac_SCRG_SW780 = 0.2691142767     # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
+cispAccumFrac_SCRG_KU_19_19 = 0.2847440491  # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
+cispAccumFrac_RCSG_LB831_BLC = 0.02925373453# (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
+cispAccumFrac_RCSG_DSH1 = 0.04556319402     # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
 
 ## gemcitabine (possibly dFdCtP) accumulation per cell per time step, based on IC50 of bladder cancer cell line;
-## also = concentration removed from voxel; µM/MCS * siteConcGem(µM)
-gemAccumFrac_SCSG_BFTC_905 = 4.41575E-03  # (sensitive cis and gem)	5.15E-06	IC50 µM	gemcitabine			
-gemAccumFrac_SCSG_J82 = 4.41565E-03       # (sensitive cis and gem)	0.007409799	IC50 µM	gemcitabine				
-gemAccumFrac_RCRG_RT4 = 4.22858E-03       # (resistant cis and gem)	13.84278281	IC50 µM	gemcitabine				
-gemAccumFrac_RCRG_HT_1197 = 4.39190E-03   # (resistant cis and gem)	1.764248816	IC50 µM	gemcitabine				
-gemAccumFrac_SCRG_SW780 = 2.68443E-03     # (sens cis resist gem)	128.0487435	IC50 µM	gemcitabine				
-gemAccumFrac_SCRG_KU_19_19 = 4.18843E-03  # (sens cis resist gem)	16.81235445	IC50 µM	gemcitabine				
-gemAccumFrac_RCSG_LB831_BLC = 4.41518E-03 # (resist cis sens gem)	0.041854289	IC50 µM	gemcitabine				
-gemAccumFrac_RCSG_DSH1 = 4.41445E-03      # (resist cis sens gem)	0.096498675	IC50 µM	gemcitabine				
+## also = concentration removed from voxel; microM/MCS * siteConcGem(microM)
+gemAccumFrac_SCSG_BFTC_905 = 4.41575E-03  # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
+gemAccumFrac_SCSG_J82 = 4.41565E-03       # (sensitive cis and gem)	0.007409799	IC50 microM	gemcitabine				
+gemAccumFrac_RCRG_RT4 = 4.22858E-03       # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
+gemAccumFrac_RCRG_HT_1197 = 4.39190E-03   # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
+gemAccumFrac_SCRG_SW780 = 2.68443E-03     # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
+gemAccumFrac_SCRG_KU_19_19 = 4.18843E-03  # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
+gemAccumFrac_RCSG_LB831_BLC = 4.41518E-03 # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
+gemAccumFrac_RCSG_DSH1 = 4.41445E-03      # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine				
 
 
 
@@ -142,7 +142,7 @@ class CispIC50VisualizationSteppable(SteppableBasePy):
     def step(self,mcs):
         self.scalarCLField.clear()
         for cell in self.cellList:
-            if cell.type==2 or cell.type==3 or cell.type==8:
+            if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
                 dictionaryAttrib = CompuCell.getPyAttrib(cell)
                 self.scalarCLField[cell]=dictionaryAttrib[3]
 
@@ -168,45 +168,12 @@ class SetCellDictionaries(SteppableBasePy):
 
             # SAME CLOCK IN ALL CELLS
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361)
-            x = gauss(24,1)
-            y = uniform(0,24) # age of cells initialized into simulation
-            dictionaryAttrib[0:2]=[x,y]
-            print dictionaryAttrib[0],dictionarAttrib[1],dictionaryAttrib[2]
-
-            # # # DIFFERENT CLOCK FOR SELECTED CELL TYPES
-            # # PCancerGFP,RFP clocks
-            # if cell.type==2:
-            #     #mitosis clock --- 24+/-6 hours (Abbas) -- dictionaryAttrib[0:2]=[age_to_divide,current_age]
-            #     dictionaryAttrib = CompuCell.getPyAttrib(cell)
-            #     # x = gauss(25.5,1)
-            #     # y = uniform(0,25.5) # age of cells initialized into simulation
-            #     # dictionaryAttrib[0:2]=[x,y]
-            #     # INITIAL CISPLATIN ACCUMULATED IN CELL
-            #     dictionaryAttrib[3]=0.0
-            #     # INITIAL ANTIBODY ACCUMULATED ON CELL (ADSORBED BY ErbB2)
-            #     # dictionaryAttrib[4]=0.0
-            # elif cell.type==3:
-            #     # INITIAL CISPLATIN ACCUMULATED IN CELL
-            #     dictionaryAttrib[3]=0.0
-            #     # INITIAL ANTIBODY ACCUMULATED ON CELL (ADSORBED BY ErbB2)
-            #     # dictionaryAttrib[4]=0.0
-
-
-
-# SECRETIONSTEPPABLE
-# SET CELL SECRETION
-# OCCURS PRIOR TO DIFFUSION IN MCS (XML OCCURS AFTER)
-# CISPLATIN SOURCES AND SINKS IN EACH TIME STEP:
-   #"SECRETION" BY CELL TYPES VESSELWALL, PCANCERGFP, PCANCERRFP, MEDIUM;
-   # ACCUMULATION BY TUMOR CELLS;
-   # EFFLUX OF ACCUMULATED CISPLATIN? ADD IF NEEDED.
-### SOURCES:
+            # x = gauss(30,1)
+            y = uniform(0,30) # age of cells initialized into simulation
+            cell.dict["Age"]=y
+        for cell in self.cellList:
+            print 'cell.id=',cell.id,' dict=',cell.dict
   # <!-- CISPLATIN -->
-  # <!-- (DIFFUSION COEFFICIENT OF CREATININE (USED AS PROXY FOR CISPLATIN in Morrison, 1986) = 1.9 x 10^- 6 cm^2/s = 0.000114 cm^2/min = 11400 um^2/min = ) -->
-  # <!-- D_{NORMAL TISSUE}  (Swabb 1974 via Thurber 2011)
-  #      = 1.778 x 10^{-4} (300.5)^{-0.75} = 0.000002466246792 cm^2/s = 246.624679177701 um^2/s
-  #      = 4652 (SKOV3.ip1 cell diameter)^2 / (10 min)
-  #      = 1 celldiam^2/(1/465.18914889411 min) = 227911.3489336466 MCS/hour = 55822.6978672932 MCS/2 hours
   # D(VX2 carcinoma for sodium fluorescein, MW376 (Nugent 1984)
   #      = 1207.18273728686 cell diam^2 / 1 min (= 5.64um^2 (voxel edge) / 1/60hr)
   #      = 1 cell diam^2 / 1/1207.183 min (= 5.64um^2 (voxel edge) / 1/1207.183min)
@@ -215,19 +182,18 @@ class SetCellDictionaries(SteppableBasePy):
   #      = 9.4E-15 $\mu$M/cell/min = 1.57E-16 muM/cell/sec = 9.4E-14 $\mu$M/cell/10 min
   #      accumulation per SKOV3 cell, with respect to current concentration (uM)
   #      = (- 1.2e-07*x^{3} + 1.3e-05*x^{2} + 0.00058*x + 0.076)/10/465.189 uM, x = current concentration -->
-  # <!-- ACCUMULATION at 100 micromolar for 50min in SKOV3 
+  # <!-- ACCUMULATION at 100 micromolar for 50min in SKOV3
   #      = 8 +/- 0.8 nmol/mg protein/50 mins: 8 +/- 0.8 nM * 1e-3uM/nM /mg protein * 0.21mg protein/uL * 1uL/10^9um^3 * 179.1 um^3/ SKOV3 cell /50min = 6.02E-12 uM Pt/SKOV3 cell/min = 1.00E-13 uM Pt/SKOV3 cell/s -->
   # <!-- PEAK AVE INTRAPERITONEAL
-  #      (90mg/m^2 IP for 4 hour dwell = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; Howell, 1982): 
+  #      (90mg/m^2 IP for 4 hour dwell = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; Howell, 1982):
   #      40.5mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol = 134.977503749375 muM = 8098.65022496251 (concentration * 60 sec/MCS)-->
   # <!-- PEAK VALUES IV
-  #      (90mg/m^2 IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; 1.6mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol =  5.3324445925679 uM,  
+  #      (90mg/m^2 IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL; 1.6mug/mL*1g/10^6mug*1000mL/L/300.5g/mol cisplatin*10^6umol/mol =  5.3324445925679 uM,
   #      = 319.946675554074 (concentration * 60 sec/MCS) -->
   # <!-- MINIMUM EFFECTIVE CONCENTRATION OF CISPLATIN (BASED ON DNA DAMAGING LEVELS in clear cell ovarian carcinoma, Takatori, 2012)
   #      = 1 mug/mL; 1ug/ml*1000ml/L*1g/10^6ug* 1/300.5g/mol*10^6umol/mol = 3.33 muM-->
   # <!-- MINIMUM EFFECTIVE CONCENTRATION OF CISPLATIN (IN SERUM, clinical trials, lung cancer, Nakano, 1997)
   #      = 0.3micrograms/ml; 0.3ug/ml*1000ml/L*1g/10^6ug* 1/300.05g/mol*10^6umol/mol = 0.999833361106482 muM -->
-  # <!-- IC50 for SKOV3.ip1 cells (Xu, W et al. "Antisense Oligodeoxynucleotides... " IntJGynCanc)  -->
   # <!-- SECRETION = micromolar = umol/
   #      (90mg/m^2IP = peak ave IP 40.5mug/mL; peak ave IV 1.6mug/mL 1.6 1.6mug/mL*1g/10^6mug*1000mL/L/Xg/mol cisplatin*10^6umol/mol 5.3324445925679 uM 319.946675554074 (concentration * 60 sec/MCS) -->
   #      EFFLUX  (Fig.4, Mistry, 1992 ) = 3.58E-04 % accumulated Pt effluxed/ 1/465.189min = 3.58E-06 fraction of accumulated Pt effluxed/ 1/465.189min for D in normal tissue OR 1.38E-06 fraction of accumulated Pt effluxed/ 1/1207.183min for D in tumor tissue
