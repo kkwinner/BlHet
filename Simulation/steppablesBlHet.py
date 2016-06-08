@@ -166,29 +166,30 @@ class SetCellDictionaries(SteppableBasePy):
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
 
-            # # SAME CLOCK IN ALL CELLS
-            # # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361)
-            # x = gauss(24,1)
-            # y = uniform(0,24) # age of cells initialized into simulation
-            # dictionaryAttrib[0:2]=[x,y]
+            # SAME CLOCK IN ALL CELLS
+            # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361)
+            x = gauss(24,1)
+            y = uniform(0,24) # age of cells initialized into simulation
+            dictionaryAttrib[0:2]=[x,y]
+            print dictionaryAttrib[0],dictionarAttrib[1],dictionaryAttrib[2]
 
-            # # DIFFERENT CLOCK FOR SELECTED CELL TYPES
-            # PCancerGFP,RFP clocks
-            if cell.type==2:
-                #mitosis clock --- 24+/-6 hours (Abbas) -- dictionaryAttrib[0:2]=[age_to_divide,current_age]
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                # x = gauss(25.5,1)
-                # y = uniform(0,25.5) # age of cells initialized into simulation
-                # dictionaryAttrib[0:2]=[x,y]
-                # INITIAL CISPLATIN ACCUMULATED IN CELL
-                dictionaryAttrib[3]=0.0
-                # INITIAL ANTIBODY ACCUMULATED ON CELL (ADSORBED BY ErbB2)
-                # dictionaryAttrib[4]=0.0
-            elif cell.type==3:
-                # INITIAL CISPLATIN ACCUMULATED IN CELL
-                dictionaryAttrib[3]=0.0
-                # INITIAL ANTIBODY ACCUMULATED ON CELL (ADSORBED BY ErbB2)
-                # dictionaryAttrib[4]=0.0
+            # # # DIFFERENT CLOCK FOR SELECTED CELL TYPES
+            # # PCancerGFP,RFP clocks
+            # if cell.type==2:
+            #     #mitosis clock --- 24+/-6 hours (Abbas) -- dictionaryAttrib[0:2]=[age_to_divide,current_age]
+            #     dictionaryAttrib = CompuCell.getPyAttrib(cell)
+            #     # x = gauss(25.5,1)
+            #     # y = uniform(0,25.5) # age of cells initialized into simulation
+            #     # dictionaryAttrib[0:2]=[x,y]
+            #     # INITIAL CISPLATIN ACCUMULATED IN CELL
+            #     dictionaryAttrib[3]=0.0
+            #     # INITIAL ANTIBODY ACCUMULATED ON CELL (ADSORBED BY ErbB2)
+            #     # dictionaryAttrib[4]=0.0
+            # elif cell.type==3:
+            #     # INITIAL CISPLATIN ACCUMULATED IN CELL
+            #     dictionaryAttrib[3]=0.0
+            #     # INITIAL ANTIBODY ACCUMULATED ON CELL (ADSORBED BY ErbB2)
+            #     # dictionaryAttrib[4]=0.0
 
 
 
@@ -197,9 +198,8 @@ class SetCellDictionaries(SteppableBasePy):
 # OCCURS PRIOR TO DIFFUSION IN MCS (XML OCCURS AFTER)
 # CISPLATIN SOURCES AND SINKS IN EACH TIME STEP:
    #"SECRETION" BY CELL TYPES VESSELWALL, PCANCERGFP, PCANCERRFP, MEDIUM;
-   # ACCUMULATION BY PCANCERGFP, PCANCERRFP;
-   # EFFLUX OF ACCUMULATED CISPLATIN BY PCANCERGFP, PCANCERRFP.
-   # PCANCERGFP, PCANCERRFP = SKOV3 OVARIAN TUMOR CELLS
+   # ACCUMULATION BY TUMOR CELLS;
+   # EFFLUX OF ACCUMULATED CISPLATIN? ADD IF NEEDED.
 ### SOURCES:
   # <!-- CISPLATIN -->
   # <!-- (DIFFUSION COEFFICIENT OF CREATININE (USED AS PROXY FOR CISPLATIN in Morrison, 1986) = 1.9 x 10^- 6 cm^2/s = 0.000114 cm^2/min = 11400 um^2/min = ) -->
