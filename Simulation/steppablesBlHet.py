@@ -124,6 +124,8 @@ gemAccumFrac_RCSG_LB831_BLC = 4.41518E-03 # (resist cis sens gem)	0.041854289	IC
 gemAccumFrac_RCSG_DSH1 = 4.41445E-03      # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine				
 
 
+## CELL PARAMETERS
+T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 
 
 
@@ -170,10 +172,55 @@ class SetCellDictionaries(SteppableBasePy):
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361)
             # x = gauss(30,1)
             y = uniform(0,30) # age of cells initialized into simulation
-            cell.dict["Age"]=y
+            cell.dict["AgeHrs"]=y
+            cell.dict["HrsSinceDeath"]=0
         for cell in self.cellList:
             print 'cell.id=',cell.id,' dict=',cell.dict
-  # <!-- CISPLATIN -->
+
+
+
+
+# ***************************** ALSO UNCOMMENT CELL DICTIONARY KEYS 1 AND 2 FOR CELL AGE ABOVE
+# VOLUMEPARAMSTEPPABLE
+# SETS CELL TARGET VOLUMES OR COMPRESSIBILITIES
+# VOLUME CONSTRAINTS
+class VolumeParamSteppable(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.inventory=self.simulator.getPotts().getCellInventory()
+        self.cellList=CellList(self.inventory)
+
+    def start(self):
+        print "This function (VolumeParamSteppable) is called at every MCS"
+        self.cellList=CellList(self.inventory)
+        for cell in self.cellList:
+            # CANCER CELLS
+            # if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
+                cell.targetVolume=T24BCCellVol
+                cell.lambdaVolume=10000.0
+
+    def step(self,mcs):
+        for cell in self.cellList:
+            print "This function (VolumeParamSteppable) is called at every MCS"
+            print 'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            # <!-- CISPLATIN -->
   # D(VX2 carcinoma for sodium fluorescein, MW376 (Nugent 1984)
   #      = 1207.18273728686 cell diam^2 / 1 min (= 5.64um^2 (voxel edge) / 1/60hr)
   #      = 1 cell diam^2 / 1/1207.183 min (= 5.64um^2 (voxel edge) / 1/1207.183min)
@@ -592,65 +639,6 @@ class ChangeWithCisplatinSteppable(SteppableBasePy):
             #     if (dictionaryAttrib[3]>= cisplatinIC50):
             #         cell.type=8 #QCancerGFP
 
-
-
-
-# ***************************** CODE TO ADD MITOSIS IN UNFROZEN CELLS (VOL PARAMS ARE OLD); 
-# ***************************** ALSO UNCOMMENT CELL DICTIONARY KEYS 1 AND 2 FOR CELL AGE ABOVE
-# VOLUMEPARAMSTEPPABLE
-# SETS CELL TARGET VOLUMES OR COMPRESSIBILITIES
-class VolumeParamSteppable(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-
-    def start(self):
-        print "This function (VolumeParamSteppable) is called at every MCS"
-        self.cellList=CellList(self.inventory)
-        for cell in self.cellList:
-
-        # VOLUME CONSTRAINTS:
-            # MESOTHELIAL CELLS:
-            # Radius Ave=10um(Human), Height Ave=0.7um (rabbit);
-            # polygonal, will estimate as cylindrical;
-            # V= Pi*h*r^2 = Pi*0.7*10^2= 219um^3
-            # if not restrained to be flat (not using elongation or freezing),
-            #    just use small cuboidal cells = 1x1x1 or = 2x2x2
-            # visceral mesothelial cells
-            if cell.type==1:
-                cell.targetVolume=5
-                cell.lambdaVolume=2.0
-            # CANCER CELLS
-            # proliferative skov3ip cancer cells in wilson lab, nude mouse mesentery:
-            # R = 3.5 --> V = 179.59 --> cube edge = 5.64
-            # (also: SKOV3 in vitro (mouse) = 11um in diameter;
-            # vol=~4/3Pi(11/2)^3 = 696.92))
-            #green PCancer
-            elif cell.type==2:
-                cell.targetVolume=cell.volume #initial target vol from current vol
-                # cell.targetVolume=180
-                cell.lambdaVolume=2000.0 # smaller than endothelial so won't eat cell
-                # print "GFP cell.volume=",cell.volume
-            #red PCancer
-            elif cell.type==3:
-                cell.targetVolume=cell.volume #initial target vol from current vol
-                # cell.targetVolume=180
-                cell.lambdaVolume=2000.0 # smaller than endothelial so won't eat cell
-                # print "RFP cell.volume=",cell.volume
-            # necrotic cancer cells
-            elif cell.type==10:
-                cell.targetVolume=0 # cell dissolves
-                cell.lambdaVolume=2.0 # cell dissolves slowly?
-            # ECM
-            # average length of collagen fiber = 110, x 1um diameter = 110um^3
-            elif cell.type==6:
-                cell.targetVolume=cell.volume # fibers random sizes; keep init size
-                cell.lambdaVolume=500.0
-            # SMOOTH MUSCLE OF SMALL INTESTINE
-            elif cell.type==7:
-                cell.targetVolume=cell.volume # keep init size (why?)
-                cell.lambdaVolume=2000000.0
 
 
 
