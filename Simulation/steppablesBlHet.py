@@ -127,7 +127,7 @@ gemAccumFrac_RCSG_DSH1 = 4.41445E-03      # (resist cis sens gem)	0.096498675	IC
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
-
+phagocytosisEndTime = 24 # dead cells removed at 24 hours
 
 
 # PRINT SIMULATION START TIME
@@ -169,10 +169,15 @@ class SetCellDictionaries(SteppableBasePy):
             # SAME CLOCK IN ALL CELLS
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361)
             # x = gauss(30,1)
-            y = uniform(0,30) # age of cells initialized into simulation
-            cell.dict["AgeHrs"]=y
-            cell.dict["HrsSinceDeath"]=0
-        # for cell in self.cellList:
+            # y = uniform(0,30) # age of cells initialized into simulation
+            # cell.dict["AgeHrs"]=y
+            # cell.dict["HrsSinceDeath"]=0
+
+            # test non-dividing and dead cells
+            cell.dict["AgeHrs"]=29.9
+            cell.dict["HrsSinceDeath"]=23.9
+
+            # for cell in self.cellList:
         #     print 'cell.id=',cell.id,' dict=',cell.dict
 
 
@@ -192,6 +197,28 @@ class IncrementClocks(SteppableBasePy):
         for cell in self.cellList:
             cell.dict["AgeHrs"]+= MCSFractionOfHour
             if cell.type==3:
+                cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
+        for cell in self.cellList:
+            if cell.id > 125:
+                print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict
+
+
+
+
+# *****************************
+# INCREMENT AGE AND TIME SINCE DEATH
+class KillCell(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.inventory=self.simulator.getPotts().getCellInventory()
+        self.cellList=CellList(self.inventory)
+
+    def step(self,mcs):
+        print "This function (KillCell) is called at every MCS"
+        self.cellList=CellList(self.inventory)
+        for cell in self.cellList:
+            cell.dict["AgeHrs"]+= MCSFractionOfHour
+            if cell.type==12 or xcell.type==13:  # if cells are IC50Cis or IC50Gem
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
         for cell in self.cellList:
             if cell.id > 125:
@@ -245,11 +272,15 @@ class MitosisSteppable(MitosisSteppableBase):
                 print 'cells_to_divide',cells_to_divide
                 
         for cell in cells_to_divide:
-            # to change mitosis mode leave one of the below lines uncommented
-            self.divideCellRandomOrientation(cell)
-            # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
-            # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
-            # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
+            if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
+                if uniform(0,1)<=0.5:
+                    cell.type==3 # cell dies with 50% chance
+            elif cell.type!=3 and cell.type!=1 and cell.type!=2: # all cell types divide except for Vessel, LungNormal, Dead, IC50Cis, and IC50Gem
+                # to change mitosis mode leave one of the below lines uncommented
+                self.divideCellRandomOrientation(cell)
+                # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+                # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
+                # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
         self.parentCell.targetVolume /= 1.0 # reduce parent target volume by increasing; = ratio to parent vol
@@ -271,8 +302,21 @@ class MitosisSteppable(MitosisSteppableBase):
         
         
 
+class RemoveDeadCells(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+    def step(self,mcs):
+            for cell in self.cellList:
+                if cell.type==3:
+                    if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
+                        print 'removing dead cell.id', cell.id
+                        cell.targetVolume=0
+                        cell.lambdaVolume=100
+                    
 
-            
+
+
+"""
 # *****************************
 # MITOSISDATA
 # DEFINE CELL TYPES FOR MITOSIS
@@ -287,7 +331,7 @@ class MitosisData:
       return "Mitosis time="+str(self.MCS)+"parentId="+str(self.parentId)+"offspringId="+str(self.offspringId)
 
 
-"""
+
 # *****************************
 # MITOSISSTEPPABLE
 # CONDITION-DEPENDENT MITOSIS:

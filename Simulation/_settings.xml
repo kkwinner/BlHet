@@ -23,7 +23,7 @@
       <e Name="ScreenUpdateFrequency" Type="int">1</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">0</e>
+      <e Name="TabIndex" Type="int">1</e>
    </Settings>
    <Settings Type="float">
       <e Name="ArrowLength" Type="float">1.0</e>
@@ -98,17 +98,17 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">0.0848582670757,84.8582670757</e>
+            <e Name="cameraClippingRange" Type="floatlist">0.0499587640992,49.9587640992</e>
             <e Name="cameraFocalPoint" Type="floatlist">16.5,16.5,16.5</e>
-            <e Name="cameraPosition" Type="floatlist">25.8884622877,28.5313433751,29.2092305104</e>
-            <e Name="cameraViewUp" Type="floatlist">-0.252649951451,0.788898674966,-0.560184686215</e>
+            <e Name="cameraPosition" Type="floatlist">16.5056370045,16.5069583201,16.5075784014</e>
+            <e Name="cameraViewUp" Type="floatlist">-0.204243967709,0.79202992168,-0.575302533297</e>
             <e Name="is3D" Type="bool">True</e>
             <e Name="planeName" Type="str"/>
             <e Name="planePosition" Type="int">-1</e>
             <e Name="sceneName" Type="str">Cell_Field</e>
             <e Name="sceneType" Type="str">CellField</e>
             <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">400,396</e>
+            <e Name="winSize" Type="size">1023,396</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
       </e>

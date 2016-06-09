@@ -105,6 +105,10 @@ from steppablesBlHet import MitosisSteppable
 mitosisSteppable=MitosisSteppable(sim)
 steppableRegistry.registerSteppable(mitosisSteppable)
 
+from steppablesBlHet import RemoveDeadCells
+removeDeadCells=RemoveDeadCells(sim)
+steppableRegistry.registerSteppable(removeDeadCells)
+
 ################################# OUTPUTS
 """
 # from steppablesBlHet import PrintAllCells
