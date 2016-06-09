@@ -126,7 +126,7 @@ gemAccumFrac_RCSG_DSH1 = 4.41445E-03      # (resist cis sens gem)	0.096498675	IC
 
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
-
+MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
 
 
 
@@ -154,9 +154,7 @@ class CispIC50VisualizationSteppable(SteppableBasePy):
 # SETCELLCLOCKS
 # SETS UNIQUE INITIAL AGE FROM UNIFORM DISTRIBUTION
 # STARTS INTERNAL CLOCK IN CELL
-# SETS DIVISION RATE FOR CELL, SELECTED FROM GAUSSIAN DISTRIBUTION
-# SETS INITIAL CISPLATIN CONCENTRATION
-# SETS INITIAL PERTUZUMAB CONCENTRATION
+# SETS DIVISION RATE FROM GAUSSIAN DISTRIBUTION
 class SetCellDictionaries(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
@@ -174,6 +172,27 @@ class SetCellDictionaries(SteppableBasePy):
             y = uniform(0,30) # age of cells initialized into simulation
             cell.dict["AgeHrs"]=y
             cell.dict["HrsSinceDeath"]=0
+        # for cell in self.cellList:
+        #     print 'cell.id=',cell.id,' dict=',cell.dict
+
+
+
+
+# *****************************
+# INCREMENT AGE AND TIME SINCE DEATH
+class IncrementClocks(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.inventory=self.simulator.getPotts().getCellInventory()
+        self.cellList=CellList(self.inventory)
+
+    def step(self,mcs):
+        print "This function (IncrementClocks) is called at every MCS"
+        self.cellList=CellList(self.inventory)
+        for cell in self.cellList:
+            cell.dict["AgeHrs"]+= MCSFractionOfHour
+            if cell.type==3:
+                cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
         for cell in self.cellList:
             print 'cell.id=',cell.id,' dict=',cell.dict
 
@@ -197,12 +216,238 @@ class VolumeParamSteppable(SteppableBasePy):
             # CANCER CELLS
             # if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
                 cell.targetVolume=T24BCCellVol
-                cell.lambdaVolume=10000.0
+                cell.lambdaVolume=100.0
+                print 'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
 
+    # def step(self,mcs):
+    #     for cell in self.cellList:
+    #         print "MCS",mcs,'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
+
+
+
+
+# *****************************
+# MITOSIS
+class MitosisSteppable(MitosisSteppableBase):
+    def __init__(self,_simulator,_frequency=1):
+        MitosisSteppableBase.__init__(self,_simulator, _frequency)
+    
     def step(self,mcs):
+        print "INSIDE MITOSIS STEPPABLE"
+        cells_to_divide=[]
         for cell in self.cellList:
-            print "MCS",mcs,'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
 
+            # print 'cell.id=',cell.id,' dict=',cell.dict
+
+            if cell.dict["AgeHrs"]>30:
+                cells_to_divide.append(cell)
+                print 'cells_to_divide',cells_to_divide
+                
+        for cell in cells_to_divide:
+            # to change mitosis mode leave one of the below lines uncommented
+            self.divideCellRandomOrientation(cell)
+            # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+            # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
+            # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
+
+    def updateAttributes(self):
+        self.parentCell.targetVolume /= 1.0 # reduce parent target volume by increasing; = ratio to parent vol
+        self.cloneParent2Child()            
+        
+        # for more control of what gets copied from parent to child use cloneAttributes function
+        # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
+
+        self.childCell.type=self.parentCell.type
+        self.childCell.dict["AgeHrs"]=0
+        self.childCell.dict["HrsSinceDeath"]=0
+        # for cell in self.cellList:
+        print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict        
+
+        # if self.parentCell.type==1:
+        #     self.childCell.type=2
+        # else:
+        #     self.childCell.type=1
+        
+        
+
+
+            
+# *****************************
+# MITOSISDATA
+# DEFINE CELL TYPES FOR MITOSIS
+class MitosisData:
+   def __init__(self,_MCS,_parentId,_parentType,_offspringId,_offspringType):
+      self.MCS=_MCS
+      self.parentId=_parentId
+      self.parentType=_parentType
+      self.offspringId=_offspringId
+      self.offspringType=_offspringType
+   def __str__(self):
+      return "Mitosis time="+str(self.MCS)+"parentId="+str(self.parentId)+"offspringId="+str(self.offspringId)
+
+
+"""
+# *****************************
+# MITOSISSTEPPABLE
+# CONDITION-DEPENDENT MITOSIS:
+#   CELL AGE = DIVISION AGE,
+#   CELL VOLUME = TARGET VOLUME = DOUBLE ORIGINAL VOLUME
+class MitosisSteppable(MitosisSteppableBase):
+    def __init__(self,_simulator,_frequency=1):
+        MitosisSteppableBase.__init__(self,_simulator, _frequency)
+        # self.cellList=CellList(self.inventory)
+    def step(self,mcs):
+        print "INSIDE MITOSIS STEPPABLE"
+        cells_to_divide=[]
+        # print "cells_to_divide =",cells_to_divide
+        for cell in self.cellList:
+#            dictionaryAttrib = CompuCell.getPyAttrib(cell)
+            if cell.type==2:
+                if dictionaryAttrib[1]>dictionaryAttrib[0] and cell.volume>=cell.targetVolume:
+                #     print "high enough cisplatin to mark for division apoptosis?",dictionaryAttrib
+                #     if dictionaryAttrib[2]>0 and random()<(dictionaryAttrib[2]/(2*cisplatinEC50)):
+                #         print "cisplatin high enough for apoptosis"
+                #         # turn cell necrotic at division time w/prob =%>EC50 if
+                #         # cisplatin conc has been >=EC50 at any time
+                #         cell.type==10
+                #     else:
+                        print "CANCGFP is old enough #############"
+                        cells_to_divide.append(cell)
+                        # print cells_to_divide
+            if cell.type==3:
+                if dictionaryAttrib[1]>dictionaryAttrib[0] and cell.volume>=cell.targetVolume:
+                    # # print "DIVIDING CANCER CELL ATTRIBUTES (for programming):"
+                    # # print dir(cell)
+                    # if (dictionaryAttrib[2]>0) and random()<(dictionaryAttrib[2]/(2*cisplatinEC50)):
+                    #     # turn cell necrotic at division time w/prob =%>EC50 if
+                    #     # cisplatin conc has been >=EC50 at any time
+                    #     cell.type==10
+                    # else:
+                        print "CANCRFP is old enough #############"
+                        cells_to_divide.append(cell)
+                        # print cells_to_divide
+        print "cells_to_divide =",cells_to_divide
+        for cell in cells_to_divide:
+            # TO CHANGE MITOSIS MODE LEAVE ONE OF THE BELOW LINES UNCOMMENTED
+            # self.divideCellRandomOrientation(cell)
+            # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+            # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
+            # print "CELL TO DIVIDE: ID",cell.id,"CELL TYPE",cell.type,"CELL TARGET VOLUME",cell.targetVolume,"CELL VOLUME",cell.volume
+            self.divideCellAlongMinorAxis(cell)                               # this is a valid option
+            print "CELL HAS DIVIDED: ID",cell.id,"CELL TYPE",cell.type,"TARGET VOLUME",cell.targetVolume,"VOLUME",cell.volume
+
+    def updateAttributes(self):
+        parentCell=self.mitosisSteppable.parentCell
+        childCell=self.mitosisSteppable.childCell
+
+        # # UPDATES FOR ALL CELL TYPES THAT HAVE DIVIDED
+        # dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
+        # # xc = gauss(0.22,0.03)
+        # # xc = gauss(2.2,0.3)
+        # xc = gauss(22,3)
+        # dictionaryAttribParentCell[0:2]=[xc,0]
+        # dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
+        # # xp = gauss(0.22,0.03)
+        # # xp = gauss(2.2,0.3)
+        # xp = gauss(22,3)
+        # dictionaryAttribChildCell[0:2]=[xp,0]
+        # print "dictionaryAttrib[0:2]", dictionaryAttribChildCell[0:2]
+        # print "PCancerGFP AGE *****",dictionaryAttribChildCell[1]
+        # # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
+        # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
+        # childCell.targetVolume=parentCell.targetVolume/2
+        # # childCell.targetVolume=parentCell.targetVolume
+        # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
+        # parentCell.targetVolume=childCell.targetVolume
+        # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
+        # childCell.lambdaVolume=parentCell.lambdaVolume
+        # if parentcell.type==2:
+        #     childCell.type=2
+        # elif parentcell.type==3:
+        #     childCell.type=3
+        # elif parentcell.type==11:
+        #     childCell.type=11
+
+        # UPDATES FOR SPECIFIC CELL TYPES
+        # for cell in self.cellList:
+            # parentCell=self.mitosisSteppable.parentCell
+            # childCell=self.mitosisSteppable.childCell
+        if parentCell.type==2:
+            # print "PARENT CELL ID",parentCell.id,"PARENT CELL TYPE",parentCell.type,"PARENT CELL TARGET VOLUME",parentCell.targetVolume,"PARENT CELL VOLUME",parentCell.volume
+            # parentCell=self.mitosisSteppable.parentCell
+            # childCell=self.mitosisSteppable.childCell
+            dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
+            # xc = gauss(0.22,0.03)
+            xc = gauss(25.5,1)
+            dictionaryAttribParentCell[0:2]=[xc,0]
+            print "CANCER PARENT MITOSIS TIME IS",dictionaryAttribParentCell[0]
+            dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
+            # xp = gauss(0.22,0.03)
+            xp = gauss(25.5,1)
+            dictionaryAttribChildCell[0:2]=[xp,0]
+            print "CANCER CHILD MITOSIS TIME IS",dictionaryAttribChildCell[0]
+            dictionaryAttribChildCell.append(0.0) #initialize 0 concentration cisplatin in element 2 of dictionary
+            # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
+            # print "OLD PARENT TARGET VOLUME",parentCell.targetVolume,"INIT CHILD TARGET VOLUME",childCell.targetVolume
+            # childCell.targetVolume=parentCell.targetVolume/2
+            childCell.targetVolume=parentCell.volume
+            # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
+            parentCell.targetVolume=childCell.targetVolume
+            print "NEW PARENT TARGET VOLUME",parentCell.targetVolume,"NEW CHILD TARGET VOLUME",childCell.targetVolume
+            childCell.lambdaVolume=parentCell.lambdaVolume
+        elif parentCell.type==3:
+            # print "PARENT CELL ID",parentCell.id,"PARENT CELL TYPE",parentCell.type,"PARENT CELL TARGET VOLUME",parentCell.targetVolume,"PARENT CELL VOLUME",parentCell.volume
+            # parentCell=self.mitosisSteppable.parentCell
+            # childCell=self.mitosisSteppable.childCell
+            dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
+            # xc = gauss(0.22,0.03)
+            xc = gauss(25.5,1)
+            dictionaryAttribParentCell[0:2]=[xc,0]
+            print "CANCER PARENT MITOSIS TIME IS",dictionaryAttribParentCell[0]
+            dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
+            # xp = gauss(0.22,0.03)
+            xp = gauss(25.5,1)
+            dictionaryAttribChildCell[0:2]=[xp,0]
+            print "CANCER CHILD MITOSIS TIME IS",dictionaryAttribChildCell[0]
+            dictionaryAttribChildCell.append(0.0) #initialize 0 concentration cisplatin in element 2 of dictionary
+            # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
+            # print "OLD PARENT TARGET VOLUME",parentCell.targetVolume,"INIT CHILD TARGET VOLUME",childCell.targetVolume
+            # childCell.targetVolume=parentCell.targetVolume/2
+            childCell.targetVolume=parentCell.volume
+            # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
+            parentCell.targetVolume=childCell.targetVolume
+            print "NEW PARENT TARGET VOLUME",parentCell.targetVolume,"NEW CHILD TARGET VOLUME",childCell.targetVolume
+            childCell.lambdaVolume=parentCell.lambdaVolume
+            # childCell.type=11
+            # childCell.type=3
+            # elif cell.type==2:
+            #     print "CELL ID",cell.id,"CELL TYPE",cell.type,"CELL TARGET VOLUME",cell.targetVolume,"CELL VOLUME",cell.volume
+            #     # parentCell=self.mitosisSteppable.parentCell
+            #     # childCell=self.mitosisSteppable.childCell
+            #     dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
+            #     xc = gauss(0.22,0.03)
+            #     # xc = gauss(22,3)
+            #     dictionaryAttribParentCell[0:2]=[xc,0]
+            #     dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
+            #     xp = gauss(0.22,0.03)
+            #     # xp = gauss(22,3)
+            #     dictionaryAttribChildCell[0:2]=[xp,0]
+            #     # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
+            #     print "childCell.targetVolume=",childCell.targetVolume
+            #     print "parentCell.targetVolume=",parentCell.targetVolume
+            #     childCell.targetVolume=parentCell.targetVolume/2
+            #     # childCell.targetVolume=parentCell.targetVolume
+            #     print "childCell.targetVolume=",childCell.targetVolume
+            #     parentCell.targetVolume=childCell.targetVolume
+            #     print "parentCell.targetVolume=",parentCell.targetVolume
+            #     childCell.lambdaVolume=parentCell.lambdaVolume        # dictionaryAttrib[1]=0
+                 # childCell.type=3
+
+        if parentCell.type==2:
+            childCell.type=2
+        elif parentCell.type==3:
+            childCell.type=3
+"""
 
 
 
@@ -550,7 +795,7 @@ class DiffusionSolverFESteeringCisplatinIPplusIV(SteppableBasePy):
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall']))
             IVxml=IVAll            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
-
+ 
             #SET IP CONCENTRATION = IP + IPpostIV
             IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium']))
             IPpostIVxml=IPAll
@@ -637,185 +882,6 @@ class ChangeWithCisplatinSteppable(SteppableBasePy):
             # if cell.type==3:  #red proliferating cancer cell
             #     if (dictionaryAttrib[3]>= cisplatinIC50):
             #         cell.type=8 #QCancerGFP
-
-
-
-
-# *****************************
-# MITOSISDATA
-# DEFINE CELL TYPES FOR MITOSIS
-class MitosisData:
-   def __init__(self,_MCS,_parentId,_parentType,_offspringId,_offspringType):
-      self.MCS=_MCS
-      self.parentId=_parentId
-      self.parentType=_parentType
-      self.offspringId=_offspringId
-      self.offspringType=_offspringType
-   def __str__(self):
-      return "Mitosis time="+str(self.MCS)+"parentId="+str(self.parentId)+"offspringId="+str(self.offspringId)
-
-
-
-# *****************************
-# MITOSISSTEPPABLE
-# CONDITION-DEPENDENT MITOSIS:
-#   CELL AGE = DIVISION AGE,
-#   CELL VOLUME = TARGET VOLUME = DOUBLE ORIGINAL VOLUME
-class MitosisSteppable(MitosisSteppableBase):
-    def __init__(self,_simulator,_frequency=1):
-        MitosisSteppableBase.__init__(self,_simulator, _frequency)
-        # self.cellList=CellList(self.inventory)
-    def step(self,mcs):
-        print "INSIDE MITOSIS STEPPABLE"
-        cells_to_divide=[]
-        # print "cells_to_divide =",cells_to_divide
-        for cell in self.cellList:
-#            dictionaryAttrib = CompuCell.getPyAttrib(cell)
-            if cell.type==2:
-                if dictionaryAttrib[1]>dictionaryAttrib[0] and cell.volume>=cell.targetVolume:
-                #     print "high enough cisplatin to mark for division apoptosis?",dictionaryAttrib
-                #     if dictionaryAttrib[2]>0 and random()<(dictionaryAttrib[2]/(2*cisplatinEC50)):
-                #         print "cisplatin high enough for apoptosis"
-                #         # turn cell necrotic at division time w/prob =%>EC50 if
-                #         # cisplatin conc has been >=EC50 at any time
-                #         cell.type==10
-                #     else:
-                        print "CANCGFP is old enough #############"
-                        cells_to_divide.append(cell)
-                        # print cells_to_divide
-            if cell.type==3:
-                if dictionaryAttrib[1]>dictionaryAttrib[0] and cell.volume>=cell.targetVolume:
-                    # # print "DIVIDING CANCER CELL ATTRIBUTES (for programming):"
-                    # # print dir(cell)
-                    # if (dictionaryAttrib[2]>0) and random()<(dictionaryAttrib[2]/(2*cisplatinEC50)):
-                    #     # turn cell necrotic at division time w/prob =%>EC50 if
-                    #     # cisplatin conc has been >=EC50 at any time
-                    #     cell.type==10
-                    # else:
-                        print "CANCRFP is old enough #############"
-                        cells_to_divide.append(cell)
-                        # print cells_to_divide
-        print "cells_to_divide =",cells_to_divide
-        for cell in cells_to_divide:
-            # TO CHANGE MITOSIS MODE LEAVE ONE OF THE BELOW LINES UNCOMMENTED
-            # self.divideCellRandomOrientation(cell)
-            # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
-            # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
-            # print "CELL TO DIVIDE: ID",cell.id,"CELL TYPE",cell.type,"CELL TARGET VOLUME",cell.targetVolume,"CELL VOLUME",cell.volume
-            self.divideCellAlongMinorAxis(cell)                               # this is a valid option
-            print "CELL HAS DIVIDED: ID",cell.id,"CELL TYPE",cell.type,"TARGET VOLUME",cell.targetVolume,"VOLUME",cell.volume
-
-    def updateAttributes(self):
-        parentCell=self.mitosisSteppable.parentCell
-        childCell=self.mitosisSteppable.childCell
-
-        # # UPDATES FOR ALL CELL TYPES THAT HAVE DIVIDED
-        # dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
-        # # xc = gauss(0.22,0.03)
-        # # xc = gauss(2.2,0.3)
-        # xc = gauss(22,3)
-        # dictionaryAttribParentCell[0:2]=[xc,0]
-        # dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
-        # # xp = gauss(0.22,0.03)
-        # # xp = gauss(2.2,0.3)
-        # xp = gauss(22,3)
-        # dictionaryAttribChildCell[0:2]=[xp,0]
-        # print "dictionaryAttrib[0:2]", dictionaryAttribChildCell[0:2]
-        # print "PCancerGFP AGE *****",dictionaryAttribChildCell[1]
-        # # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
-        # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
-        # childCell.targetVolume=parentCell.targetVolume/2
-        # # childCell.targetVolume=parentCell.targetVolume
-        # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
-        # parentCell.targetVolume=childCell.targetVolume
-        # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
-        # childCell.lambdaVolume=parentCell.lambdaVolume
-        # if parentcell.type==2:
-        #     childCell.type=2
-        # elif parentcell.type==3:
-        #     childCell.type=3
-        # elif parentcell.type==11:
-        #     childCell.type=11
-
-        # UPDATES FOR SPECIFIC CELL TYPES
-        # for cell in self.cellList:
-            # parentCell=self.mitosisSteppable.parentCell
-            # childCell=self.mitosisSteppable.childCell
-        if parentCell.type==2:
-            # print "PARENT CELL ID",parentCell.id,"PARENT CELL TYPE",parentCell.type,"PARENT CELL TARGET VOLUME",parentCell.targetVolume,"PARENT CELL VOLUME",parentCell.volume
-            # parentCell=self.mitosisSteppable.parentCell
-            # childCell=self.mitosisSteppable.childCell
-            dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
-            # xc = gauss(0.22,0.03)
-            xc = gauss(25.5,1)
-            dictionaryAttribParentCell[0:2]=[xc,0]
-            print "CANCER PARENT MITOSIS TIME IS",dictionaryAttribParentCell[0]
-            dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
-            # xp = gauss(0.22,0.03)
-            xp = gauss(25.5,1)
-            dictionaryAttribChildCell[0:2]=[xp,0]
-            print "CANCER CHILD MITOSIS TIME IS",dictionaryAttribChildCell[0]
-            dictionaryAttribChildCell.append(0.0) #initialize 0 concentration cisplatin in element 2 of dictionary
-            # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
-            # print "OLD PARENT TARGET VOLUME",parentCell.targetVolume,"INIT CHILD TARGET VOLUME",childCell.targetVolume
-            # childCell.targetVolume=parentCell.targetVolume/2
-            childCell.targetVolume=parentCell.volume
-            # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
-            parentCell.targetVolume=childCell.targetVolume
-            print "NEW PARENT TARGET VOLUME",parentCell.targetVolume,"NEW CHILD TARGET VOLUME",childCell.targetVolume
-            childCell.lambdaVolume=parentCell.lambdaVolume
-        elif parentCell.type==3:
-            # print "PARENT CELL ID",parentCell.id,"PARENT CELL TYPE",parentCell.type,"PARENT CELL TARGET VOLUME",parentCell.targetVolume,"PARENT CELL VOLUME",parentCell.volume
-            # parentCell=self.mitosisSteppable.parentCell
-            # childCell=self.mitosisSteppable.childCell
-            dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
-            # xc = gauss(0.22,0.03)
-            xc = gauss(25.5,1)
-            dictionaryAttribParentCell[0:2]=[xc,0]
-            print "CANCER PARENT MITOSIS TIME IS",dictionaryAttribParentCell[0]
-            dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
-            # xp = gauss(0.22,0.03)
-            xp = gauss(25.5,1)
-            dictionaryAttribChildCell[0:2]=[xp,0]
-            print "CANCER CHILD MITOSIS TIME IS",dictionaryAttribChildCell[0]
-            dictionaryAttribChildCell.append(0.0) #initialize 0 concentration cisplatin in element 2 of dictionary
-            # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
-            # print "OLD PARENT TARGET VOLUME",parentCell.targetVolume,"INIT CHILD TARGET VOLUME",childCell.targetVolume
-            # childCell.targetVolume=parentCell.targetVolume/2
-            childCell.targetVolume=parentCell.volume
-            # print "PARENT TARGET VOLUME",parentCell.targetVolume,"CHILD TARGET VOLUME",childCell.targetVolume
-            parentCell.targetVolume=childCell.targetVolume
-            print "NEW PARENT TARGET VOLUME",parentCell.targetVolume,"NEW CHILD TARGET VOLUME",childCell.targetVolume
-            childCell.lambdaVolume=parentCell.lambdaVolume
-            # childCell.type=11
-            # childCell.type=3
-            # elif cell.type==2:
-            #     print "CELL ID",cell.id,"CELL TYPE",cell.type,"CELL TARGET VOLUME",cell.targetVolume,"CELL VOLUME",cell.volume
-            #     # parentCell=self.mitosisSteppable.parentCell
-            #     # childCell=self.mitosisSteppable.childCell
-            #     dictionaryAttribParentCell = CompuCell.getPyAttrib(parentCell)
-            #     xc = gauss(0.22,0.03)
-            #     # xc = gauss(22,3)
-            #     dictionaryAttribParentCell[0:2]=[xc,0]
-            #     dictionaryAttribChildCell = CompuCell.getPyAttrib(childCell)
-            #     xp = gauss(0.22,0.03)
-            #     # xp = gauss(22,3)
-            #     dictionaryAttribChildCell[0:2]=[xp,0]
-            #     # reset target volumes of child and parent to original vol. (cell growth increments set to make cells approx. 2xtargetvol @ division time 24 hrs.)
-            #     print "childCell.targetVolume=",childCell.targetVolume
-            #     print "parentCell.targetVolume=",parentCell.targetVolume
-            #     childCell.targetVolume=parentCell.targetVolume/2
-            #     # childCell.targetVolume=parentCell.targetVolume
-            #     print "childCell.targetVolume=",childCell.targetVolume
-            #     parentCell.targetVolume=childCell.targetVolume
-            #     print "parentCell.targetVolume=",parentCell.targetVolume
-            #     childCell.lambdaVolume=parentCell.lambdaVolume        # dictionaryAttrib[1]=0
-                 # childCell.type=3
-
-        if parentCell.type==2:
-            childCell.type=2
-        elif parentCell.type==3:
-            childCell.type=3
 
 
 

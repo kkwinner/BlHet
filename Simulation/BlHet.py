@@ -58,14 +58,6 @@ steppableRegistry=SteppableRegistry()
 # cispIC50VisualizationSteppable=CispIC50VisualizationSteppable (sim)
 # steppableRegistry.registerSteppable(cispIC50VisualizationSteppable)
 
-from steppablesBlHet import SetCellDictionaries
-setCellDictionaries=SetCellDictionaries(sim)
-steppableRegistry.registerSteppable(setCellDictionaries)
-
-from steppablesBlHet import VolumeParamSteppable
-volumeParamSteppable=VolumeParamSteppable(sim)
-steppableRegistry.registerSteppable(volumeParamSteppable)
-
 """
 from steppablesBlHet import DiffusionSolverFESteeringCisplatinIV
 diffusionSolverFESteeringCisplatinIV=DiffusionSolverFESteeringCisplatinIV(sim)
@@ -90,21 +82,31 @@ e# diffusionSolverFESteeringCisplatinIPplusIV=DiffusionSolverFESteeringCisplatin
 from steppablesBlHet import ChangeWithCisplatinSteppable
 changeWithCisplatinSteppable=ChangeWithCisplatinSteppable(sim)
 steppableRegistry.registerSteppable(changeWithCisplatinSteppable)
-
+"""
 
 ################################# CELL DYNAMICS
+from steppablesBlHet import SetCellDictionaries
+setCellDictionaries=SetCellDictionaries(sim)
+steppableRegistry.registerSteppable(setCellDictionaries)
+
+from steppablesBlHet import IncrementClocks
+incrementClocks=IncrementClocks(sim)
+steppableRegistry.registerSteppable(incrementClocks)
+
+from steppablesBlHet import VolumeParamSteppable
+volumeParamSteppable=VolumeParamSteppable(sim)
+steppableRegistry.registerSteppable(volumeParamSteppable)
 
 # from steppablesBlHet import VolumeConstraintSteppable
 # volumeConstraint=VolumeConstraintSteppable(sim)
 # steppableRegistry.registerSteppable(volumeConstraint)
 
-# from steppablesBlHet import MitosisSteppable
-# mitosisSteppable=MitosisSteppable(sim)
-# steppableRegistry.registerSteppable(mitosisSteppable)
-
+from steppablesBlHet import MitosisSteppable
+mitosisSteppable=MitosisSteppable(sim)
+steppableRegistry.registerSteppable(mitosisSteppable)
 
 ################################# OUTPUTS
-
+"""
 # from steppablesBlHet import PrintAllCells
 # printAllCells=PrintAllCells(sim)
 # steppableRegistry.registerSteppable(printAllCells)

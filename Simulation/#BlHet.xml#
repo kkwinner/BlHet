@@ -193,7 +193,7 @@ IC50_RCSG_DSH1
     <Energy Type1="SCSG_J82" Type2="Medium">10</Energy>
     <Energy Type1="RCRG_RT4" Type2="Medium">10</Energy>
     <Energy Type1="RCRG_HT_1197" Type2="Medium">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="Medium">10</Energy>
+    <Energy Type1="SCRG_SW780" Type2="Medium">1</Energy>
     <Energy Type1="SCRG_KU_19_19" Type2="Medium">10</Energy>
     <Energy Type1="RCSG_LB831_BLC" Type2="Medium">10</Energy>
     <Energy Type1="RCSG_DSH1" Type2="Medium">10</Energy>
@@ -324,13 +324,8 @@ IC50_RCSG_DSH1
 
 
   
-   <!-- MAKE CELL VOLUME ATTRIBUTES ACCESSIBLE FROM PYTHON -->
-   <Plugin Name="Volume"/>
-
-
-
-
-   <!-- CHEMICAL FIELDS THAT WILL BE ACCESSED FROM PYTHON -->
+   <!-- make Python volume plugin work -->
+<Plugin Name="Volume"/>  <!-- CHEMICAL FIELDS THAT WILL BE ACCESSED FROM PYTHON -->
   <Plugin Name="Secretion">
       
       <!-- Specification of secretion properties of select cell types. -->
@@ -578,12 +573,12 @@ IC50_RCSG_DSH1
      <Region>
   <!-- 10 x 10 x 10 TEST -->
       <BoxMin x="0" y="0" z="0"/>
-      <BoxMax x="5" y="5" z="5"/>
+      <BoxMax x="2" y="2" z="2"/>
       <Gap>0</Gap>
       <Width>1</Width>
       <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
-      <!-- <Types>SCRG_SW780</Types> -->
-      <Types>Vessel,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1,LungNormal,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1</Types>
+      <Types>SCRG_SW780</Types>
+      <!-- <Types>Vessel,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1,LungNormal,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1</Types> -->
      </Region>
   </Steppable>
 
