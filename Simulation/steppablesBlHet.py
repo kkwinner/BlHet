@@ -167,15 +167,15 @@ class SetCellDictionaries(SteppableBasePy):
         for cell in self.cellList:
 
             # SAME CLOCK IN ALL CELLS
-            # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361)
+            # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361?)
             # x = gauss(30,1)
-            # y = uniform(0,30) # age of cells initialized into simulation
-            # cell.dict["AgeHrs"]=y
-            # cell.dict["HrsSinceDeath"]=0
+            y = uniform(0,30) # age of cells initialized into simulation
+            cell.dict["AgeHrs"]=y
+            cell.dict["HrsSinceDeath"]=0
 
-            # test non-dividing and dead cells
-            cell.dict["AgeHrs"]=29.9
-            cell.dict["HrsSinceDeath"]=23.9
+            # # test non-dividing and dead cells
+            # cell.dict["AgeHrs"]=29.9
+            # cell.dict["HrsSinceDeath"]=23.9
 
             # for cell in self.cellList:
         #     print 'cell.id=',cell.id,' dict=',cell.dict
@@ -191,8 +191,10 @@ class IncrementClocks(SteppableBasePy):
         self.inventory=self.simulator.getPotts().getCellInventory()
         self.cellList=CellList(self.inventory)
 
-    def step(self,mcs):
+    def start(self):
         print "This function (IncrementClocks) is called at every MCS"
+
+    def step(self,mcs):
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
             cell.dict["AgeHrs"]+= MCSFractionOfHour
@@ -212,6 +214,9 @@ class KillCell(SteppableBasePy):
         SteppableBasePy.__init__(self,_simulator,_frequency)
         self.inventory=self.simulator.getPotts().getCellInventory()
         self.cellList=CellList(self.inventory)
+
+    def start(self):
+        print "This function (KillCell) is called at every MCS"
 
     def step(self,mcs):
         print "This function (KillCell) is called at every MCS"
@@ -259,6 +264,9 @@ class VolumeParamSteppable(SteppableBasePy):
 class MitosisSteppable(MitosisSteppableBase):
     def __init__(self,_simulator,_frequency=1):
         MitosisSteppableBase.__init__(self,_simulator, _frequency)
+
+    def start(self):
+        print "This function (MitosisSteppable) is called at every MCS"
     
     def step(self,mcs):
         print "INSIDE MITOSIS STEPPABLE"
@@ -269,7 +277,7 @@ class MitosisSteppable(MitosisSteppableBase):
 
             if cell.dict["AgeHrs"]>30:
                 cells_to_divide.append(cell)
-                print 'cells_to_divide',cells_to_divide
+                # print 'cells_to_divide',cells_to_divide
                 
         for cell in cells_to_divide:
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
@@ -292,7 +300,7 @@ class MitosisSteppable(MitosisSteppableBase):
         self.childCell.type=self.parentCell.type
         self.childCell.dict["AgeHrs"]=0
         self.childCell.dict["HrsSinceDeath"]=0
-        # for cell in self.cellList:
+        ## for cell in self.cellList:
         print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict        
 
         # if self.parentCell.type==1:
@@ -305,13 +313,17 @@ class MitosisSteppable(MitosisSteppableBase):
 class RemoveDeadCells(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
+
+    def start(self):
+        print "This function (RemoveDeadCells) is called at every MCS"
+
     def step(self,mcs):
-            for cell in self.cellList:
-                if cell.type==3:
-                    if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
-                        print 'removing dead cell.id', cell.id
-                        cell.targetVolume=0
-                        cell.lambdaVolume=100
+        for cell in self.cellList:
+            if cell.type==3:
+                if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
+                    print 'removing dead cell.id', cell.id
+                    cell.targetVolume=0
+                    cell.lambdaVolume=100
                     
 
 

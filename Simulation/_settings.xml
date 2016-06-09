@@ -133,7 +133,7 @@
       <e Name="ConcentrationLimitsOn" Type="bool">True</e>
       <e Name="ContoursOn" Type="bool">False</e>
       <e Name="DebugOutputPlayer" Type="bool">False</e>
-      <e Name="DisplayConsole" Type="bool">False</e>
+      <e Name="DisplayConsole" Type="bool">True</e>
       <e Name="DisplayLatticeData" Type="bool">False</e>
       <e Name="DisplayModelEditor" Type="bool">True</e>
       <e Name="FPPLinksColorOn" Type="bool">False</e>
