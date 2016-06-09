@@ -201,8 +201,7 @@ class VolumeParamSteppable(SteppableBasePy):
 
     def step(self,mcs):
         for cell in self.cellList:
-            print "This function (VolumeParamSteppable) is called at every MCS"
-            print 'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
+            print "MCS",mcs,'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
 
 
 
