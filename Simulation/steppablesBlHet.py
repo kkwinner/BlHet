@@ -169,13 +169,13 @@ class SetCellDictionaries(SteppableBasePy):
             # SAME CLOCK IN ALL CELLS
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361?)
             # x = gauss(30,1)
-            y = uniform(0,30) # age of cells initialized into simulation
-            cell.dict["AgeHrs"]=y
-            cell.dict["HrsSinceDeath"]=0
+            # y = uniform(0,30) # age of cells initialized into simulation
+            # cell.dict["AgeHrs"]=y
+            # cell.dict["HrsSinceDeath"]=0
 
             # # test non-dividing and dead cells
-            # cell.dict["AgeHrs"]=29.9
-            # cell.dict["HrsSinceDeath"]=23.9
+            cell.dict["AgeHrs"]=29.99
+            cell.dict["HrsSinceDeath"]=23.99
 
             # for cell in self.cellList:
         #     print 'cell.id=',cell.id,' dict=',cell.dict
@@ -256,8 +256,10 @@ class MitosisSteppable(MitosisSteppableBase):
                 
         for cell in cells_to_divide:
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
-                if uniform(0,1)<=0.5:
-                    cell.type==3 # cell dies with 50% chance
+                deathChance = uniform(0,1)
+                print 'deathChance=',deathChance
+                if deathChance<=0.5:
+                    cell.type=3 # cell dies with 50% chance
             elif cell.type!=3 and cell.type!=1 and cell.type!=2: # all cell types divide except for Vessel, LungNormal, Dead, IC50Cis, and IC50Gem
                 # to change mitosis mode leave one of the below lines uncommented
                 self.divideCellRandomOrientation(cell)
@@ -295,10 +297,11 @@ class RemoveDeadCells(SteppableBasePy):
     def step(self,mcs):
         for cell in self.cellList:
             if cell.type==3:
+                print 'I am dead cell.id', cell.id, 'and I died',cell.dict["HrsSinceDeath"],'hrs ago.'
                 if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
-                    print 'removing dead cell.id', cell.id
+                    print 'removing dead cell.id', cell.id,'with cell volume',cell.volume,'cell.targetVolume',cell.targetVolume,'and cell.lambdaVolume',cell.lambdaVolume
                     cell.targetVolume=0
-                    cell.lambdaVolume=100
+                    cell.lambdaVolume=1000
                     
 
 

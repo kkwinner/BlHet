@@ -87,6 +87,9 @@
          <e Name="0" Type="color">#000000</e>
          <e Name="1" Type="color">#ff0000</e>
          <e Name="10" Type="color">#ccff66</e>
+         <e Name="11" Type="color">#00ff80</e>
+         <e Name="12" Type="color">#0000ff</e>
+         <e Name="13" Type="color">#8000ff</e>
          <e Name="2" Type="color">#ff6fcf</e>
          <e Name="3" Type="color">#808080</e>
          <e Name="4" Type="color">#008080</e>
@@ -98,10 +101,10 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">0.0499587640992,49.9587640992</e>
+            <e Name="cameraClippingRange" Type="floatlist">0.113276852701,113.276852701</e>
             <e Name="cameraFocalPoint" Type="floatlist">16.5,16.5,16.5</e>
-            <e Name="cameraPosition" Type="floatlist">16.5056370045,16.5069583201,16.5075784014</e>
-            <e Name="cameraViewUp" Type="floatlist">-0.204243967709,0.79202992168,-0.575302533297</e>
+            <e Name="cameraPosition" Type="floatlist">-13.6577097626,-1.30605501536,-7.70352778519</e>
+            <e Name="cameraViewUp" Type="floatlist">-0.477501912539,-0.309187170825,0.822432499917</e>
             <e Name="is3D" Type="bool">True</e>
             <e Name="planeName" Type="str"/>
             <e Name="planePosition" Type="int">-1</e>
@@ -125,7 +128,7 @@
       <e Name="BoundingBoxOn" Type="bool">True</e>
       <e Name="CC3DOutputOn" Type="bool">True</e>
       <e Name="CellBordersOn" Type="bool">False</e>
-      <e Name="CellGlyphScaleByVolumeOn" Type="bool">False</e>
+      <e Name="CellGlyphScaleByVolumeOn" Type="bool">True</e>
       <e Name="CellGlyphsOn" Type="bool">False</e>
       <e Name="CellsOn" Type="bool">True</e>
       <e Name="ClosePlayerAfterSimulationDone" Type="bool">False</e>
