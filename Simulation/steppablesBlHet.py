@@ -194,7 +194,8 @@ class IncrementClocks(SteppableBasePy):
             if cell.type==3:
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
         for cell in self.cellList:
-            print 'cell.id=',cell.id,' dict=',cell.dict
+            if cell.id > 125:
+                print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict
 
 
 
