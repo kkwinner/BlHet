@@ -177,8 +177,8 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["AgeHrs"]=29.99
             cell.dict["HrsSinceDeath"]=23.99
 
-            # for cell in self.cellList:
-        #     print 'cell.id=',cell.id,' dict=',cell.dict
+            for cell in self.cellList:
+            print 'cell.id=',cell.id,' dict=',cell.dict
 
 
 
