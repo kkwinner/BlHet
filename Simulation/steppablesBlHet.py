@@ -207,31 +207,6 @@ class IncrementClocks(SteppableBasePy):
 
 
 
-# *****************************
-# INCREMENT AGE AND TIME SINCE DEATH
-class KillCell(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-
-    def start(self):
-        print "This function (KillCell) is called at every MCS"
-
-    def step(self,mcs):
-        print "This function (KillCell) is called at every MCS"
-        self.cellList=CellList(self.inventory)
-        for cell in self.cellList:
-            cell.dict["AgeHrs"]+= MCSFractionOfHour
-            if cell.type==12 or xcell.type==13:  # if cells are IC50Cis or IC50Gem
-                cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
-        for cell in self.cellList:
-            if cell.id > 125:
-                print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict
-
-
-
-
 # ***************************** ALSO UNCOMMENT CELL DICTIONARY KEYS 1 AND 2 FOR CELL AGE ABOVE
 # VOLUMEPARAMSTEPPABLE
 # SETS CELL TARGET VOLUMES OR COMPRESSIBILITIES
@@ -260,7 +235,7 @@ class VolumeParamSteppable(SteppableBasePy):
 
 
 # *****************************
-# MITOSIS
+# MITOSIS; IC50 CELLS DIE WITH 50% CHANCE WHEN MITOSIS IS ATTEMPTED; DEAD, IC50, VESSEL, AND LUNG CELLS DO NOT REPLICATE;
 class MitosisSteppable(MitosisSteppableBase):
     def __init__(self,_simulator,_frequency=1):
         MitosisSteppableBase.__init__(self,_simulator, _frequency)
