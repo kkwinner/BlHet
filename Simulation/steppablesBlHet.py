@@ -139,7 +139,7 @@ T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
 
 #divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
-divisionCycleTimeHrs = 0.0005 # average time to division / replication from several cancer cell lines in vitro
+divisionCycleTimeHrs = 0.005 # TEST average time to division / replication from several cancer cell lines in vitro
 phagocytosisEndTime = 24 # dead cells removed at 24 hours
 
 
@@ -294,7 +294,7 @@ class MitosisSteppable(MitosisSteppableBase):
         self.childCell.dict["cisAccum"]=0
         self.childCell.dict["gemAccum"]=0
         ## for cell in self.cellList:
-        print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict        
+        print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
 
         # if self.parentCell.type==1:
         #     self.childCell.type=2
