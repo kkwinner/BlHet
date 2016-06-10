@@ -29,8 +29,7 @@ pyAttributeDictionaryAdder,dictAdder=CompuCellSetup.attachDictionaryToCells(sim)
 
 CompuCellSetup.initializeSimulationObjects(sim,simthread)
 
-#notice importing CompuCell to main script has to be done after
-# call to getCoreSimulationObjects()
+#notice importing CompuCell to main script has to be done after call to getCoreSimulationObjects()
 import CompuCell
 
 #add lattice monitors here
@@ -53,11 +52,13 @@ steppableRegistry=SteppableRegistry()
 
 
 ################################# DRUG DYNAMICS
-
 # from steppablesBlHet import CispIC50VisualizationSteppable
 # cispIC50VisualizationSteppable=CispIC50VisualizationSteppable (sim)
 # steppableRegistry.registerSteppable(cispIC50VisualizationSteppable)
 
+from steppablesBlHet import SecretionSteppableCisplatin
+secretionSteppableCisplatin=SecretionSteppableCisplatin(sim)
+steppableRegistry.registerSteppable(secretionSteppableCisplatin)
 """
 from steppablesBlHet import DiffusionSolverFESteeringCisplatinIV
 diffusionSolverFESteeringCisplatinIV=DiffusionSolverFESteeringCisplatinIV(sim)
@@ -67,12 +68,9 @@ steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIV)
 # diffusionSolverFESteeringCisplatinIP=DiffusionSolverFESteeringCisplatinIP(sim)
 # steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIP)
 
-from steppablesBlHet import SecretionSteppableCisplatin
-secretionSteppableCisplatin=SecretionSteppableCisplatin(sim)
-steppableRegistry.registerSteppable(secretionSteppableCisplatin)
 
 # from steppablesBlHet import DiffusionSolverFESteeringCisplatinIPplusIV
-e# diffusionSolverFESteeringCisplatinIPplusIV=DiffusionSolverFESteeringCisplatinIPplusIV(sim)
+# diffusionSolverFESteeringCisplatinIPplusIV=DiffusionSolverFESteeringCisplatinIPplusIV(sim)
 # steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIPplusIV)
 
 # from steppablesBlHet import SetCellConcentrations
@@ -96,10 +94,6 @@ steppableRegistry.registerSteppable(incrementClocks)
 from steppablesBlHet import VolumeParamSteppable
 volumeParamSteppable=VolumeParamSteppable(sim)
 steppableRegistry.registerSteppable(volumeParamSteppable)
-
-# from steppablesBlHet import VolumeConstraintSteppable
-# volumeConstraint=VolumeConstraintSteppable(sim)
-# steppableRegistry.registerSteppable(volumeConstraint)
 
 from steppablesBlHet import MitosisSteppable
 mitosisSteppable=MitosisSteppable(sim)
