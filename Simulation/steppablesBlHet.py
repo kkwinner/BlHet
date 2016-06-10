@@ -189,8 +189,8 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
 
-            for cell in self.cellList:
-                print 'cell.id=',cell.id,' dict=',cell.dict
+            # for cell in self.cellList:
+            print 'cell.id=',cell.id,' dict=',cell.dict
 
 
 
@@ -230,10 +230,9 @@ class VolumeParamSteppable(SteppableBasePy):
         self.cellList=CellList(self.inventory)
 
     def start(self):
-        print "This function (VolumeParamSteppable) is called at every MCS"
+        print "This function (VolumeParamSteppable) is called once before simulation"
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
-            # CANCER CELLS
             # if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
                 cell.targetVolume=T24BCCellVol
                 cell.lambdaVolume=100.0
@@ -354,19 +353,22 @@ class RemoveDeadCells(SteppableBasePy):
 
 # *****************************
 # CELLS ACCUMULATE CISPLATIN AND REMOVE IT FROM SURFACE OF CELL
+# limit of cellular cisplatin absorption not known
 class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
 # MEDIUM is a null pointer, not a true cell type, and cannot secrete (conversation w/CC3D developer Maciek Swat, July 2014); must add another medium-like cell type to secrete
     def __init__(self,_simulator,_frequency=1):
         SecretionBasePy.__init__(self,_simulator, _frequency)
+
     def start(self):
-        pass
+        print "This function (SecretionSteppableCisplatin) is called at every MCS"
+
     def step(self,mcs):
         ## START PROFILER
         # profile = cProfile.Profile()
         # profile.enable()
 
         for cell in self.cellList:
-            if cell.type!=1:  #all cells except vessel -- limit of cisplatin absorption not known
+            if cell.type==4:  #all cells except vessel
                 comPt=CompuCell.Point3D()
                 field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
                 # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
@@ -374,19 +376,13 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                 comPt.y=int(cell.yCM)
                 comPt.z=int(cell.zCM)
                 cisplatin=field.get(comPt) # get concentration at center of mass
-
                 attrSecretor=self.getFieldSecretor("Cisplatin")
-
-                #ACCUMULATE TO DICTIONARY, REMOVE FROM FIELD
                 if cisplatin > 0:
                     dictionaryAttrib = CompuCell.getPyAttrib(cell)
-
-                    # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL
-                    # ******fraction of what would have accumulated in 2 hrs at current concentration at COM (Mistry, 1992)
-                    MCSFrac2Hrs=1/Cisp1Min/60/2 # MCSFrac2Hrs= 1 mcs / number of mcs in 2 h  =  1 mcs / (Cisp1Minmcs/min * 60min/hr * 2hr)
-                    accumC=(0.4755*cisplatin**1.289)*MCSFrac2Hrs #  Accumulation (micromolar) = 0.4755*IncubationConc(micromolar)^1.289, R-square: 0.9999
-                    dictionaryAttrib[3]+=accumC
-
+                    # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
+                    accumC=(cisplatin * cispAccumFrac_SCSG_BFTC_905) #  Accumulation (micromolar) = 0.4755*IncubationConc(micromolar)^1.289, R-square: 0.9999
+                    cell.dict["cisAccum"]+=accumC
+                    print "I am cell.id",cell.id,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
                     # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
 
