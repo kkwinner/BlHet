@@ -428,7 +428,7 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                     accumC=(cisplatin * cispAccumFrac_RCRG_HT_1197) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
                     cell.dict["cisAccum"]+=accumC
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==8: # RCRG_HT_1197
+            if cell.type==8: # SCRG_SW780
                 comPt=CompuCell.Point3D()
                 field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
                 comPt.x=int(cell.xCM)
@@ -438,10 +438,64 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                 attrSecretor=self.getFieldSecretor("Cisplatin")
                 if cisplatin > 0:
                     dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_RCRG_HT_1197) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                    accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
                     cell.dict["cisAccum"]+=accumC
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-
+            if cell.type==9: # SCRG_KU_19_19
+                comPt=CompuCell.Point3D()
+                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                comPt.x=int(cell.xCM)
+                comPt.y=int(cell.yCM)
+                comPt.z=int(cell.zCM)
+                cisplatin=field.get(comPt)
+                attrSecretor=self.getFieldSecretor("Cisplatin")
+                if cisplatin > 0:
+                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                    accumC=(cisplatin * cispAccumFrac_SCRG_KU_19_19) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                    cell.dict["cisAccum"]+=accumC
+                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+            if cell.type==10: # RCSG_LB831_BLC
+                comPt=CompuCell.Point3D()
+                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                comPt.x=int(cell.xCM)
+                comPt.y=int(cell.yCM)
+                comPt.z=int(cell.zCM)
+                cisplatin=field.get(comPt)
+                attrSecretor=self.getFieldSecretor("Cisplatin")
+                if cisplatin > 0:
+                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                    accumC=(cisplatin * cispAccumFrac_RCSG_LB831_BLC) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                    cell.dict["cisAccum"]+=accumC
+                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+            if cell.type==11: # RCSG_DSH1
+                comPt=CompuCell.Point3D()
+                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                comPt.x=int(cell.xCM)
+                comPt.y=int(cell.yCM)
+                comPt.z=int(cell.zCM)
+                cisplatin=field.get(comPt)
+                attrSecretor=self.getFieldSecretor("Cisplatin")
+                if cisplatin > 0:
+                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                    accumC=(cisplatin * cispAccumFrac_RCSG_DSH1) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                    cell.dict["cisAccum"]+=accumC
+                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                    
+            # lung, dead(filled with active phagocytes), IC50cis, and IC50gem, equal to middle-of-the-road-least-sensitive line SCRG_SW780
+            if cell.type==2 or cell.type==3 or cell.type==12 or cell.type==13: 
+                comPt=CompuCell.Point3D()
+                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                comPt.x=int(cell.xCM)
+                comPt.y=int(cell.yCM)
+                comPt.z=int(cell.zCM)
+                cisplatin=field.get(comPt)
+                attrSecretor=self.getFieldSecretor("Cisplatin")
+                if cisplatin > 0:
+                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                    accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                    cell.dict["cisAccum"]+=accumC
+                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                    
             print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
                     
 

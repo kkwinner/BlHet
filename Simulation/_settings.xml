@@ -101,17 +101,17 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">0.0629797830203,62.9797830203</e>
+            <e Name="cameraClippingRange" Type="floatlist">0.0949460177462,94.9460177462</e>
             <e Name="cameraFocalPoint" Type="floatlist">16.5,16.5,16.5</e>
-            <e Name="cameraPosition" Type="floatlist">18.7407835625,22.1897752188,23.4600894877</e>
-            <e Name="cameraViewUp" Type="floatlist">0.190049611313,0.729243227101,-0.657332078152</e>
+            <e Name="cameraPosition" Type="floatlist">48.9704757408,10.8703987036,4.17775078141</e>
+            <e Name="cameraViewUp" Type="floatlist">-0.187432165963,0.607853288661,-0.771611017694</e>
             <e Name="is3D" Type="bool">True</e>
             <e Name="planeName" Type="str"/>
             <e Name="planePosition" Type="int">-1</e>
             <e Name="sceneName" Type="str">Cell_Field</e>
             <e Name="sceneType" Type="str">CellField</e>
-            <e Name="winPosition" Type="point">-2,0</e>
-            <e Name="winSize" Type="size">1023,396</e>
+            <e Name="winPosition" Type="point">0,0</e>
+            <e Name="winSize" Type="size">1225,575</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
       </e>
