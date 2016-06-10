@@ -101,6 +101,16 @@ cIPFirstPtPlus15=(7.386+15.0)*1207.183 #= 27023.998638 MCS = 7.386 min, first ti
 
 Cisp1Min = 65.678 # 65.678 mcs = 1 min for cells of diameter T24 bladder cancer cell line
 
+## CELL IDs
+# TypeId="4" TypeName="SCSG_BFTC_# 905"
+# TypeId="5" TypeName="SCSG_J82"
+# TypeId="6" TypeName="RCRG_RT4"
+# TypeId="7" TypeName="RCRG_HT_1197"
+# TypeId="8" TypeName="SCRG_SW780"
+# TypeId="9" TypeName="SCRG_KU_19_19"
+# TypeId="10" TypeName="RCSG_LB831_BLC"
+# TypeId="11" TypeName="RCSG_DSH1"
+
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
 ## also = concentration removed from voxel; microM/MCS * siteConcCis(microM)
 cispAccumFrac_SCSG_BFTC_905 = 0.3147446166  # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
@@ -176,6 +186,8 @@ class SetCellDictionaries(SteppableBasePy):
             # # test non-dividing and dead cells
             cell.dict["AgeHrs"]=29.99
             cell.dict["HrsSinceDeath"]=23.99
+            cell.dict["cisAccum"]=0
+            cell.dict["gemAccum"]=0
 
             for cell in self.cellList:
                 print 'cell.id=',cell.id,' dict=',cell.dict
@@ -338,6 +350,10 @@ class RemoveDeadCells(SteppableBasePy):
 # Cisplatin post-IP plasma concentration fitted curve [IP(t)]*-0.000889*t+0.06288 muM, t= Sugarbaker, 1986, 1990, 1997
 # Cisplatin intravenous concentration fitted curve (dosage =100mg/m^2) -3.338ln(t) + 16.094 muM, t=min   Himmelstein, 1981 (Fig. )
 # Cisplatin post-IV peritoneal concentration fitted curve [IV(tMins)]*( -2E-07*tMins^3 + 0.0002*tMins^2 - 0.0197*tMins + 0.9963) # goes to zero when t = 896.305 (Wolfram Alpha cubic polynomial solver); Linear solution:  (0.5431*t - 0.386) muM, t=h; y = [IV(t)]*0.0091t - 0.386, R^2= 0.9509, t=,min; Sugarbaker, 1996
+
+
+# *****************************
+# CELLS ACCUMULATE CISPLATIN AND REMOVE IT FROM SURFACE OF CELL
 class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
 # MEDIUM is a null pointer, not a true cell type, and cannot secrete (conversation w/CC3D developer Maciek Swat, July 2014); must add another medium-like cell type to secrete
     def __init__(self,_simulator,_frequency=1):
@@ -358,19 +374,25 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                 comPt.y=int(cell.yCM)
                 comPt.z=int(cell.zCM)
                 cisplatin=field.get(comPt) # get concentration at center of mass
+
                 attrSecretor=self.getFieldSecretor("Cisplatin")
 
-                #ACCUMULATE (ADD TO DICTIONARY, REMOVE FROM FIELD)
+                #ACCUMULATE TO DICTIONARY, REMOVE FROM FIELD
                 if cisplatin > 0:
                     dictionaryAttrib = CompuCell.getPyAttrib(cell)
+
                     # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL
-                    # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     # ******fraction of what would have accumulated in 2 hrs at current concentration at COM (Mistry, 1992)
                     MCSFrac2Hrs=1/Cisp1Min/60/2 # MCSFrac2Hrs= 1 mcs / number of mcs in 2 h  =  1 mcs / (Cisp1Minmcs/min * 60min/hr * 2hr)
                     accumC=(0.4755*cisplatin**1.289)*MCSFrac2Hrs #  Accumulation (micromolar) = 0.4755*IncubationConc(micromolar)^1.289, R-square: 0.9999
                     dictionaryAttrib[3]+=accumC
+
+                    # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
 
+
+
+                    
                  #     # REMOVE EMPIRICALLY-DETERMINED EFFLUXED DRUG FROM ACCUMULATED DRUG IN CELL
                 #     # IF IMPLEMENTING EFFLUX AFTER EXTERNAL DRUG = 0, ADD EFFLUX FROM TOTAL DRUG ACCUMULATED PER CELL BACK INTO EXTERNAL DRUG CONCENTRATION. Net accumulation empirical measurements include efflux.
                 # #EFFLUX (REMOVE FROM DICTIONARY, ADD TO FIELD)
