@@ -107,9 +107,9 @@
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
-            <e Name="planePosition" Type="int">6</e>
-            <e Name="sceneName" Type="str">Cisplatin</e>
-            <e Name="sceneType" Type="str">ConField</e>
+            <e Name="planePosition" Type="int">0</e>
+            <e Name="sceneName" Type="str">Cell_Field</e>
+            <e Name="sceneType" Type="str">CellField</e>
             <e Name="winPosition" Type="point">-2,0</e>
             <e Name="winSize" Type="size">1023,396</e>
             <e Name="winType" Type="str">Graphics</e>
