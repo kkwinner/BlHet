@@ -382,7 +382,7 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                     # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
                     accumC=(cisplatin * cispAccumFrac_SCSG_BFTC_905) #  Accumulation (micromolar) = 0.4755*IncubationConc(micromolar)^1.289, R-square: 0.9999
                     cell.dict["cisAccum"]+=accumC
-                    print "I am cell.id",cell.id,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
+                    print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
                     # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
 
