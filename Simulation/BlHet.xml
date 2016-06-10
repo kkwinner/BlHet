@@ -337,10 +337,10 @@ IC50_RCSG_DSH1
       <!-- You may repeat Field element for each chemical field declared in the PDE solvers -->
       <!-- Specification of secretion properties of individual cells can be done in Python -->
       <Field Name="Cisplatin">
-         <ConstantConcentration Type="Vessel">30.0</ConstantConcentration>
+         <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
       </Field>
       <Field Name="Gemcitabine">
-         <ConstantConcentration Type="Vessel">30.0</ConstantConcentration>
+         <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
       </Field>
    </Plugin>
 
@@ -581,8 +581,8 @@ IC50_RCSG_DSH1
       <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
       <!-- <Types>SCRG_SW780</Types> -->
       <!-- <Types>Vessel,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1,LungNormal,IC50Cis,IC50Gem,Dead,SCSG_BFTC_905,SCSG_J82,RCRG_RT4,RCRG_HT_1197,SCRG_SW780,SCRG_KU_19_19,RCSG_LB831_BLC,RCSG_DSH1</Types> -->
-      <Types>Vessel,IC50Cis,IC50Gem,Dead,LungNormal,SCSG_BFTC_905</Types>
-
+      <!-- <Types>Vessel,IC50Cis,IC50Gem,Dead,LungNormal,SCSG_BFTC_905</Types> -->
+      <Types>SCSG_BFTC_905</Types>
      </Region>
   </Steppable>
 
