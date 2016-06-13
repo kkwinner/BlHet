@@ -216,8 +216,8 @@ class IncrementClocks(SteppableBasePy):
             if cell.type==3:
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
         for cell in self.cellList:
-            if cell.id > 125:
-                print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict
+            # if cell.id > 125:
+                print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict, 'vol=',cell.targetVolume,'volLambda=',cell.lambdaVolume
 
 
 
@@ -249,13 +249,35 @@ class VolumeParamSteppable(SteppableBasePy):
 
 
 # *****************************
+# GROW CELLS WHEN READY TO DIVIDE
+class GrowthSteppable(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+    def step(self,mcs):
+        for cell in self.cellList:
+            if cell.dict["AgeHrs"]>divisionCycleTimeHrs:
+                cell.targetVolume=2*T24BCCellVol
+        # alternatively if you want to make growth a function of chemical concentration uncomment lines below and comment lines above        
+        # field=CompuCell.getConcentrationField(self.simulator,"PUT_NAME_OF_CHEMICAL_FIELD_HERE")
+        # pt=CompuCell.Point3D()
+        # for cell in self.cellList:
+            # pt.x=int(cell.xCOM)
+            # pt.y=int(cell.yCOM)
+            # pt.z=int(cell.zCOM)
+            # concentrationAtCOM=field.get(pt)
+            # cell.targetVolume+=0.01*concentrationAtCOM  # you can use here any fcn of concentrationAtCOM     
+        
+
+
+
+# *****************************
 # MITOSIS; IC50 CELLS DIE WITH 50% CHANCE WHEN MITOSIS IS ATTEMPTED; DEAD, IC50, VESSEL, AND LUNG CELLS DO NOT REPLICATE;
 class MitosisSteppable(MitosisSteppableBase):
     def __init__(self,_simulator,_frequency=1):
         MitosisSteppableBase.__init__(self,_simulator, _frequency)
 
-    def start(self):
-        print "This function (MitosisSteppable) is called at every MCS"
+    # def start(self):
+    #     print "This function (MitosisSteppable) is called at every MCS"
     
     def step(self,mcs):
         print "INSIDE MITOSIS STEPPABLE"
@@ -265,8 +287,9 @@ class MitosisSteppable(MitosisSteppableBase):
             # print 'cell.id=',cell.id,' dict=',cell.dict
 
             if cell.dict["AgeHrs"]>divisionCycleTimeHrs:
-                cells_to_divide.append(cell)
-                # print 'cells_to_divide',cells_to_divide
+                if cell.volume==2*T24BCCellVol:
+                    cells_to_divide.append(cell)
+                    print 'cell is dividing at AgeHrs',cell.dict["AgeHrs"]
                 
         for cell in cells_to_divide:
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
@@ -282,8 +305,9 @@ class MitosisSteppable(MitosisSteppableBase):
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
-        self.parentCell.targetVolume /= 1.0 # reduce parent target volume by increasing; = ratio to parent vol
-        self.cloneParent2Child()            
+        self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+        self.parentCell.targetLambda = 2000 # make sure parent stays in place
+        self.cloneParent2Child()
         
         # for more control of what gets copied from parent to child use cloneAttributes function
         # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
@@ -296,9 +320,11 @@ class MitosisSteppable(MitosisSteppableBase):
         ## for cell in self.cellList:
         print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
 
-        # if self.parentCell.type==1:
-        #     self.childCell.type=2
-        # else:
+        if self.parentCell.type==5:
+            self.childCell.type=6
+        elif self.parentCell.type==6:
+            self.childCell.type=7
+            # else:
         #     self.childCell.type=1
 
 
@@ -387,6 +413,9 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                     # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
                     accumC=(cisplatin * cispAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcCis = (-0.8242 * IC50 + 67.2261) * siteConcCis/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM cis accumulation / MCS * frac50uMCis
                     cell.dict["cisAccum"]+=accumC
+
+                    print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
+
                     # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
             if cell.type==5: # SCSG_J82

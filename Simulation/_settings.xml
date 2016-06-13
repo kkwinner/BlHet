@@ -23,7 +23,7 @@
       <e Name="ScreenUpdateFrequency" Type="int">1</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">0</e>
+      <e Name="TabIndex" Type="int">1</e>
    </Settings>
    <Settings Type="float">
       <e Name="ArrowLength" Type="float">1.0</e>
@@ -101,17 +101,17 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">0.0949460177462,94.9460177462</e>
-            <e Name="cameraFocalPoint" Type="floatlist">16.5,16.5,16.5</e>
-            <e Name="cameraPosition" Type="floatlist">48.9704757408,10.8703987036,4.17775078141</e>
-            <e Name="cameraViewUp" Type="floatlist">-0.187432165963,0.607853288661,-0.771611017694</e>
-            <e Name="is3D" Type="bool">True</e>
-            <e Name="planeName" Type="str"/>
-            <e Name="planePosition" Type="int">-1</e>
+            <e Name="cameraClippingRange" Type="floatlist">34.4120903507,35.2810825312</e>
+            <e Name="cameraFocalPoint" Type="floatlist">11.9487275157,6.09659869288,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">11.9487275157,6.09659869288,34.7596872229</e>
+            <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
+            <e Name="is3D" Type="bool">False</e>
+            <e Name="planeName" Type="str">XY</e>
+            <e Name="planePosition" Type="int">0</e>
             <e Name="sceneName" Type="str">Cell_Field</e>
             <e Name="sceneType" Type="str">CellField</e>
             <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">1225,575</e>
+            <e Name="winSize" Type="size">1023,396</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
       </e>
@@ -120,14 +120,14 @@
       <e Name="LastVersionCheckDate" Type="str">20160607</e>
       <e Name="OutputLocation" Type="str">/Users/squirrel/CC3DWorkspace</e>
       <e Name="ProjectLocation" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet</e>
-      <e Name="RecentFile" Type="str">/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
+      <e Name="RecentFile" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
       <e Name="ScalarIsoValues" Type="str"/>
       <e Name="Types3DInvisible" Type="str">0</e>
    </Settings>
    <Settings Type="bool">
       <e Name="BoundingBoxOn" Type="bool">True</e>
       <e Name="CC3DOutputOn" Type="bool">True</e>
-      <e Name="CellBordersOn" Type="bool">True</e>
+      <e Name="CellBordersOn" Type="bool">False</e>
       <e Name="CellGlyphScaleByVolumeOn" Type="bool">True</e>
       <e Name="CellGlyphsOn" Type="bool">False</e>
       <e Name="CellsOn" Type="bool">True</e>

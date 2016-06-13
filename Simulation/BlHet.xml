@@ -1,15 +1,16 @@
- 
-<CompuCell3D>
+ <CompuCell3D Revision="20160517" Version="3.7.5">
 
   <Potts>  
     
     <!-- <Dimensions x="150" y="150" z="150" /> -->
     <!-- <Dimensions x="41" y="41" z="41" /> -->
     <!-- MEDIUM-SIZED TEST RUNS -->
-    <Dimensions x="33" y="33" z="33" />
+    <!-- <Dimensions x="33" y="33" z="33" /> -->
     <!-- <Dimensions x="30" y="30" z="30" /> -->
     <!-- <Dimensions x="20" y="20" z="20" /> -->
     <!-- <Dimensions x="10" y="10" z="10" /> -->
+    <!-- 2-D -->
+        <Dimensions x="20" y="20" z="1" />
 
     <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
     <Anneal>5</Anneal> 
@@ -21,6 +22,7 @@
     <Steps>23644</Steps>
 
     <Temperature>1.0</Temperature>
+    <NeighborOrder>2</NeighborOrder>
 
 
     <!-- CELL TYPES
@@ -319,9 +321,8 @@ IC50_RCSG_DSH1
     
 
   <!-- REFERENCE POINT WITHIN CELL FOR CONCENTRATIONS of O2, VEGF, other measurements, etc. --> 
-  <Plugin Name="CenterOfMass"/>
-
-
+  <Plugin Name="CenterOfMass">
+   </Plugin>
 
   
    <!-- MAKE CELL VOLUME ATTRIBUTES ACCESSIBLE FROM PYTHON -->
@@ -575,33 +576,37 @@ IC50_RCSG_DSH1
 
 
   <!-- INITIALIZE TISSUE FOR DRUG DELIVERY -->
-  <Steppable Type="UniformInitializer">
-     <Region>
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--   <Region> -->
+        <Steppable Type="BlobInitializer">
+    <Region>
   <!-- 10 x 10 x 10 TEST -->
-      <BoxMin x="0" y="0" z="0"/>
-      <BoxMax x="3" y="3" z="3"/>
+      <!-- <BoxMin x="3" y="3" z="3"/> -->
+      <!-- <BoxMax x="5" y="5" z="5"/> -->
+        <Radius>2</Radius>
+        <Center x="1" y="1" z="1"/>
       <Gap>0</Gap>
-      <Width>1</Width>
+      <Width>2</Width>
       <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
       <!-- <Types>SCRG_SW780</Types> -->
-      <Types>
-	Vessel,
-      IC50Cis,
-      IC50Gem,
-      Dead,
-      LungNormal,
-      SCSG_BFTC_905,
-      SCSG_J82,
-      RCRG_RT4,
-      RCRG_HT_1197,
-      SCRG_SW780,
-      SCRG_KU_19_19,
-      RCSG_LB831_BLC,
-      RCSG_DSH1
-      </Types>
+      <!-- <Types> -->
+      <!--   Vessel, -->
+      <!-- IC50Cis, -->
+      <!-- IC50Gem, -->
+      <!-- Dead, -->
+      <!-- LungNormal, -->
+      <!-- SCSG_BFTC_905, -->
+      <!-- SCSG_J82, -->
+      <!-- RCRG_RT4, -->
+      <!-- RCRG_HT_1197, -->
+      <!-- SCRG_SW780, -->
+      <!-- SCRG_KU_19_19, -->
+      <!-- RCSG_LB831_BLC, -->
+      <!-- RCSG_DSH1 -->
+      <!-- </Types> -->
       <!-- <Types>Vessel,IC50Cis,IC50Gem,Dead,LungNormal,SCSG_BFTC_905</Types> -->
       <!-- <Types>SCSG_BFTC_905, -->
-      <!-- <Types>SCSG_J82</Types> -->
+      <Types>SCSG_J82</Types>
      </Region>
   </Steppable>
 

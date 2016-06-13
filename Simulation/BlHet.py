@@ -95,6 +95,10 @@ from steppablesBlHet import VolumeParamSteppable
 volumeParamSteppable=VolumeParamSteppable(sim)
 steppableRegistry.registerSteppable(volumeParamSteppable)
 
+from steppablesBlHet import GrowthSteppable
+growthSteppable=GrowthSteppable(sim)
+steppableRegistry.registerSteppable(growthSteppable)
+
 from steppablesBlHet import MitosisSteppable
 mitosisSteppable=MitosisSteppable(sim)
 steppableRegistry.registerSteppable(mitosisSteppable)
