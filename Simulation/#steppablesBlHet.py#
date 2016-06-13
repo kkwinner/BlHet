@@ -1,6 +1,6 @@
 from PySteppables import *
 import CompuCell
-# import CompuCellSetup
+import CompuCellSetup
 import sys
 from PySteppablesExamples import MitosisSteppableBase
 from random import *

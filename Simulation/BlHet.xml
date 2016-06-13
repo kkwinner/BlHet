@@ -21,7 +21,7 @@
     <!--IV CISPLATIN GOES TO 0 @ 190 MINS IN 10^3v (7-22-14)-->
     <Steps>23644</Steps>
 
-    <Temperature>1.0</Temperature>
+    <Temperature>0.0</Temperature>
     <NeighborOrder>2</NeighborOrder>
 
 
@@ -152,9 +152,9 @@ IC50_RCSG_DSH1
 
   <!-- limit pixels selected for ID switch to those comprising shell of non-frozen cells (shell thickness = NeighborhoodOrder); speedup of 15% on 10^3 lattice w/27 cells
   -->
-  <Plugin Name="GlobalBoundaryPixelTracker">
-    <NeighborOrder>2</NeighborOrder> 
-  </Plugin> 
+  <!-- <Plugin Name="GlobalBoundaryPixelTracker"> -->
+  <!--   <NeighborOrder>2</NeighborOrder>  -->
+  <!-- </Plugin>  -->
 
 
 
@@ -331,7 +331,7 @@ IC50_RCSG_DSH1
 
 
    <!-- USED BY MITOSIS STEPPABLE -->
-   <Plugin Name="PixelTracker"/>
+   <!-- <Plugin Name="PixelTracker"/> -->
 
 
 
@@ -584,7 +584,7 @@ IC50_RCSG_DSH1
       <!-- <BoxMin x="3" y="3" z="3"/> -->
       <!-- <BoxMax x="5" y="5" z="5"/> -->
         <Radius>2</Radius>
-        <Center x="1" y="1" z="1"/>
+        <Center x="10" y="10" z="1"/>
       <Gap>0</Gap>
       <Width>2</Width>
       <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
