@@ -342,10 +342,10 @@ IC50_RCSG_DSH1
       <!-- You may repeat Field element for each chemical field declared in the PDE solvers -->
       <!-- Specification of secretion properties of individual cells can be done in Python -->
       <Field Name="Cisplatin">
-         <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
+         <!-- <ConstantConcentration Type="Vessel">0.0</ConstantConcentration> -->
       </Field>
       <Field Name="Gemcitabine">
-         <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
+         <!-- <ConstantConcentration Type="Vessel">0.0</ConstantConcentration> -->
       </Field>
    </Plugin>
 
@@ -453,8 +453,8 @@ IC50_RCSG_DSH1
       <GlobalDecayConstant>0</GlobalDecayConstant>
     </DiffusionData>
     <SecretionData>
-      <ConstantConcentration Type="Vessel">1.0</ConstantConcentration>
-      <ConstantConcentration Type="Medium">1.0</ConstantConcentration>
+      <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
+      <ConstantConcentration Type="Medium">0.0</ConstantConcentration>
     </SecretionData>
     <BoundaryConditions>
       <!-- <Plane Axis="X"> <Periodic/></Plane> <Plane Axis="Y"><Periodic/> </Plane> -->
@@ -493,8 +493,8 @@ IC50_RCSG_DSH1
       <GlobalDecayConstant>0</GlobalDecayConstant>
     </DiffusionData>
     <SecretionData>
-      <ConstantConcentration Type="Vessel">1.0</ConstantConcentration>
-      <ConstantConcentration Type="Medium">1.0</ConstantConcentration>
+      <ConstantConcentration Type="Vessel">0.0</ConstantConcentration>
+      <ConstantConcentration Type="Medium">0.0</ConstantConcentration>
     </SecretionData>
     <BoundaryConditions>
       <Plane Axis="X">
@@ -583,10 +583,10 @@ IC50_RCSG_DSH1
   <!-- 10 x 10 x 10 TEST -->
       <!-- <BoxMin x="3" y="3" z="3"/> -->
       <!-- <BoxMax x="5" y="5" z="5"/> -->
-        <Radius>2</Radius>
+        <Radius>3</Radius>
         <Center x="10" y="10" z="1"/>
       <Gap>0</Gap>
-      <Width>2</Width>
+      <Width>1</Width>
       <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
       <!-- <Types>SCRG_SW780</Types> -->
       <!-- <Types> -->
@@ -606,7 +606,7 @@ IC50_RCSG_DSH1
       <!-- </Types> -->
       <!-- <Types>Vessel,IC50Cis,IC50Gem,Dead,LungNormal,SCSG_BFTC_905</Types> -->
       <!-- <Types>SCSG_BFTC_905, -->
-      <Types>SCSG_J82</Types>
+      <Types>SCSG_J82,Vessel</Types>
      </Region>
   </Steppable>
 

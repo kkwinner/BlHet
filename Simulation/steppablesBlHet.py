@@ -70,36 +70,37 @@ numIC50Cancer=0
 #INITIALIZE CHEMICAL THRESHOLDS
 
 # FINAL CISPLATIN IC50 = MISTRY 1992
-cisplatinIC50=52.71 # FINAL USED: muM (equiv to (equitoxic) 2h-IC-50 Mistry, 1992)
+cisplatinIC50=52.71 # FINAL USED: muM (equiv to (equitoxic) 2h-IC-50 Mistry, 1992
 # cisplatinIC50=38.3 # (MATCHES 2H DRUG TIME COURSE): muM (SD=12.6, in SKOV-3, 2h exposure; Table 1, Mistry, 1992)
 # cisplatinIC50=0.0001 #test
 # cisplatinIC50=126.63 # muM (+/- 12.06 micromols/L, in SKOV3ip1, 48h exposure; Fig. 3, Xu, 2008)
 # cisplatinIC50  =3.33 # muM (Nakaro 1997, minimum effective concentration for DNA damage)
 
+# DIFFUSION COEFFICIENTS
+CisGem1Min = 65.678 # 65.678 mcs = 1 min of diffusion time for cells of diameter T24 bladder cancer cell line, for drugs with diffusion coeff. of sodium fluorescein
 #IV CISPLATIN
-# first five minutes (no data, linear fit from t=0, [iv]=0 to first time point
+Infusion15Mins=15*CisGem1Min # 18107.745 MCS; subtract from runtime once begin using concentration time course
+cIVFirstPoint=(5.742+15)*CisGem1Min # 6931.79 MCS; five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
+cEndDataSet=(170.862*CisGem1Min)+Infusion15Mins
+
+#### first five minutes (no data, linear fit from t=0, [iv]=0 to first time point
 # cFirst5Mins=5*465.189 # five minutes worth of MCSes in normal tissue (Swabb 1974?)
-cFirst5Mins=5*1207.183 # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
-cIVFirstPoint=(5.742+15)*1207.183 # 6931.79 MCS; five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
-cFirst20Mins=20*1207.183 # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
-Infusion15Mins=15*1207.183 # 18107.745 MCS; subtract from runtime once begin using concentration time course
-# x-intercept of cisplatin IV concentration function
-# cIVZero=57751. #mcs hrs, MCS scaled for diffusion in normal tissue
+cFirst5Mins=5*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
+####
+cFirst20Mins=20*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 # cIVZero=math.exp(-16.094/-3.338)*1207.183 ##mcs mins, MCS scaled for diffusion in tumor tissue;Excel check, yintercept = 124.1449668
 # x-intercept of cisplatin IP-post-IV concentration function
 # cIPpostIV_zero=(0.386/0.5431)*465.... #mcs hrs, MCS scaled for diffusion in normal tissue
-# cIPpostIVZero= (0.386/0.0091)*1207.183 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after this time point (42.42mins = 51205.8mcs)
-#  cIPpostIVZero= 896.305 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 896.305 (Wolfram Alpha cubic polynomial solver).  Will not use because becomes zero after IV goes to zero; then soln. is zero
+# cIPpostIVZero= (0.386/0.0091)*1207.183 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after this time point (42.42mins = 51205.8mcs)#  cIPpostIVZero= 896.305 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 896.305 (Wolfram Alpha cubic polynomial solver).  Will not use because becomes zero after IV goes to zero; then soln. is zero
 #  cIVpostPZero=~ 7hrs #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 7 hrs
 
 #ip CISPLATIN
 # cIPFirstPt=0.2126*60*1207.183 #hrs, first time point
 # cIPFirstPt=7.386*1207.183 #7.386 min, first time point
-cIPFirstPtPlus15=(7.386+15.0)*1207.183 #= 27023.998638 MCS = 7.386 min, first time point, plus 15 mins infusion time; initialize with floats
+cIPFirstPtPlus15=(7.386+15.0)*CisGem1Min # = mcs to get to 7.386 min, first time point in IV infusion, plus 15 mins infusion time; initialize with floats
 #cIVFirstPtPlus15=(5.742+15.0)*1207.183 # = 25039.389786 MCS = 5.742 min, first time point, plus 15 mins infusion time
 
 
-Cisp1Min = 65.678 # 65.678 mcs = 1 min for cells of diameter T24 bladder cancer cell line
 
 ## CELL IDs
 # TypeId="4" TypeName="SCSG_BFTC_# 905"
@@ -707,107 +708,33 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
         # tMins=mcs/465.189 # diffusion time for one cell diameter in normal tissue
 #         if 0<=mcs<cFirst5Mins:
         if 0<=mcs<Infusion15Mins:
-            tMins=mcs/1207.183 # diffusion time for one cell diameter in tumor tissue
+            tMins=mcs/CisGem1Min
             IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
             IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
             self.updateXML()
 
-# IP-POST-IV = 0
-# NO DATA FOR IP-POST-IV PRIOR TO 5 MINUTES AFTER IV INFUSION (THOUGH THEY MAY HAVE MARKED 0 CONC @ 0 MINUTES AFTER INFUSION)
         elif Infusion15Mins<=mcs<cIVFirstPoint:
-
             IVtMins = 5.59 # highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall']))
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
             IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
-            
-            ###########################  COMMENT OUT TO INCREASE SPEED
-            # IP-post-IV CONCENTRATION
-            """
-            tMins=(mcs/1207.183) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
-
-            IPpostIV =  2.366e-07*tMins**3 - 0.0001287*tMins**2 + 0.01389*tMins + 0.4209 # Casper, 1984
-            IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium']))
-            IPpostIVxml=IPpostIV # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
             self.updateXML()
-            """
-            
-        elif cIVFirstPoint<=mcs<(170.862*1207.183+Infusion15Mins):        # prior to end of IV data set
 
-#             tMins=(mcs/1207.183) - Infusion15Mins # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct
-            tMins=(mcs/1207.183) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
+        elif cIVFirstPoint<=mcs<cEndDataSet:        # prior to end of IV data se
+            tMins=(mcs/CisGem1Min) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
             IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall']))
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
             IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
-
-            ###########################  COMMENT OUT TO INCREASE SPEED
-            """
-            # IP-post-IV CONCENTRATION
-            IPpostIV =  2.366e-07*tMins**3 - 0.0001287*tMins**2 + 0.01389*tMins + 0.4209 # Casper, 1984
-            IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium']))
-            IPpostIVxml=IPpostIV            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
             self.updateXML()
-            
 
-        else:        # IP-only concentration after end of IV data set; IV = 0 in XML
-        
-            tMins=(mcs/1207.183) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
-            # IP-post-IV CONCENTRATION
-            IPpostIV =  2.366e-07*tMins**3 - 0.0001287*tMins**2 + 0.01389*tMins + 0.4209 # Casper, 1984
-            IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium']))
-            IPpostIVxml=IPpostIV            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
-            self.updateXML()
-            """
     def finish(self):
         # Finish Function gets called after the last MCS
         pass
 
-        # # POST-INTRAVENOUS DOSING INTRAPERITONEAL CONCENTRATION -- SUGARBAKER
-        # # use "if" statements when post-IV IP does not go negative when IV = 0
-        #     # tHrs=mcs/465.189/60 # diffusion time for one cell diameter in normal tissue
-        # # tHrs=mcs/60/1207.183 # diffusion time for one cell diameter in tumor tissue
-        # if mcs < cIPpostIVZero: # x-intercept (0) of [IP]/[IV]
-        #     # IV AND IP GO TO ZERO SIMULTANEOUSLY
-        #     if mcs<cIVZero:
 
-        #         # IP CONCENTRATION FROM FIT OF RATIO OF IP CONCENTRATION TO IV CONCENTRATION
-        #         # calculate [IP] for when [IV]<=0
-        #         # IVtHrs=(-3.338*math.log(tMins) + 16.094)/60
-        #         # IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min
-        #         #IPpostIV = (IVtHrs)*(0.5431*tHrs - 0.386) # IP proportion of IV fit from Sugarbaker, 1996;
-                # linear fit for ratio: (0.0091*tMins - 0.386)
-        # IPpostIV = (IVtMins)*( -2E-07*tMins**3 + 0.0002*tMins**2 - 0.0197*tMins + 0.9963) # goes to zero when t = 896.305 (Wolfram Alpha cubic polynomial solver)
-        # # get xml IP fluid ("Medium) constant concentration value
-        # IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField'],['SecretionData'],['ConstantConcentration','Type','Medium']))
-        # # set new xml value for Medium constant concentration
-        # # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-        # IPpostIVxml=IPpostIV
-        # self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField'],['SecretionData'],['ConstantConcentration','Type','Medium'])
-
-            # IVtMins=6.164*math.exp( -0.02012*tMins) # fit for patient [cisplatin IV], t=min (Casper 1984)
-            # IPpostIV = (IVtMins)*(-2E-07*tMins**3 + 0.0002*tMins**2 - 0.0197*tMins + 0.9963) # goes to zero when t = 896.305 (Wolfram Alpha cubic polynomial solver) #(Sugarbaker)
-            # IPpostIV = (IVtMins)*(1.524e-06*tMins**3 - 0.0001449*tMins**2 + 0.009744*tMins + 0.02845)#(Old IV/IP ratio: Casper,1984)
-            # IPpostIV = (IVtMins)*( -2E-07*tMins**3 + 0.0002*tMins**2 - 0.0197*tMins + 0.9963) # goes to zero when t = 896.305 (Wolfram Alpha cubic polynomial solver) #(Sugarbaker)
-            # IPpostIV = (IVtMins)*(1.524e-06*tMins**3 - 0.0001449*tMins**2 + 0.009744*tMins + 0.02845) # (Old IP/IV ratioCasper 1984) 
-            # IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min (Sugarbaker)
-
-            #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
-            # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
-#             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-
-#             # IP CONCENTRATION FROM FIT OF RATIO OF IP CONCENTRATION TO IV CONCENTRATION
-#             # IPpostIV = (IVtMins)*( -2E-07*tMins**3 + 0.0002*tMins**2 - 0.0197*tMins + 0.9963) # goes to zero when t = 896.305 (Wolfram Alpha cubic polynomial solver) #(Sugarbaker)
-#             IPpostIV = (IVtMins)*(1.524e-06*tMins**3 - 0.0001449*tMins**2 + 0.009744*tMins + 0.02845) # (Casper 1984)
-#             IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium']))
-#             IPpostIVxml=IPpostIV # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-#             self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
-#             self.updateXML()
             #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
             # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
 #             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)

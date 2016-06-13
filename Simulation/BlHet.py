@@ -1,12 +1,12 @@
-# def configureSimulation(sim):
-#     import CompuCellSetup
-#     from XMLUtils import ElementCC3D
+def configureSimulation(sim):
+    import CompuCellSetup
+    from XMLUtils import ElementCC3D
 
-#     CompuCell3DElmnt=ElementCC3D("CompuCell3D",{"version":"3.7.5"})
-#     # CompuCellSetup.setSimulationXMLDescription(CompuCell3DElmnt)
+    CompuCell3DElmnt=ElementCC3D("CompuCell3D",{"version":"3.7.5"})
+    # CompuCellSetup.setSimulationXMLDescription(CompuCell3DElmnt)
     
 
-# # INCORPORATE XML DATA SPECIFICATION FILE
+# INCORPORATE XML DATA SPECIFICATION FILE
 
 
 import sys
@@ -65,11 +65,11 @@ from steppablesBlHet import SecretionSteppableGemcitabine
 secretionSteppableGemcitabine=SecretionSteppableGemcitabine(sim)
 steppableRegistry.registerSteppable(secretionSteppableGemcitabine)
 
-"""
 from steppablesBlHet import DiffusionSolverFESteeringCisplatinIV
 diffusionSolverFESteeringCisplatinIV=DiffusionSolverFESteeringCisplatinIV(sim)
 steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIV)
 
+"""
 # from steppablesBlHet import DiffusionSolverFESteeringCisplatinIP
 # diffusionSolverFESteeringCisplatinIP=DiffusionSolverFESteeringCisplatinIP(sim)
 # steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIP)
