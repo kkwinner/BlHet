@@ -1,6 +1,6 @@
 from PySteppables import *
 import CompuCell
-# import CompuCellSetup
+import CompuCellSetup
 import sys
 from PySteppablesExamples import MitosisSteppableBase
 from random import *
@@ -709,7 +709,7 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
         if 0<=mcs<Infusion15Mins:
             tMins=mcs/1207.183 # diffusion time for one cell diameter in tumor tissue
             IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall']))
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
             IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
             self.updateXML()
@@ -722,8 +722,10 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall']))
             IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
-
+            
+            ###########################  COMMENT OUT TO INCREASE SPEED
             # IP-post-IV CONCENTRATION
+            """
             tMins=(mcs/1207.183) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
 
             IPpostIV =  2.366e-07*tMins**3 - 0.0001287*tMins**2 + 0.01389*tMins + 0.4209 # Casper, 1984
@@ -731,6 +733,7 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             IPpostIVxml=IPpostIV # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
             self.updateXML()
+            """
             
         elif cIVFirstPoint<=mcs<(170.862*1207.183+Infusion15Mins):        # prior to end of IV data set
 
@@ -741,12 +744,15 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','VesselWall'])
 
+            ###########################  COMMENT OUT TO INCREASE SPEED
+            """
             # IP-post-IV CONCENTRATION
             IPpostIV =  2.366e-07*tMins**3 - 0.0001287*tMins**2 + 0.01389*tMins + 0.4209 # Casper, 1984
             IPpostIVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium']))
             IPpostIVxml=IPpostIV            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
             self.updateXML()
+            
 
         else:        # IP-only concentration after end of IV data set; IV = 0 in XML
         
@@ -757,7 +763,7 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             IPpostIVxml=IPpostIV            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IPpostIVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Medium'])
             self.updateXML()
-
+            """
     def finish(self):
         # Finish Function gets called after the last MCS
         pass

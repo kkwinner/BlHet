@@ -191,16 +191,16 @@ IC50_RCSG_DSH1
     <Energy Type1="Medium" Type2="Medium">0</Energy>
     <Energy Type1="Vessel" Type2="Medium">0</Energy>
     <Energy Type1="LungNormal" Type2="Medium">0</Energy>
-    <Energy Type1="SCSG_BFTC_905" Type2="Medium">10</Energy>
-    <Energy Type1="SCSG_J82" Type2="Medium">10</Energy>
-    <Energy Type1="RCRG_RT4" Type2="Medium">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="Medium">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="Medium">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="Medium">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="Medium">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="Medium">10</Energy>
-    <Energy Type1="IC50Cis" Type2="Medium">10</Energy>
-    <Energy Type1="IC50Gem" Type2="Medium">10</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="Medium">0</Energy>
+    <Energy Type1="SCSG_J82" Type2="Medium">0</Energy>
+    <Energy Type1="RCRG_RT4" Type2="Medium">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="Medium">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="Medium">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="Medium">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="Medium">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="Medium">0</Energy>
+    <Energy Type1="IC50Cis" Type2="Medium">0</Energy>
+    <Energy Type1="IC50Gem" Type2="Medium">0</Energy>
     <Energy Type1="Dead" Type2="Medium">5</Energy>
 
     <!-- tumor and normal lung stick to vessel with same adhesion as tumor-tumor -->
