@@ -69,24 +69,17 @@ from steppablesBlHet import DiffusionSolverFESteeringCisplatinIV
 diffusionSolverFESteeringCisplatinIV=DiffusionSolverFESteeringCisplatinIV(sim)
 steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIV)
 
-"""
-# from steppablesBlHet import DiffusionSolverFESteeringCisplatinIP
-# diffusionSolverFESteeringCisplatinIP=DiffusionSolverFESteeringCisplatinIP(sim)
-# steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIP)
+from steppablesBlHet import DiffusionSolverFESteeringGemcitabineIV
+diffusionSolverFESteeringGemcitabineIV=DiffusionSolverFESteeringGemcitabineIV(sim)
+steppableRegistry.registerSteppable(diffusionSolverFESteeringGemcitabineIV)
 
-
-# from steppablesBlHet import DiffusionSolverFESteeringCisplatinIPplusIV
-# diffusionSolverFESteeringCisplatinIPplusIV=DiffusionSolverFESteeringCisplatinIPplusIV(sim)
-# steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIPplusIV)
+from steppablesBlHet import ChangeAtGemIC50Steppable
+changeAtGemIC50Steppable=ChangeAtGemIC50Steppable(sim)
+steppableRegistry.registerSteppable(changeAtGemIC50Steppable)
 
 # from steppablesBlHet import SetCellConcentrations
 # setCellConcentrations=SetCellConcentrations(sim)
 # steppableRegistry.registerSteppable(setCellConcentrations)
-
-from steppablesBlHet import ChangeWithCisplatinSteppable
-changeWithCisplatinSteppable=ChangeWithCisplatinSteppable(sim)
-steppableRegistry.registerSteppable(changeWithCisplatinSteppable)
-"""
 
 ################################# CELL DYNAMICS
 from steppablesBlHet import SetCellDictionaries

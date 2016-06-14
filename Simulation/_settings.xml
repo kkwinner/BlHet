@@ -23,10 +23,10 @@
       <e Name="ScreenUpdateFrequency" Type="int">1</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">1</e>
+      <e Name="TabIndex" Type="int">2</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -48,14 +48,14 @@
       <e Name="FieldParams" Type="dict">
          <e Name="Cisplatin" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
             <e Name="MaxRange" Type="float">1.0</e>
-            <e Name="MaxRangeFixed" Type="bool">True</e>
+            <e Name="MaxRangeFixed" Type="bool">False</e>
             <e Name="MinRange" Type="float">0.0</e>
-            <e Name="MinRangeFixed" Type="bool">False</e>
+            <e Name="MinRangeFixed" Type="bool">True</e>
             <e Name="NumberAccuracy" Type="int">2</e>
             <e Name="NumberOfContourLines" Type="int">3</e>
             <e Name="NumberOfLegendBoxes" Type="int">6</e>
@@ -122,7 +122,7 @@
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
             <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cisplatin</e>
+            <e Name="sceneName" Type="str">Gemcitabine</e>
             <e Name="sceneType" Type="str">ConField</e>
             <e Name="winPosition" Type="point">0,0</e>
             <e Name="winSize" Type="size">1023,396</e>
@@ -160,8 +160,8 @@
       <e Name="ImageOutputOn" Type="bool">False</e>
       <e Name="LatticeOutputOn" Type="bool">False</e>
       <e Name="LegendEnable" Type="bool">True</e>
-      <e Name="MaxRangeFixed" Type="bool">True</e>
-      <e Name="MinRangeFixed" Type="bool">False</e>
+      <e Name="MaxRangeFixed" Type="bool">False</e>
+      <e Name="MinRangeFixed" Type="bool">True</e>
       <e Name="OutputToProjectOn" Type="bool">False</e>
       <e Name="OverlayVectorsOn" Type="bool">False</e>
       <e Name="PixelizedScalarField" Type="bool">True</e>
