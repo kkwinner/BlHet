@@ -326,18 +326,22 @@ class MitosisSteppable(MitosisSteppableBase):
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
             if cell.type!=3 and cell.type!=1 and cell.type!=2: # all cell types divide except for Vessel, LungNormal, Dead (IC50Cis, and IC50Gem divide)
-                # to change mitosis mode leave one of the below lines uncommented
-                self.divideCellRandomOrientation(cell)
-                # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
-                # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
-                # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
+                if cell.volume==2:
+                    # to change mitosis mode leave one of the below lines uncommented
+                    self.divideCellRandomOrientation(cell)
+                    # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+                    # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
+                    # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
         self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-        self.cloneParent2Child()
-        # set parent lambda volume post-division
         self.parentCell.lambdaVolume = 10000 # make sure parent stays in place
-        self.childCell.lambdaVolume = 100 # make sure parent stays in place
+        self.childCell.targetVolume = 1
+        self.childCell.lambdaVolume = 100  # make sure parent stays in place
+        # self.cloneParent2Child()
+        # self.childCell.lambdaVolume = 100 # make sure parent stays in place
+        # set parent lambda volume post-division
+
         
         # for more control of what gets copied from parent to child use cloneAttributes function
         # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
