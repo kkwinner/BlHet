@@ -165,7 +165,8 @@ MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for
 
 #divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
 divisionCycleTimeHrs = 0.005 # TEST average time to division / replication from several cancer cell lines in vitro
-phagocytosisEndTime = 24 # dead cells removed at 24 hours
+#phagocytosisEndTime = 24 # dead cells removed at 24 hours
+phagocytosisEndTime = 0.005 # TEST dead cells removed at 24 hours
 
 
 # PRINT SIMULATION START TIME
@@ -212,8 +213,8 @@ class SetCellDictionaries(SteppableBasePy):
             # cell.dict["HrsSinceDeath"]=0
 
             # # test non-dividing and dead cells
-            cell.dict["AgeHrs"]=29.99
-            cell.dict["HrsSinceDeath"]=23.99
+            cell.dict["AgeHrs"]=0
+            cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
 
