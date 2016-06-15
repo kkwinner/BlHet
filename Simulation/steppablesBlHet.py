@@ -284,6 +284,7 @@ class GrowthSteppable(SteppableBasePy):
         for cell in self.cellList:
             if cell.dict["AgeHrs"]>divisionCycleTimeHrs:
                 cell.targetVolume=2*T24BCCellVol
+                cell.lambdaVolume=1
         # alternatively if you want to make growth a function of chemical concentration uncomment lines below and comment lines above        
         # field=CompuCell.getConcentrationField(self.simulator,"PUT_NAME_OF_CHEMICAL_FIELD_HERE")
         # pt=CompuCell.Point3D()
