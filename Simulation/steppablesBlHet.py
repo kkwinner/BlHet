@@ -323,7 +323,7 @@ class MitosisSteppable(MitosisSteppableBase):
                 print 'deathChance=',deathChance
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
-            elif cell.type!=3 and cell.type!=1 and cell.type!=2: # all cell types divide except for Vessel, LungNormal, Dead, IC50Cis, and IC50Gem
+            if cell.type!=3 and cell.type!=1 and cell.type!=2: # all cell types divide except for Vessel, LungNormal, Dead (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
                 self.divideCellRandomOrientation(cell)
                 # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
@@ -334,7 +334,8 @@ class MitosisSteppable(MitosisSteppableBase):
         self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
         self.cloneParent2Child()
         # set parent lambda volume post-division
-        self.parentCell.lambdaVolume = 2000 # make sure parent stays in place
+        self.parentCell.lambdaVolume = 10000 # make sure parent stays in place
+        self.childCell.lambdaVolume = 100 # make sure parent stays in place
         
         # for more control of what gets copied from parent to child use cloneAttributes function
         # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
@@ -351,6 +352,14 @@ class MitosisSteppable(MitosisSteppableBase):
             self.childCell.type=6
         elif self.parentCell.type==6:
             self.childCell.type=7
+        elif self.parentCell.type==7:
+            self.childCell.type=8
+        elif self.parentCell.type==8:
+            self.childCell.type=9
+        elif self.parentCell.type==9:
+            self.childCell.type=10
+        elif self.parentCell.type==10:
+            self.childCell.type=11
             # else:
         #     self.childCell.type=1
 
