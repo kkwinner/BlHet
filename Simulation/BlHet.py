@@ -77,6 +77,10 @@ from steppablesBlHet import ChangeAtGemIC50Steppable
 changeAtGemIC50Steppable=ChangeAtGemIC50Steppable(sim)
 steppableRegistry.registerSteppable(changeAtGemIC50Steppable)
 
+from steppablesBlHet import ChangeAtCisIC50Steppable
+changeAtCisIC50Steppable=ChangeAtCisIC50Steppable(sim)
+steppableRegistry.registerSteppable(changeAtCisIC50Steppable)
+
 # from steppablesBlHet import SetCellConcentrations
 # setCellConcentrations=SetCellConcentrations(sim)
 # steppableRegistry.registerSteppable(setCellConcentrations)
@@ -98,9 +102,9 @@ from steppablesBlHet import GrowthSteppable
 growthSteppable=GrowthSteppable(sim)
 steppableRegistry.registerSteppable(growthSteppable)
 
-from steppablesBlHet import MitosisSteppable
-mitosisSteppable=MitosisSteppable(sim)
-steppableRegistry.registerSteppable(mitosisSteppable)
+# from steppablesBlHet import MitosisSteppable
+# mitosisSteppable=MitosisSteppable(sim)
+# steppableRegistry.registerSteppable(mitosisSteppable)
 
 from steppablesBlHet import RemoveDeadCells
 removeDeadCells=RemoveDeadCells(sim)

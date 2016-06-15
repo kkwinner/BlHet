@@ -117,26 +117,46 @@ gem30Mins=30*CisGem1Min
 
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
 ## also = concentration removed from voxel; microM/MCS * siteConcCis(microM)
-cispAccumFrac_SCSG_BFTC_905 = 0.3147446166  # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
-cispAccumFrac_SCSG_J82 = 0.3033715255	    # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
-cispAccumFrac_RCRG_RT4 = 0.2154448963	    # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
-cispAccumFrac_RCRG_HT_1197 = 0.1498013738   # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
-cispAccumFrac_SCRG_SW780 = 0.2691142767     # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
-cispAccumFrac_SCRG_KU_19_19 = 0.2847440491  # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
-cispAccumFrac_RCSG_LB831_BLC = 0.02925373453# (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
-cispAccumFrac_RCSG_DSH1 = 0.04556319402     # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
+cispAccumFrac_SCSG_BFTC_905 = 0.3147446166   # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
+cispAccumFrac_SCSG_J82 = 0.3033715255	     # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_RT4 = 0.2154448963	     # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_HT_1197 = 0.1498013738    # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
+cispAccumFrac_SCRG_SW780 = 0.2691142767      # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
+cispAccumFrac_SCRG_KU_19_19 = 0.2847440491   # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
+cispAccumFrac_RCSG_LB831_BLC = 0.02925373453 # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
+cispAccumFrac_RCSG_DSH1 = 0.04556319402      # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
 
 ## gemcitabine (possibly dFdCtP) accumulation per cell per time step, based on IC50 of bladder cancer cell line;
 ## also = concentration removed from voxel; microM/MCS * siteConcGem(microM)
-gemAccumFrac_SCSG_BFTC_905 = 4.41575E-03  # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
-gemAccumFrac_SCSG_J82 = 4.41565E-03       # (sensitive cis and gem)
-gemIC50_SCSG_J82 = 0.007409799	# IC50 microM	gemcitabine				
-gemAccumFrac_RCRG_RT4 = 4.22858E-03       # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
-gemAccumFrac_RCRG_HT_1197 = 4.39190E-03   # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
-gemAccumFrac_SCRG_SW780 = 2.68443E-03     # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
-gemAccumFrac_SCRG_KU_19_19 = 4.18843E-03  # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
-gemAccumFrac_RCSG_LB831_BLC = 4.41518E-03 # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
-gemAccumFrac_RCSG_DSH1 = 4.41445E-03      # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine				
+gemAccumFrac_SCSG_BFTC_905 = 4.41575E-03     # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
+gemAccumFrac_SCSG_J82 = 4.41565E-03          # (sensitive cis and gem)
+gemAccumFrac_RCRG_RT4 = 4.22858E-03          # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
+gemAccumFrac_RCRG_HT_1197 = 4.39190E-03      # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
+gemAccumFrac_SCRG_SW780 = 2.68443E-03        # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
+gemAccumFrac_SCRG_KU_19_19 = 4.18843E-03     # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
+gemAccumFrac_RCSG_LB831_BLC = 4.41518E-03    # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
+gemAccumFrac_RCSG_DSH1 = 4.41445E-03         # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
+
+## IC50s
+# based on accumulation calculated from fit to IC50 of bladder cancer cell line;
+cisIC50_SCSG_BFTC_905 = 3194.407435         # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
+cisIC50_SCSG_J82 = 6491.22488               # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
+cisIC50_RCRG_RT4 = 23344.4253               # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
+cisIC50_RCRG_HT_1197 = 25956.7652           # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
+cisIC50_SCRG_SW780 = 14875.73178            # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
+cisIC50_SCRG_KU_19_19 = 11338.25877         # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
+cisIC50_RCSG_LB831_BLC = 25956.7652         # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
+cisIC50_RCSG_DSH1 = 25956.7652              # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
+
+gemIC50_SCSG_BFTC_905 = 0.000179231         # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
+gemIC50_SCSG_J82 =  0.257872655             # (sensitive cis and gem)
+gemIC50_RCRG_RT4 =  461.341639352           # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
+gemIC50_RCRG_HT_1197 = 61.068340312         # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
+gemIC50_SCRG_SW780 = 2,709.139285145        # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
+gemIC50_SCRG_KU_19_19 = 554.989029530       # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
+gemIC50_RCSG_LB831_BLC = 1.456441437        # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
+gemIC50_RCSG_DSH1 = 3.357389495             # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
+
 
 
 ## CELL PARAMETERS
@@ -222,6 +242,7 @@ class IncrementClocks(SteppableBasePy):
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
         for cell in self.cellList:
             # if cell.id > 125:
+            if cell.type!=1:
                 print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict, 'vol=',cell.targetVolume,'volLambda=',cell.lambdaVolume
 
 
@@ -419,8 +440,6 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                     accumC=(cisplatin * cispAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcCis = (-0.8242 * IC50 + 67.2261) * siteConcCis/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM cis accumulation / MCS * frac50uMCis
                     cell.dict["cisAccum"]+=accumC
 
-                    print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
-
                     # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
             if cell.type==5: # SCSG_J82
@@ -530,7 +549,7 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                     cell.dict["cisAccum"]+=accumC
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary
 
-                    print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
+            # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
 
 
 
@@ -582,8 +601,6 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                     accumG=(gemcitabine * gemAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcGem = (-0.8242 * IC50 + 67.2261) * siteConcGem/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM gem accumulation / MCS * frac50uMGem
                     cell.dict["gemAccum"]+=accumG
 
-                    print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["gemAccum"],'microM gemcitabine.'
-
                     # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
             if cell.type==5: # SCSG_J82
@@ -594,10 +611,14 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                 comPt.z=int(cell.zCM)
                 gemcitabine=field.get(comPt)
                 attrSecretor=self.getFieldSecretor("Gemcitabine")
+                print 'gemcitabine=',gemcitabine
                 if gemcitabine > 0:
                     dictionaryAttrib = CompuCell.getPyAttrib(cell)
                     accumG=(gemcitabine * gemAccumFrac_SCSG_J82) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
+                    print 'accumulation=',accumG
+                    print 'cell.dict=',cell.dict["gemAccum"]
                     cell.dict["gemAccum"]+=accumG
+                    print 'incremented cell.dict=',cell.dict["gemAccum"]
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
             if cell.type==6: # RCRG_RT4
                 comPt=CompuCell.Point3D()
@@ -693,7 +714,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                     cell.dict["gemAccum"]+=accumG
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary
 
-                    print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["gemAccum"],'microM gemcitabine.'
+            # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["gemAccum"],'microM gemcitabine.'
 
 
 
@@ -782,7 +803,7 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
 
 
 
-#########################################CELL TYPES CHANGE AT DRUG IC50 THRESHOLD
+######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
 class ChangeAtGemIC50Steppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator, _frequency)
@@ -797,15 +818,95 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
         pass
     def step(self,mcs):
         for cell in self.cellList:
+            if cell.type==4:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCSG_BFTC_905):
+                    cell.type=13 # IC50Gem
             if cell.type==5:
                 dictionaryAttrib = CompuCell.getPyAttrib(cell)
                 if (cell.dict["gemAccum"]>=gemIC50_SCSG_J82):
                     cell.type=13 # IC50Gem
+            if cell.type==6:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCRG_RT4):
+                    cell.type=13 # IC50Gem
+            if cell.type==7:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCRG_HT_1197):
+                    cell.type=13 # IC50Gem
+            if cell.type==8:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCRG_SW780):
+                    cell.type=13 # IC50Gem
+            if cell.type==9:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCRG_KU_19_19):
+                    cell.type=13 # IC50Gem
+            if cell.type==10:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCSG_LB831_BLC):
+                    cell.type=13 # IC50Gem
+            if cell.type==11:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCSG_DSH1):
+                    cell.type=13 # IC50Gem 
+
+
+
+
+######################################### CELL TYPES CHANGE AT GEMCITABINE IC50 THRESHOLD
+class ChangeAtCisIC50Steppable(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator, _frequency)
+        self.simulator=_simulator
+        self.inventory=self.simulator.getPotts().getCellInventory()
+        self.cellList=CellList(self.inventory)
+          # 2 lines following are mentioned in the manual, but are not in Listing 17,
+          #    or the demo (cellsort_2D_field_modules.py)
+          # self.dim=self.simulator.getPotts().getCellFieldG().getDim()
+          # self.fieldName="FGF"
+    def start(self):
+        pass
+    def step(self,mcs):
+        for cell in self.cellList:
+            if cell.type==4:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_SCSG_BFTC_905):
+                    cell.type=13 # IC50Cis
+            if cell.type==5:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_SCSG_J82):
+                    cell.type=13 # IC50Cis
+            if cell.type==6:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_RCRG_RT4):
+                    cell.type=13 # IC50Cis
+            if cell.type==7:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_RCRG_HT_1197):
+                    cell.type=13 # IC50Cis
+            if cell.type==8:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_SCRG_SW780):
+                    cell.type=13 # IC50Cis
+            if cell.type==9:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_SCRG_KU_19_19):
+                    cell.type=13 # IC50Cis
+            if cell.type==10:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_RCSG_LB831_BLC):
+                    cell.type=13 # IC50Cis
+            if cell.type==11:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["cisAccum"]>=cisIC50_RCSG_DSH1):
+                    cell.type=13 # IC50Cis 
 
 
 
 
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& DATA RECORDING FUNCTIONS
+# &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 class PrintAllCells(SteppableBasePy):
 
