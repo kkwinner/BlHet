@@ -585,18 +585,18 @@ IC50_RCSG_DSH1
 
   <!-- INITIALIZE TISSUE FOR DRUG DELIVERY -->
     <!-- 10 x 10 x 10 TEST -->
-  <Steppable Type="UniformInitializer">
-    <Region>
-      <BoxMin x="5" y="5" z="0"/>
-      <BoxMax x="15" y="15" z="1"/>
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--   <Region> -->
+  <!--     <BoxMin x="5" y="5" z="0"/> -->
+  <!--     <BoxMax x="15" y="15" z="1"/> -->
       
       <!-- <Steppable Type="BlobInitializer"> -->
     <!-- <Region> -->
         <!-- <Radius>3</Radius> -->
         <!-- <Center x="10" y="10" z="1"/> -->
         
-      <Gap>0</Gap>
-      <Width>1</Width>
+      <!-- <Gap>0</Gap> -->
+      <!-- <Width>1</Width> -->
       <!-- <Types>SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,SCRG_SW780,Vessel</Types> -->
       <!-- <Types>SCRG_SW780</Types> -->
       <!-- <Types> -->
@@ -616,8 +616,41 @@ IC50_RCSG_DSH1
       <!-- </Types> -->
       <!-- <Types>Vessel,IC50Cis,IC50Gem,Dead,LungNormal,SCSG_BFTC_905</Types> -->
       <!-- <Types>SCSG_BFTC_905, -->
-      <Types>SCSG_J82,SCSG_J82,Vessel</Types>
-     </Region>
+  <!--     <Types>SCSG_J82,SCSG_J82,Vessel</Types> -->
+  <!--    </Region> -->
+  <!-- </Steppable> -->
+
+    <!-- INITIALIZE QUADRANTS -->
+    <!-- 10 x 10 x 1 TEST -->
+  <Steppable Type="UniformInitializer">
+    <Region>
+      <BoxMin x="5" y="5" z="0"/>
+      <BoxMax x="10" y="10" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types>SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, Vessel</Types>
+    </Region>
+    <Region>
+      <BoxMin x="10" y="10" z="0"/>
+      <BoxMax x="15" y="15" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types> RCRG_RT4, RCRG_RT4, RCRG_RT4, Vessel</Types>
+    </Region>
+    <Region>
+      <BoxMin x="10" y="5" z="0"/>
+      <BoxMax x="15" y="10" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types>  SCRG_SW780, SCRG_SW780, SCRG_SW780, Vessel</Types>
+    </Region>
+    <Region>
+      <BoxMin x="5" y="10" z="0"/>
+      <BoxMax x="10" y="15" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types> RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, Vessel</Types>
+    </Region>
   </Steppable>
 
   <!-- <Steppable Type="BlobInitializer"> -->

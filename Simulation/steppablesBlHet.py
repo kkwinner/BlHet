@@ -12,16 +12,11 @@ from datetime import datetime
 import cProfile
 # from scipy import integrate
 
-""" "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
-print dir(cell)
-output 7-2-2012:
-['__class__', '__del__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattr__', '__getattribute__', '__hash__', '__init__', '__module__',
-'__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__swig_destroy__', '__swig_getmetho
-ds__', '__swig_setmethods__', '__weakref__', 'angle', 'averageConcentration', 'clusterId', 'clusterSurface', 'ecc', 'extraAttribPtr', 'flag', 'fluctAm
-pl', 'iXX', 'iXY', 'iXZ', 'iYY', 'iYZ', 'iZZ', 'id', 'lX', 'lY', 'lZ', 'lambdaClusterSurface', 'lambdaSurface', 'lambdaVecX', 'lambdaVecY', 'lambdaVec
-Z', 'lambdaVolume', 'pyAttrib', 'subtype', 'surface', 'targetClusterSurface', 'targetSurface', 'targetVolume', 'this', 'type', 'volume', 'xCM', 'xCOM'
-, 'xCOMPrev', 'yCM', 'yCOM', 'yCOMPrev', 'zCM', 'zCOM', 'zCOMPrev']
-"""
+# "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
+def step(self,mcs):
+    for cell in self.cellList:
+        print dir(cell)
+        break
 
 
 #STRINGS FOR OUTPUT FILES
@@ -221,7 +216,7 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["gemAccum"]=0
 
             # for cell in self.cellList:
-            print 'cell.id=',cell.id,' dict=',cell.dict
+            # print 'cell.id=',cell.id,' dict=',cell.dict
 
 
 
@@ -268,7 +263,7 @@ class VolumeParamSteppable(SteppableBasePy):
             # if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
                 cell.targetVolume=T24BCCellVol
                 cell.lambdaVolume=normalLambdaVolume
-                print 'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
+                # print 'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
 
     # def step(self,mcs):
     #     for cell in self.cellList:
@@ -330,8 +325,8 @@ class MitosisSteppable(MitosisSteppableBase):
                     cell.type=3 # cell dies with 50% chance
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
-                # self.divideCellRandomOrientation(cell)
-                self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+                self.divideCellRandomOrientation(cell)
+                # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
                 # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 

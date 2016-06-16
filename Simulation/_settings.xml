@@ -116,8 +116,8 @@
          </e>
          <e Name="1" Type="dict">
             <e Name="cameraClippingRange" Type="floatlist">65.4544732478,67.1073639863</e>
-            <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">10.0,10.0,66.1156295432</e>
+            <e Name="cameraFocalPoint" Type="floatlist">12.9716539879,16.2480930002,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">12.9716539879,16.2480930002,66.1156295432</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
