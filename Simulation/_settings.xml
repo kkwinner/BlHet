@@ -18,12 +18,12 @@
       <e Name="NumberOfLegendBoxes" Type="int">6</e>
       <e Name="NumberOfRecentSimulations" Type="int">10</e>
       <e Name="Projection" Type="int">0</e>
-      <e Name="SaveImageFrequency" Type="int">650</e>
+      <e Name="SaveImageFrequency" Type="int">1</e>
       <e Name="SaveLatticeFrequency" Type="int">100</e>
       <e Name="ScreenUpdateFrequency" Type="int">1</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">1</e>
+      <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
       <e Name="ArrowLength" Type="float">1.0</e>
