@@ -331,8 +331,8 @@ class MitosisSteppable(MitosisSteppableBase):
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
                 # self.divideCellRandomOrientation(cell)
-                # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
-                self.divideCellAlongMajorAxis(cell)                               # this is a valid option
+                self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+                # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
