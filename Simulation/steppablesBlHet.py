@@ -167,6 +167,8 @@ MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for
 divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in vitro
 #phagocytosisEndTime = 24 # dead cells removed at 24 hours
 phagocytosisEndTime = 0.001 # TEST dead cells removed at 24 hours
+normalLambdaVolume = 100.0
+cellGrowthLambdaVolume = 1.0
 
 
 # PRINT SIMULATION START TIME
@@ -265,7 +267,7 @@ class VolumeParamSteppable(SteppableBasePy):
         for cell in self.cellList:
             # if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
                 cell.targetVolume=T24BCCellVol
-                cell.lambdaVolume=100.0
+                cell.lambdaVolume=normalLambdaVolume
                 print 'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
 
     # def step(self,mcs):
