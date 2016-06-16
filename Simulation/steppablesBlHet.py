@@ -164,9 +164,9 @@ T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
 
 #divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
-divisionCycleTimeHrs = 0.005 # TEST average time to division / replication from several cancer cell lines in vitro
+divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in vitro
 #phagocytosisEndTime = 24 # dead cells removed at 24 hours
-phagocytosisEndTime = 0.005 # TEST dead cells removed at 24 hours
+phagocytosisEndTime = 0.001 # TEST dead cells removed at 24 hours
 
 
 # PRINT SIMULATION START TIME
@@ -282,9 +282,10 @@ class GrowthSteppable(SteppableBasePy):
         SteppableBasePy.__init__(self,_simulator,_frequency)
     def step(self,mcs):
         for cell in self.cellList:
-            if cell.dict["AgeHrs"]>divisionCycleTimeHrs:
+            if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
                 cell.targetVolume=2*T24BCCellVol
                 cell.lambdaVolume=1
+                print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
         # alternatively if you want to make growth a function of chemical concentration uncomment lines below and comment lines above        
         # field=CompuCell.getConcentrationField(self.simulator,"PUT_NAME_OF_CHEMICAL_FIELD_HERE")
         # pt=CompuCell.Point3D()
@@ -314,10 +315,10 @@ class MitosisSteppable(MitosisSteppableBase):
 
             # print 'cell.id=',cell.id,' dict=',cell.dict
 
-            if cell.dict["AgeHrs"]>divisionCycleTimeHrs:
-                if cell.volume==2*T24BCCellVol:
-                    cells_to_divide.append(cell)
-                    print 'cell is dividing at AgeHrs',cell.dict["AgeHrs"]
+            # cell division time has been reached if volume has doubled (condition for GrowthSteppable)
+            if cell.volume==2*T24BCCellVol:
+                cells_to_divide.append(cell)
+                print 'cell is dividing at AgeHrs',cell.dict["AgeHrs"]
                 
         for cell in cells_to_divide:
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
@@ -325,13 +326,12 @@ class MitosisSteppable(MitosisSteppableBase):
                 print 'deathChance=',deathChance
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
-            if cell.type!=3 and cell.type!=1 and cell.type!=2: # all cell types divide except for Vessel, LungNormal, Dead (IC50Cis, and IC50Gem divide)
-                if cell.volume==2:
-                    # to change mitosis mode leave one of the below lines uncommented
-                    self.divideCellRandomOrientation(cell)
-                    # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
-                    # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
-                    # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
+            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
+                # to change mitosis mode leave one of the below lines uncommented
+                self.divideCellRandomOrientation(cell)
+                # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
+                # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
+                # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
         self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol

@@ -196,19 +196,19 @@ IC50_RCSG_DSH1
   <Plugin Name="Contact">
     <!-- add slight attraction for cancer to medium if want outer cells of spheroid to shed -->
     <!-- current settings assume attraction between cancer cells, with necrotic cells less adhesive -->
-    <Energy Type1="Medium" Type2="Medium">10</Energy>
-    <Energy Type1="Vessel" Type2="Medium">10</Energy>
-    <Energy Type1="LungNormal" Type2="Medium">10</Energy>
-    <Energy Type1="SCSG_BFTC_905" Type2="Medium">10</Energy>
-    <Energy Type1="SCSG_J82" Type2="Medium">10</Energy>
-    <Energy Type1="RCRG_RT4" Type2="Medium">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="Medium">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="Medium">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="Medium">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="Medium">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="Medium">10</Energy>
-    <Energy Type1="IC50Cis" Type2="Medium">10</Energy>
-    <Energy Type1="IC50Gem" Type2="Medium">10</Energy>
+    <Energy Type1="Medium" Type2="Medium">0</Energy>
+    <Energy Type1="Vessel" Type2="Medium">0</Energy>
+    <Energy Type1="LungNormal" Type2="Medium">0</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="Medium">0</Energy>
+    <Energy Type1="SCSG_J82" Type2="Medium">0</Energy>
+    <Energy Type1="RCRG_RT4" Type2="Medium">0</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="Medium">0</Energy>
+    <Energy Type1="SCRG_SW780" Type2="Medium">0</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="Medium">0</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="Medium">0</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="Medium">0</Energy>
+    <Energy Type1="IC50Cis" Type2="Medium">0</Energy>
+    <Energy Type1="IC50Gem" Type2="Medium">0</Energy>
     <Energy Type1="Dead" Type2="Medium">5</Energy>
 
     <!-- tumor and normal lung stick to vessel with same adhesion as tumor-tumor -->
@@ -241,7 +241,7 @@ IC50_RCSG_DSH1
     <Energy Type1="Dead" Type2="LungNormal">5</Energy>
 
     <!-- tumor-tumor ahdesion same in all cases, dead cells stick less -->
-    <Energy Type1="SCSG_BFTC_905" Type2="SCSG_BFTC_905">10</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="SCSG_BFTC_905">0</Energy>
     <Energy Type1="SCSG_J82" Type2="SCSG_BFTC_905">0</Energy>
     <Energy Type1="RCRG_RT4" Type2="SCSG_BFTC_905">0</Energy>
     <Energy Type1="RCRG_HT_1197" Type2="SCSG_BFTC_905">0</Energy>
@@ -253,7 +253,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCSG_BFTC_905">0</Energy>
     <Energy Type1="Dead" Type2="SCSG_BFTC_905">5</Energy>
 
-    <Energy Type1="SCSG_J82" Type2="SCSG_J82">10</Energy>
+    <Energy Type1="SCSG_J82" Type2="SCSG_J82">0</Energy>
     <Energy Type1="RCRG_RT4" Type2="SCSG_J82">0</Energy>
     <Energy Type1="RCRG_HT_1197" Type2="SCSG_J82">0</Energy>
     <Energy Type1="SCRG_SW780" Type2="SCSG_J82">0</Energy>
@@ -264,7 +264,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCSG_J82">0</Energy>
     <Energy Type1="Dead" Type2="SCSG_J82">5</Energy>
 
-    <Energy Type1="RCRG_RT4" Type2="RCRG_RT4">10</Energy>
+    <Energy Type1="RCRG_RT4" Type2="RCRG_RT4">0</Energy>
     <Energy Type1="RCRG_HT_1197" Type2="RCRG_RT4">0</Energy>
     <Energy Type1="SCRG_SW780" Type2="RCRG_RT4">0</Energy>
     <Energy Type1="SCRG_KU_19_19" Type2="RCRG_RT4">0</Energy>
@@ -274,7 +274,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="RCRG_RT4">0</Energy>
     <Energy Type1="Dead" Type2="RCRG_RT4">5</Energy>
 
-    <Energy Type1="RCRG_HT_1197" Type2="RCRG_HT_1197">10</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="RCRG_HT_1197">0</Energy>
     <Energy Type1="SCRG_SW780" Type2="RCRG_HT_1197">0</Energy>
     <Energy Type1="SCRG_KU_19_19" Type2="RCRG_HT_1197">0</Energy>
     <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_HT_1197">0</Energy>
@@ -283,7 +283,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="RCRG_HT_1197">0</Energy>
     <Energy Type1="Dead" Type2="RCRG_HT_1197">5</Energy>
     
-    <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">10</Energy>
+    <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">0</Energy>
     <Energy Type1="SCRG_KU_19_19" Type2="SCRG_SW780">0</Energy>
     <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_SW780">0</Energy>
     <Energy Type1="RCSG_DSH1" Type2="SCRG_SW780">0</Energy>
@@ -291,29 +291,29 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCRG_SW780">0</Energy>
     <Energy Type1="Dead" Type2="SCRG_SW780">5</Energy>
 
-    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_KU_19_19">10</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_KU_19_19">0</Energy>
     <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_KU_19_19">0</Energy>
     <Energy Type1="RCSG_DSH1" Type2="SCRG_KU_19_19">0</Energy>
     <Energy Type1="IC50Cis" Type2="SCRG_KU_19_19">0</Energy>
     <Energy Type1="IC50Gem" Type2="SCRG_KU_19_19">0</Energy>
     <Energy Type1="Dead" Type2="SCRG_KU_19_19">5</Energy>
     
-    <Energy Type1="RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">10</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">0</Energy>
     <Energy Type1="RCSG_DSH1" Type2="RCSG_LB831_BLC">0</Energy>
     <Energy Type1="IC50Cis" Type2="RCSG_LB831_BLC">0</Energy>
     <Energy Type1="IC50Gem" Type2="RCSG_LB831_BLC">0</Energy>
     <Energy Type1="Dead" Type2="RCSG_LB831_BLC">5</Energy>
     
-    <Energy Type1="RCSG_DSH1" Type2="RCSG_DSH1">10</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCSG_DSH1">0</Energy>
     <Energy Type1="IC50Cis" Type2="RCSG_DSH1">0</Energy>
     <Energy Type1="IC50Gem" Type2="RCSG_DSH1">0</Energy>
     <Energy Type1="Dead" Type2="RCSG_DSH1">5</Energy>
     
-    <Energy Type1="IC50Cis" Type2="IC50Cis">10</Energy>
+    <Energy Type1="IC50Cis" Type2="IC50Cis">0</Energy>
     <Energy Type1="IC50Gem" Type2="IC50Cis">0</Energy>
     <Energy Type1="Dead" Type2="IC50Cis">5</Energy>
 
-    <Energy Type1="IC50Gem" Type2="IC50Gem">10</Energy>
+    <Energy Type1="IC50Gem" Type2="IC50Gem">0</Energy>
     <Energy Type1="Dead" Type2="IC50Gem">5</Energy>
     
     <Energy Type1="Dead" Type2="Dead">5</Energy>
@@ -587,8 +587,8 @@ IC50_RCSG_DSH1
     <!-- 10 x 10 x 10 TEST -->
   <Steppable Type="UniformInitializer">
     <Region>
-      <BoxMin x="2" y="2" z="0"/>
-      <BoxMax x="18" y="18" z="1"/>
+      <BoxMin x="5" y="5" z="0"/>
+      <BoxMax x="15" y="15" z="1"/>
       
       <!-- <Steppable Type="BlobInitializer"> -->
     <!-- <Region> -->
