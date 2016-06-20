@@ -13,7 +13,7 @@ import cProfile
 # from scipy import integrate
 
 # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
-def step(self,mcs):
+def start(self):
     for cell in self.cellList:
         print dir(cell)
         break
@@ -240,10 +240,10 @@ class IncrementClocks(SteppableBasePy):
             cell.dict["AgeHrs"]+= MCSFractionOfHour
             if cell.type==3:
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
-        for cell in self.cellList:
+        # for cell in self.cellList:
             # if cell.id > 125:
-            if cell.type!=1:
-                print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict, 'vol=',cell.targetVolume,'volLambda=',cell.lambdaVolume
+            # if cell.type!=1:
+            # print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict, 'vol=',cell.targetVolume,'volLambda=',cell.lambdaVolume
 
 
 
@@ -311,20 +311,17 @@ class MitosisSteppable(MitosisSteppableBase):
         print "INSIDE MITOSIS STEPPABLE"
         cells_to_divide=[]
         for cell in self.cellList:
-
             # print 'cell.id=',cell.id,' dict=',cell.dict
-
-            # cell division time has been reached if volume has doubled (condition for GrowthSteppable)
-            if cell.volume==2*T24BCCellVol:
-                cells_to_divide.append(cell)
-                print 'cell is dividing at AgeHrs',cell.dict["AgeHrs"]
-                
-        for cell in cells_to_divide:
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
                 deathChance = uniform(0,1)
                 print 'deathChance=',deathChance
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
+            # cell division time has been reached if volume has doubled (condition for GrowthSteppable)
+            if cell.volume==2*T24BCCellVol:
+                cells_to_divide.append(cell)
+                print 'cell is dividing at AgeHrs',cell.dict["AgeHrs"]
+        for cell in cells_to_divide:
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
                 self.divideCellRandomOrientation(cell)
@@ -354,6 +351,7 @@ class MitosisSteppable(MitosisSteppableBase):
         self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
         ## for cell in self.cellList:
         print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+        print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
         # if self.parentCell.type==5:
         #     self.childCell.type=6
@@ -631,10 +629,10 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                 if gemcitabine > 0:
                     dictionaryAttrib = CompuCell.getPyAttrib(cell)
                     accumG=(gemcitabine * gemAccumFrac_SCSG_J82) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                    print 'accumulation=',accumG
-                    print 'cell.dict=',cell.dict["gemAccum"]
+                    # print 'accumulation=',accumG
+                    # print 'cell.dict=',cell.dict["gemAccum"]
                     cell.dict["gemAccum"]+=accumG
-                    print 'incremented cell.dict=',cell.dict["gemAccum"]
+                    # print 'incremented cell.dict=',cell.dict["gemAccum"]
                     attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
             if cell.type==6: # RCRG_RT4
                 comPt=CompuCell.Point3D()
