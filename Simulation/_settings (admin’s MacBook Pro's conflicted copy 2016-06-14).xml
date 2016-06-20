@@ -18,15 +18,15 @@
       <e Name="NumberOfLegendBoxes" Type="int">6</e>
       <e Name="NumberOfRecentSimulations" Type="int">10</e>
       <e Name="Projection" Type="int">0</e>
-      <e Name="SaveImageFrequency" Type="int">1</e>
+      <e Name="SaveImageFrequency" Type="int">650</e>
       <e Name="SaveLatticeFrequency" Type="int">100</e>
-      <e Name="ScreenUpdateFrequency" Type="int">100</e>
+      <e Name="ScreenUpdateFrequency" Type="int">1</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
       <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -48,7 +48,7 @@
       <e Name="FieldParams" Type="dict">
          <e Name="Cisplatin" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -66,7 +66,7 @@
          </e>
          <e Name="Gemcitabine" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -115,9 +115,9 @@
             <e Name="winType" Type="str">Graphics</e>
          </e>
          <e Name="1" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">65.4544732478,67.1073639863</e>
-            <e Name="cameraFocalPoint" Type="floatlist">12.9716539879,16.2480930002,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">12.9716539879,16.2480930002,66.1156295432</e>
+            <e Name="cameraClippingRange" Type="floatlist">54.0946059899,55.4606313936</e>
+            <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">10.0,10.0,54.6410161514</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
@@ -125,7 +125,7 @@
             <e Name="sceneName" Type="str">Cell_Field</e>
             <e Name="sceneType" Type="str">CellField</e>
             <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">1023,566</e>
+            <e Name="winSize" Type="size">1023,396</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
       </e>
@@ -157,7 +157,7 @@
       <e Name="FPPLinksOn" Type="bool">False</e>
       <e Name="FixedArrowColorOn" Type="bool">False</e>
       <e Name="FloatingWindows" Type="bool">False</e>
-      <e Name="ImageOutputOn" Type="bool">False</e>
+      <e Name="ImageOutputOn" Type="bool">True</e>
       <e Name="LatticeOutputOn" Type="bool">False</e>
       <e Name="LegendEnable" Type="bool">True</e>
       <e Name="MaxRangeFixed" Type="bool">False</e>

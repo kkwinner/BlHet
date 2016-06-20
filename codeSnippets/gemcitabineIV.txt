@@ -1,0 +1,33 @@
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.simulator=_simulator
+    def start(self):
+        pass
+    def step(self,mcs):
+
+        ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
+        # INTRAVENOUS DRUG CONCENTRATION
+        # tMins=mcs/465.189 # diffusion time for one cell diameter in normal tissue
+#         if 0<=mcs<cFirst5Mins:
+        if 0<=mcs<gem30Mins:
+            tMins=mcs/CisGem1Min
+            IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
+
+        elif gem30Mins<=mcs:
+            tMins=(mcs/CisGem1Min) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
+            IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
+
+    def finish(self):
+        # Finish Function gets called after the last MCS
+        pass
