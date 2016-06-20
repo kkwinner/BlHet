@@ -156,14 +156,16 @@ gemIC50_RCSG_DSH1 = 3.357389495             # (resist cis sens gem)	0.096498675	
 
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
-MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
+normalLambdaVolume = 100.0
+cellGrowthLambdaVolume = 1.0
 
+## TIME FRAMES
+MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
 #divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
 divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in vitro
 #phagocytosisEndTime = 24 # dead cells removed at 24 hours
 phagocytosisEndTime = 0.001 # TEST dead cells removed at 24 hours
-normalLambdaVolume = 100.0
-cellGrowthLambdaVolume = 1.0
+
 
 
 # PRINT SIMULATION START TIME
@@ -346,25 +348,27 @@ class MitosisSteppable(MitosisSteppableBase):
         self.childCell.type=self.parentCell.type
         self.childCell.dict["AgeHrs"]=0
         self.childCell.dict["HrsSinceDeath"]=0
-        self.childCell.dict["cisAccum"]=0
-        self.childCell.dict["gemAccum"]=0
+        self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+        self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+        self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+        self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
         ## for cell in self.cellList:
         print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
 
-        if self.parentCell.type==5:
-            self.childCell.type=6
-        elif self.parentCell.type==6:
-            self.childCell.type=7
-        elif self.parentCell.type==7:
-            self.childCell.type=8
-        elif self.parentCell.type==8:
-            self.childCell.type=9
-        elif self.parentCell.type==9:
-            self.childCell.type=10
-        elif self.parentCell.type==10:
-            self.childCell.type=11
-            # else:
-        #     self.childCell.type=1
+        # if self.parentCell.type==5:
+        #     self.childCell.type=6
+        # elif self.parentCell.type==6:
+        #     self.childCell.type=7
+        # elif self.parentCell.type==7:
+        #     self.childCell.type=8
+        # elif self.parentCell.type==8:
+        #     self.childCell.type=9
+        # elif self.parentCell.type==9:
+        #     self.childCell.type=10
+        # elif self.parentCell.type==10:
+        #     self.childCell.type=11
+        #     # else:
+        # #     self.childCell.type=1
 
 
         
