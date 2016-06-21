@@ -10,7 +10,7 @@
    <Settings Type="int">
       <e Name="CellGlyphPhiRes" Type="int">2</e>
       <e Name="CellGlyphThetaRes" Type="int">2</e>
-      <e Name="FieldIndex" Type="int">0</e>
+      <e Name="FieldIndex" Type="int">1</e>
       <e Name="GraphicsWinHeight" Type="int">400</e>
       <e Name="GraphicsWinWidth" Type="int">400</e>
       <e Name="NumberAccuracy" Type="int">2</e>
@@ -18,15 +18,15 @@
       <e Name="NumberOfLegendBoxes" Type="int">6</e>
       <e Name="NumberOfRecentSimulations" Type="int">10</e>
       <e Name="Projection" Type="int">0</e>
-      <e Name="SaveImageFrequency" Type="int">65</e>
+      <e Name="SaveImageFrequency" Type="int">200</e>
       <e Name="SaveLatticeFrequency" Type="int">10</e>
-      <e Name="ScreenUpdateFrequency" Type="int">20</e>
+      <e Name="ScreenUpdateFrequency" Type="int">100</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">1</e>
+      <e Name="TabIndex" Type="int">2</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -66,7 +66,7 @@
          </e>
          <e Name="Gemcitabine" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -115,17 +115,17 @@
             <e Name="winType" Type="str">Graphics</e>
          </e>
          <e Name="1" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">65.4544732478,67.1073639863</e>
-            <e Name="cameraFocalPoint" Type="floatlist">12.9716539879,16.2480930002,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">12.9716539879,16.2480930002,66.1156295432</e>
+            <e Name="cameraClippingRange" Type="floatlist">54.0946059899,55.4606313936</e>
+            <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">10.0,10.0,54.6410161514</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
             <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cell_Field</e>
-            <e Name="sceneType" Type="str">CellField</e>
+            <e Name="sceneName" Type="str">Gemcitabine</e>
+            <e Name="sceneType" Type="str">ConField</e>
             <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">1023,566</e>
+            <e Name="winSize" Type="size">1301,886</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
       </e>
@@ -134,14 +134,14 @@
       <e Name="LastVersionCheckDate" Type="str">20160607</e>
       <e Name="OutputLocation" Type="str">/Users/squirrel/CC3DWorkspace</e>
       <e Name="ProjectLocation" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet</e>
-      <e Name="RecentFile" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
+      <e Name="RecentFile" Type="str">/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
       <e Name="ScalarIsoValues" Type="str"/>
       <e Name="Types3DInvisible" Type="str">0</e>
    </Settings>
    <Settings Type="bool">
       <e Name="BoundingBoxOn" Type="bool">True</e>
       <e Name="CC3DOutputOn" Type="bool">True</e>
-      <e Name="CellBordersOn" Type="bool">False</e>
+      <e Name="CellBordersOn" Type="bool">True</e>
       <e Name="CellGlyphScaleByVolumeOn" Type="bool">True</e>
       <e Name="CellGlyphsOn" Type="bool">False</e>
       <e Name="CellsOn" Type="bool">True</e>
