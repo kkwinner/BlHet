@@ -159,6 +159,7 @@ gemIC50_RCSG_DSH1 = 3.357389495             # (resist cis sens gem)	0.096498675	
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 1.0
+vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
 
 ## TIME FRAMES
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
@@ -209,12 +210,15 @@ class SetCellDictionaries(SteppableBasePy):
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361?)
             x = gauss(30,1)
             y = uniform(0,30) # age of cells initialized into simulation
-            # cell.dict["AgeHrs"]=y
+            cell.dict["AgeHrs"]=y
             # cell.dict["HrsSinceDeath"]=0
 
             # # test non-dividing and dead cells
             cell.dict["cycleHrs"]=x
-            cell.dict["AgeHrs"]=y
+            
+            # cell.dict["AgeHrs"]=0
+            # print 'AgeHrs distribution = ', y
+            print 'AgeHrs distribution = ', cell.dict["AgeHrs"]
             cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
@@ -239,6 +243,7 @@ class IncrementClocks(SteppableBasePy):
     def step(self,mcs):
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
+            # print cell.dict["AgeHrs"]
             cell.dict["AgeHrs"]+= MCSFractionOfHour
             if cell.type==3:
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
@@ -333,10 +338,21 @@ class MitosisSteppable(MitosisSteppableBase):
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
-        self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-        self.parentCell.lambdaVolume = 100 # make sure parent stays in place
-        self.childCell.targetVolume = 1
-        self.childCell.lambdaVolume = 100  # make sure parent stays in place
+        chanceToBeVessel = uniform(0,1)
+        if chanceToBeVessel <= vesselPercentMetastasis:
+            self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+            self.parentCell.lambdaVolume = 100
+            self.childCell.type=1 # make child Vessel
+            self.childCell.targetVolume = 1
+            self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place
+            # self.cloneParent2Child()
+            print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+            print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+        else:
+            self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+            self.parentCell.lambdaVolume = 100 # make sure parent stays in place
+            self.childCell.targetVolume = 1
+            self.childCell.lambdaVolume = 100  # make sure parent stays in place
         # self.cloneParent2Child()
         # self.childCell.lambdaVolume = 100 # make sure parent stays in place
         # set parent lambda volume post-division
@@ -344,17 +360,17 @@ class MitosisSteppable(MitosisSteppableBase):
         
         # for more control of what gets copied from parent to child use cloneAttributes function
         # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
-
-        self.childCell.type=self.parentCell.type
-        self.childCell.dict["AgeHrs"]=0
-        self.childCell.dict["HrsSinceDeath"]=0
-        self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-        self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-        self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-        self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+        
+            self.childCell.type=self.parentCell.type
+            self.childCell.dict["AgeHrs"]=0
+            self.childCell.dict["HrsSinceDeath"]=0
+            self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+            self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+            self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+            self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
         ## for cell in self.cellList:
-        print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-        print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+            print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+            print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
         # if self.parentCell.type==5:
         #     self.childCell.type=6
@@ -792,7 +808,7 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
-        if mcs>gemZeroConcTime or  gemZeroConcTime1<mcs>cycle2Gem:
+        # if mcs>gemZeroConcTime or  gemZeroConcTime1<mcs>cycle2Gem:
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
         # INTRAVENOUS DRUG CONCENTRATION
         # tMins=mcs/465.189 # diffusion time for one cell diameter in normal tissue
