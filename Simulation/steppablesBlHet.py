@@ -164,7 +164,7 @@ MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for
 #divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
 divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in vitro
 #phagocytosisEndTime = 24 # dead cells removed at 24 hours
-phagocytosisEndTime = 0.001 # TEST dead cells removed at 24 hours
+phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
 
 
 
@@ -206,13 +206,14 @@ class SetCellDictionaries(SteppableBasePy):
 
             # SAME CLOCK IN ALL CELLS
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361?)
-            # x = gauss(30,1)
-            # y = uniform(0,30) # age of cells initialized into simulation
+            x = gauss(30,1)
+            y = uniform(0,30) # age of cells initialized into simulation
             # cell.dict["AgeHrs"]=y
             # cell.dict["HrsSinceDeath"]=0
 
             # # test non-dividing and dead cells
-            cell.dict["AgeHrs"]=0
+            cell.dict["cycleHrs"]=x
+            cell.dict["AgeHrs"]=y
             cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
@@ -282,6 +283,7 @@ class GrowthSteppable(SteppableBasePy):
     def step(self,mcs):
         for cell in self.cellList:
             if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
+#            if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
                 cell.targetVolume=2*T24BCCellVol
                 cell.lambdaVolume=1
                 print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
