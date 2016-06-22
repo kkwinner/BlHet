@@ -211,17 +211,17 @@ class SetCellDictionaries(SteppableBasePy):
             x = gauss(30,1)
             y = uniform(0,30) # age of cells initialized into simulation
             cell.dict["AgeHrs"]=y
-            # cell.dict["HrsSinceDeath"]=0
-
-            # # test non-dividing and dead cells
             cell.dict["cycleHrs"]=x
-            
             # cell.dict["AgeHrs"]=0
-            # print 'AgeHrs distribution = ', y
-            print 'AgeHrs distribution = ', cell.dict["AgeHrs"]
             cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
+            cell.dict["resistance"]=1
+
+            cell.dict["IC50"]=0
+
+            # print 'AgeHrs distribution = ', y
+            print 'AgeHrs distribution = ', cell.dict["AgeHrs"]
 
             # for cell in self.cellList:
             # print 'cell.id=',cell.id,' dict=',cell.dict
