@@ -12,11 +12,7 @@ from datetime import datetime
 import cProfile
 # from scipy import integrate
 
-# "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
-def start(self):
-    for cell in self.cellList:
-        print dir(cell)
-        break
+
 
 
 #STRINGS FOR OUTPUT FILES
@@ -224,8 +220,12 @@ class SetCellDictionaries(SteppableBasePy):
             # print 'AgeHrs distribution = ', y
             # print 'AgeHrs distribution = ', cell.dict["AgeHrs"]
 
-            # for cell in self.cellList:
+        # for cell in self.cellList:
             # print 'cell.id=',cell.id,' dict=',cell.dict
+            # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
+        print 'Members of SteppableBasePy class'
+        print dir(cell)
+            # break
 
 
 
@@ -339,42 +339,49 @@ class MitosisSteppable(MitosisSteppableBase):
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
-        if self.parentCell.dict["generation"]==0:  # if cell has already divided once, do not become vessel
+        if self.parentCell.dict["generation"]<=1:  # if cell has already divided once, do not become vessel
             chanceToBeVessel = uniform(0,1)
             if chanceToBeVessel <= vesselPercentMetastasis:
-                self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = 100
-                self.cloneParent2Child() # copy all parent parameters
-                # over-write some parental parameters
-                self.childCell.type=1 # CHILD IS Vessel
-                self.childCell.targetVolume = 1
-                self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place
-                self.childCell.dict["AgeHrs"]=0
-                self.childCell.dict["HrsSinceDeath"]=0
-                self.childCell.dict["cisAccum"] = 0
-                self.childCell.dict["gemAccum"] = 0
-                self.parentCell.dict["cisAccum"] = 0
-                self.parentCell.dict["gemAccum"] = 0
-                print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
-            else:
-                self.parentCell.dict["generation"]+=1
-                self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = 100 # make sure parent stays in place
-                self.cloneParent2Child() # copy all parent parameters
-                # over-write some parental parameters
-                #            self.childCell.targetVolume = 1
-                #            self.childCell.lambdaVolume = 100  # make sure parent stays in place
-                #            self.childCell.type=self.parentCell.type
-                self.childCell.dict["generation"]=0
-                self.childCell.dict["HrsSinceDeath"]=0
-                self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-                self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-                self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-                self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-                ## for cell in self.cellList:
-                print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                for neighbor , commonSurfaceArea in self.getCellNeighborDataList(self):
+                    if neighbor:
+                        print "neighbor.id",neighbor.id," commonSurfaceArea=",commonSurfaceArea
+                    else:
+                        print "Medium commonSurfaceArea=", commonSurfaceArea
+                        #                neighbors=
+                if neighbor.type==0:
+                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                    self.parentCell.lambdaVolume = 100
+                    self.cloneParent2Child() # copy all parent parameters
+                    # over-write some parental parameters
+                    self.childCell.type=1 # CHILD IS Vessel
+                    self.childCell.targetVolume = 1
+                    self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place
+                    self.childCell.dict["AgeHrs"]=0
+                    self.childCell.dict["HrsSinceDeath"]=0
+                    self.childCell.dict["cisAccum"] = 0
+                    self.childCell.dict["gemAccum"] = 0
+                    self.parentCell.dict["cisAccum"] = 0
+                    self.parentCell.dict["gemAccum"] = 0
+                    print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                    print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                else:
+                    self.parentCell.dict["generation"]+=1
+                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                    self.parentCell.lambdaVolume = 100 # make sure parent stays in place
+                    self.cloneParent2Child() # copy all parent parameters
+                    # over-write some parental parameters
+                    #            self.childCell.targetVolume = 1
+                    #            self.childCell.lambdaVolume = 100  # make sure parent stays in place
+                    #            self.childCell.type=self.parentCell.type
+                    # self.childCell.dict["generation"]=0
+                    self.childCell.dict["HrsSinceDeath"]=0
+                    self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+                    self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+                    self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+                    self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+                    ## for cell in self.cellList:
+                    print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                    print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
         else: # if cell has already divided once, do not become vessel
             self.parentCell.dict["generation"]+=1
@@ -385,7 +392,7 @@ class MitosisSteppable(MitosisSteppableBase):
 #            self.childCell.targetVolume = 1
 #            self.childCell.lambdaVolume = 100  # make sure parent stays in place
 #            self.childCell.type=self.parentCell.type
-            self.childCell.dict["generation"]=0
+            # self.childCell.dict["generation"]=0
             self.childCell.dict["AgeHrs"]=0
             self.childCell.dict["HrsSinceDeath"]=0
             self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
