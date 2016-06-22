@@ -342,26 +342,28 @@ class MitosisSteppable(MitosisSteppableBase):
         if chanceToBeVessel <= vesselPercentMetastasis:
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
             self.parentCell.lambdaVolume = 100
-            self.childCell.type=1 # make child Vessel
+            self.cloneParent2Child() # copy all parent parameters
+            # over-write some parental parameters
+            self.childCell.type=1 # CHILD IS Vessel
             self.childCell.targetVolume = 1
             self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place
-            # self.cloneParent2Child()
+            self.childCell.dict["AgeHrs"]=0
+            self.childCell.dict["HrsSinceDeath"]=0
+            self.childCell.dict["cisAccum"] = 0
+            self.childCell.dict["gemAccum"] = 0
+            self.parentCell.dict["cisAccum"] = 0
+            self.parentCell.dict["gemAccum"] = 0
             print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
             print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+
         else:
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
             self.parentCell.lambdaVolume = 100 # make sure parent stays in place
-            self.childCell.targetVolume = 1
-            self.childCell.lambdaVolume = 100  # make sure parent stays in place
-        # self.cloneParent2Child()
-        # self.childCell.lambdaVolume = 100 # make sure parent stays in place
-        # set parent lambda volume post-division
-
-        
-        # for more control of what gets copied from parent to child use cloneAttributes function
-        # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
-        
-            self.childCell.type=self.parentCell.type
+            self.cloneParent2Child() # copy all parent parameters
+            # over-write some parental parameters
+#            self.childCell.targetVolume = 1
+#            self.childCell.lambdaVolume = 100  # make sure parent stays in place
+#            self.childCell.type=self.parentCell.type
             self.childCell.dict["AgeHrs"]=0
             self.childCell.dict["HrsSinceDeath"]=0
             self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
@@ -371,6 +373,9 @@ class MitosisSteppable(MitosisSteppableBase):
         ## for cell in self.cellList:
             print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
             print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+
+        # for more control of what gets copied from parent to child use cloneAttributes function
+        # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
 
         # if self.parentCell.type==5:
         #     self.childCell.type=6
