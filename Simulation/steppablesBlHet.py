@@ -156,6 +156,11 @@ T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 1.0
 vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
+totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
+print "total cells in sim =",totalSimCellsPossible
+maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible)
+global maxVesselCellCount
+print "max vessels = ",maxVesselCellCount
 
 ## TIME FRAMES
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
@@ -225,6 +230,7 @@ class SetCellDictionaries(SteppableBasePy):
             # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
         print 'Members of SteppableBasePy class'
         print dir(cell)
+
             # break
 
 
@@ -346,7 +352,10 @@ class MitosisSteppable(MitosisSteppableBase):
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
 
     def updateAttributes(self):
-        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
+        #        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
+
+        print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
+        if len(self.cellListByType(self.VESSEL))<maxVesselCellCount:
             chanceToBeVessel = uniform(0,1)
             if chanceToBeVessel <= vesselPercentMetastasis:
 

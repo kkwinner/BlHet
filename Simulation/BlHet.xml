@@ -5,7 +5,7 @@
    <!-- </Metadata> -->
 
   <Potts>  
-    
+    <!-- FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
     <!-- <Dimensions x="150" y="150" z="150" /> -->
     <!-- <Dimensions x="41" y="41" z="41" /> -->
     <!-- MEDIUM-SIZED TEST RUNS -->
@@ -28,7 +28,7 @@
     <!-- <Steps>11916700</Steps> -->
     
     <Temperature>0.0</Temperature>
-    <!-- Neighbor order = 1, faster simulation, greater anisotropy; Introduction to Compucell3D v.3.7.4, p.11 -->
+    <!-- Neighbor order = 1 = faster simulation, greater anisotropy; Introduction to Compucell3D v.3.7.4, p.11 -->
     <NeighborOrder>2</NeighborOrder>
 
 

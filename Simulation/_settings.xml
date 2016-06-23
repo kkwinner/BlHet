@@ -18,7 +18,7 @@
       <e Name="NumberOfLegendBoxes" Type="int">6</e>
       <e Name="NumberOfRecentSimulations" Type="int">10</e>
       <e Name="Projection" Type="int">0</e>
-      <e Name="SaveImageFrequency" Type="int">65</e>
+      <e Name="SaveImageFrequency" Type="int">650</e>
       <e Name="SaveLatticeFrequency" Type="int">10</e>
       <e Name="ScreenUpdateFrequency" Type="int">1</e>
       <e Name="Screenshot_X" Type="int">600</e>
@@ -26,7 +26,7 @@
       <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -48,7 +48,7 @@
       <e Name="FieldParams" Type="dict">
          <e Name="Cisplatin" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -101,9 +101,9 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">41.6386293243,42.6901098628</e>
-            <e Name="cameraFocalPoint" Type="floatlist">10.4534801936,9.64088864145,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">10.4534801936,9.64088864145,42.0592215397</e>
+            <e Name="cameraClippingRange" Type="floatlist">54.0946059899,55.4606313936</e>
+            <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">10.0,10.0,54.6410161514</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
