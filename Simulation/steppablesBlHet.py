@@ -164,10 +164,9 @@ print "max vessels = ",maxVesselCellCount
 
 ## TIME FRAMES
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
-#divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
-divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in vitro
-#phagocytosisEndTime = 24 # dead cells removed at 24 hours
-phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
+divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
+phagocytosisEndTime = 24 # dead cells removed at 24 hours
+# divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in # phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
 
 
 
@@ -209,8 +208,8 @@ class SetCellDictionaries(SteppableBasePy):
 
             # SAME CLOCK IN ALL CELLS
             # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361?)
-            x = gauss(30,1)
-            y = uniform(0,30) # age of cells initialized into simulation
+            x = gauss(divisionCycleTimeHrs,1)
+            y = uniform(0,divisionCycleTimeHrs) # age of cells initialized into simulation
             cell.dict["AgeHrs"]=y
             cell.dict["cycleHrs"]=x
             # cell.dict["AgeHrs"]=0
@@ -295,8 +294,8 @@ class GrowthSteppable(SteppableBasePy):
         SteppableBasePy.__init__(self,_simulator,_frequency)
     def step(self,mcs):
         for cell in self.cellList:
-            if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
-#            if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
+            # if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
+           if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
                 cell.targetVolume=2*T24BCCellVol
                 cell.lambdaVolume=1
                 print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
