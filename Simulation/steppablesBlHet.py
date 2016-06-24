@@ -131,14 +131,14 @@ gemAccumFrac_RCSG_DSH1 = 4.41445E-03         # (resist cis sens gem)	0.096498675
 
 ## IC50s
 # based on accumulation calculated from fit to IC50 of bladder cancer cell line;
-cisIC50_SCSG_BFTC_905 = 3194.407435         # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
-cisIC50_SCSG_J82 = 6491.22488               # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
-cisIC50_RCRG_RT4 = 23344.4253               # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
-cisIC50_RCRG_HT_1197 = 25956.7652           # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
-cisIC50_SCRG_SW780 = 14875.73178            # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
-cisIC50_SCRG_KU_19_19 = 11338.25877         # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
-cisIC50_RCSG_LB831_BLC = 25956.7652         # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
-cisIC50_RCSG_DSH1 = 25956.7652              # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
+cisIC50_SCSG_BFTC_905 = 0.8106177157         # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
+cisIC50_SCSG_J82 = 1.647223153               # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
+cisIC50_RCRG_RT4 = 5.923917064               # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
+cisIC50_RCRG_HT_1197 = 6.586828431           # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
+cisIC50_SCRG_SW780 = 3.774888444             # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
+cisIC50_SCRG_KU_19_19 = 2.877213884          # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
+cisIC50_RCSG_LB831_BLC = 6.586828431         # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
+cisIC50_RCSG_DSH1 = 6.586828431              # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
 
 gemIC50_SCSG_BFTC_905 = 0.000179231         # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
 gemIC50_SCSG_J82 =  0.257872655             # (sensitive cis and gem)
