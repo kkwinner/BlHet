@@ -207,28 +207,20 @@ class SetCellDictionaries(SteppableBasePy):
         print "This function (SetCellDictionaries) is called once before simulation"
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
-
-            # SAME CLOCK IN ALL CELLS
-            # ALSO CHANGE IN MITOSISSTEPPABLE CLASS (~LINE 361?)
             x = gauss(divisionCycleTimeHrs,1)
             y = uniform(0,divisionCycleTimeHrs) # age of cells initialized into simulation
             cell.dict["AgeHrs"]=y
-            cell.dict["cycleHrs"]=x
             # cell.dict["AgeHrs"]=0
+            cell.dict["cycleHrs"]=x
             cell.dict["generation"]=0
             cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
             cell.dict["resistance"]=1
-
             cell.dict["IC50"]=0
-
-            # print 'AgeHrs distribution = ', y
-            # print 'AgeHrs distribution = ', cell.dict["AgeHrs"]
-
-        # for cell in self.cellList:
-            print 'cell.id=',cell.id,' dict=',cell.dict
-            # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
+            # print initial dictionary vals for each cell
+            print 'cell.type=',cell.type,'cell.id=',cell.id'dict=',cell.dict
+        # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
         print 'Members of SteppableBasePy class'
         print dir(cell)
 
