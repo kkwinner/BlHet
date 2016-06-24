@@ -5,9 +5,7 @@
    <!-- </Metadata> -->
 
   <Potts>  
-
-    <!-- !!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
-
+    <!-- FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
     <!-- <Dimensions x="150" y="150" z="150" /> -->
     <!-- <Dimensions x="41" y="41" z="41" /> -->
     <!-- MEDIUM-SIZED TEST RUNS -->
@@ -19,9 +17,6 @@
         <Dimensions x="20" y="20" z="1" />
         <!-- <Dimensions x="200" y="200" z="1" /> -->
 
-    <!-- !!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
-
-    
     <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
     <Anneal>5</Anneal> 
 
@@ -31,9 +26,15 @@
     <!--IV CISPLATIN GOES TO 0 @ 190 MINS IN 10^3v (7-22-14)-->
     <!-- <Steps>23644</Steps> -->
     <!-- 48h -->
-    <Steps>189153.9673</Steps>
-    <!-- 1986116.656	MCS per 21-day cycle	11916699.94	MCS per 6x21-day cycle -->
-    <!-- <Steps>11916700</Steps> -->
+    <!-- <Steps>189153.9673</Steps> -->
+    <!-- 24h -->
+    <!-- <Steps>94576.98363</Steps> -->
+    <!-- 6d -->
+    <!-- <Steps>567461.9018</Steps> -->
+    <!-- 21d cycle-->
+    <!-- <Steps> 1986116.656</Steps> -->
+    <!-- 6x21d cycle -->
+    <!-- <Steps>11916699.94</Steps> -->
     
     <Temperature>0.0</Temperature>
     <!-- Neighbor order = 1 = faster simulation, greater anisotropy; Introduction to Compucell3D v.3.7.4, p.11 -->
@@ -222,108 +223,108 @@ IC50_RCSG_DSH1
     <Energy Type1="Dead" Type2="Medium">5</Energy>
 
     <!-- tumor and normal lung stick to vessel with same adhesion as tumor-tumor -->
-    <Energy Type1="Vessel" Type2="Vessel">10</Energy>
-    <Energy Type1="LungNormal" Type2="Vessel">10</Energy>
-    <Energy Type1="SCSG_BFTC_905" Type2="Vessel">10</Energy>
-    <Energy Type1="SCSG_J82" Type2="Vessel">10</Energy>
-    <Energy Type1="RCRG_RT4" Type2="Vessel">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="Vessel">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="Vessel">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="Vessel">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="Vessel">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="Vessel">10</Energy>
-    <Energy Type1="IC50Cis" Type2="Vessel">10</Energy>
-    <Energy Type1="IC50Gem" Type2="Vessel">10</Energy>
+    <Energy Type1="Vessel" Type2="Vessel">5</Energy>
+    <Energy Type1="LungNormal" Type2="Vessel">5</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="Vessel">5</Energy>
+    <Energy Type1="SCSG_J82" Type2="Vessel">5</Energy>
+    <Energy Type1="RCRG_RT4" Type2="Vessel">5</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="Vessel">5</Energy>
+    <Energy Type1="SCRG_SW780" Type2="Vessel">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="Vessel">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="Vessel">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="Vessel">5</Energy>
+    <Energy Type1="IC50Cis" Type2="Vessel">5</Energy>
+    <Energy Type1="IC50Gem" Type2="Vessel">5</Energy>
     <Energy Type1="Dead" Type2="Vessel">5</Energy>
 
     <!-- tumor sticks to normal lung with same adhesion as tumor-tumor -->
-    <Energy Type1="LungNormal" Type2="LungNormal">10</Energy>
-    <Energy Type1="SCSG_BFTC_905" Type2="LungNormal">10</Energy>
-    <Energy Type1="SCSG_J82" Type2="LungNormal">10</Energy>
-    <Energy Type1="RCRG_RT4" Type2="LungNormal">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="LungNormal">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="LungNormal">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="LungNormal">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="LungNormal">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="LungNormal">10</Energy>
-    <Energy Type1="IC50Cis" Type2="LungNormal">10</Energy>
-    <Energy Type1="IC50Gem" Type2="LungNormal">10</Energy>
+    <Energy Type1="LungNormal" Type2="LungNormal">5</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="LungNormal">5</Energy>
+    <Energy Type1="SCSG_J82" Type2="LungNormal">5</Energy>
+    <Energy Type1="RCRG_RT4" Type2="LungNormal">5</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="LungNormal">5</Energy>
+    <Energy Type1="SCRG_SW780" Type2="LungNormal">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="LungNormal">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="LungNormal">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="LungNormal">5</Energy>
+    <Energy Type1="IC50Cis" Type2="LungNormal">5</Energy>
+    <Energy Type1="IC50Gem" Type2="LungNormal">5</Energy>
     <Energy Type1="Dead" Type2="LungNormal">5</Energy>
 
     <!-- tumor-tumor ahdesion same in all cases, dead cells stick less -->
-    <Energy Type1="SCSG_BFTC_905" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="SCSG_J82" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="RCRG_RT4" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="IC50Cis" Type2="SCSG_BFTC_905">10</Energy>
-    <Energy Type1="IC50Gem" Type2="SCSG_BFTC_905">10</Energy>
+    <Energy Type1="SCSG_BFTC_905" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="SCSG_J82" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="RCRG_RT4" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="SCRG_SW780" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="IC50Cis" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="IC50Gem" Type2="SCSG_BFTC_905">5</Energy>
     <Energy Type1="Dead" Type2="SCSG_BFTC_905">5</Energy>
 
-    <Energy Type1="SCSG_J82" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="RCRG_RT4" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="IC50Cis" Type2="SCSG_J82">10</Energy>
-    <Energy Type1="IC50Gem" Type2="SCSG_J82">10</Energy>
+    <Energy Type1="SCSG_J82" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="RCRG_RT4" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="SCRG_SW780" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="IC50Cis" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="IC50Gem" Type2="SCSG_J82">5</Energy>
     <Energy Type1="Dead" Type2="SCSG_J82">5</Energy>
 
-    <Energy Type1="RCRG_RT4" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="RCRG_HT_1197" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="IC50Cis" Type2="RCRG_RT4">10</Energy>
-    <Energy Type1="IC50Gem" Type2="RCRG_RT4">10</Energy>
+    <Energy Type1="RCRG_RT4" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="SCRG_SW780" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="IC50Cis" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="IC50Gem" Type2="RCRG_RT4">5</Energy>
     <Energy Type1="Dead" Type2="RCRG_RT4">5</Energy>
 
-    <Energy Type1="RCRG_HT_1197" Type2="RCRG_HT_1197">10</Energy>
-    <Energy Type1="SCRG_SW780" Type2="RCRG_HT_1197">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="RCRG_HT_1197">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_HT_1197">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="RCRG_HT_1197">10</Energy>
-    <Energy Type1="IC50Cis" Type2="RCRG_HT_1197">10</Energy>
-    <Energy Type1="IC50Gem" Type2="RCRG_HT_1197">10</Energy>
+    <Energy Type1="RCRG_HT_1197" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="SCRG_SW780" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="IC50Cis" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="IC50Gem" Type2="RCRG_HT_1197">5</Energy>
     <Energy Type1="Dead" Type2="RCRG_HT_1197">5</Energy>
     
-    <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">10</Energy>
-    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_SW780">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_SW780">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="SCRG_SW780">10</Energy>
-    <Energy Type1="IC50Cis" Type2="SCRG_SW780">10</Energy>
-    <Energy Type1="IC50Gem" Type2="SCRG_SW780">10</Energy>
+    <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">5</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_SW780">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_SW780">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCRG_SW780">5</Energy>
+    <Energy Type1="IC50Cis" Type2="SCRG_SW780">5</Energy>
+    <Energy Type1="IC50Gem" Type2="SCRG_SW780">5</Energy>
     <Energy Type1="Dead" Type2="SCRG_SW780">5</Energy>
 
-    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_KU_19_19">10</Energy>
-    <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_KU_19_19">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="SCRG_KU_19_19">10</Energy>
-    <Energy Type1="IC50Cis" Type2="SCRG_KU_19_19">10</Energy>
-    <Energy Type1="IC50Gem" Type2="SCRG_KU_19_19">10</Energy>
+    <Energy Type1="SCRG_KU_19_19" Type2="SCRG_KU_19_19">5</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="SCRG_KU_19_19">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="SCRG_KU_19_19">5</Energy>
+    <Energy Type1="IC50Cis" Type2="SCRG_KU_19_19">5</Energy>
+    <Energy Type1="IC50Gem" Type2="SCRG_KU_19_19">5</Energy>
     <Energy Type1="Dead" Type2="SCRG_KU_19_19">5</Energy>
     
-    <Energy Type1="RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">10</Energy>
-    <Energy Type1="RCSG_DSH1" Type2="RCSG_LB831_BLC">10</Energy>
-    <Energy Type1="IC50Cis" Type2="RCSG_LB831_BLC">10</Energy>
-    <Energy Type1="IC50Gem" Type2="RCSG_LB831_BLC">10</Energy>
+    <Energy Type1="RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">5</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCSG_LB831_BLC">5</Energy>
+    <Energy Type1="IC50Cis" Type2="RCSG_LB831_BLC">5</Energy>
+    <Energy Type1="IC50Gem" Type2="RCSG_LB831_BLC">5</Energy>
     <Energy Type1="Dead" Type2="RCSG_LB831_BLC">5</Energy>
     
-    <Energy Type1="RCSG_DSH1" Type2="RCSG_DSH1">10</Energy>
-    <Energy Type1="IC50Cis" Type2="RCSG_DSH1">10</Energy>
-    <Energy Type1="IC50Gem" Type2="RCSG_DSH1">10</Energy>
+    <Energy Type1="RCSG_DSH1" Type2="RCSG_DSH1">5</Energy>
+    <Energy Type1="IC50Cis" Type2="RCSG_DSH1">5</Energy>
+    <Energy Type1="IC50Gem" Type2="RCSG_DSH1">5</Energy>
     <Energy Type1="Dead" Type2="RCSG_DSH1">5</Energy>
     
-    <Energy Type1="IC50Cis" Type2="IC50Cis">10</Energy>
-    <Energy Type1="IC50Gem" Type2="IC50Cis">10</Energy>
+    <Energy Type1="IC50Cis" Type2="IC50Cis">5</Energy>
+    <Energy Type1="IC50Gem" Type2="IC50Cis">5</Energy>
     <Energy Type1="Dead" Type2="IC50Cis">5</Energy>
 
-    <Energy Type1="IC50Gem" Type2="IC50Gem">10</Energy>
+    <Energy Type1="IC50Gem" Type2="IC50Gem">5</Energy>
     <Energy Type1="Dead" Type2="IC50Gem">5</Energy>
     
     <Energy Type1="Dead" Type2="Dead">5</Energy>

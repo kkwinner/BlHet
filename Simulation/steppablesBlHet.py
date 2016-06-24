@@ -166,9 +166,10 @@ print "max vessels = ",maxVesselCellCount
 
 ## TIME FRAMES
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
-divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
-phagocytosisEndTime = 24 # dead cells removed at 24 hours
-# divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in # phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
+# divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
+# phagocytosisEndTime = 24 # dead cells removed at 24 hours
+divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in
+phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
 
 
 
@@ -213,11 +214,64 @@ class SetCellDictionaries(SteppableBasePy):
             # cell.dict["AgeHrs"]=0
             cell.dict["cycleHrs"]=x
             cell.dict["generation"]=0
+            cell.dict["numDivisions"] = 0
             cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
             cell.dict["resistance"]=1
-            cell.dict["IC50"]=0
+            if cell.type==4:
+                cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
+            if cell.type==5:
+                cell.dict["IC50Cis"]=cisIC50_SCSG_J82
+            if cell.type==6:
+                cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
+            if cell.type==7:
+                cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
+            if cell.type==8:
+                cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
+            if cell.type==9:
+                cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
+            if cell.type==10:
+                cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
+            if cell.type==11:
+                cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
+
+                
+                    
+            if cell.type==4:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCSG_BFTC_905):
+                    cell.type=13 # IC50Gem
+            if cell.type==5:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCSG_J82):
+                    cell.type=13 # IC50Gem
+            if cell.type==6:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCRG_RT4):
+                    cell.type=13 # IC50Gem
+            if cell.type==7:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCRG_HT_1197):
+                    cell.type=13 # IC50Gem
+            if cell.type==8:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCRG_SW780):
+                    cell.type=13 # IC50Gem
+            if cell.type==9:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_SCRG_KU_19_19):
+                    cell.type=13 # IC50Gem
+            if cell.type==10:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCSG_LB831_BLC):
+                    cell.type=13 # IC50Gem
+            if cell.type==11:
+                dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                if (cell.dict["gemAccum"]>=gemIC50_RCSG_DSH1):
+                    cell.type=13 # IC50Gem 
+
+                
             # print initial dictionary vals for each cell
             print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
         # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
@@ -288,11 +342,13 @@ class GrowthSteppable(SteppableBasePy):
         SteppableBasePy.__init__(self,_simulator,_frequency)
     def step(self,mcs):
         for cell in self.cellList:
-            # if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
-           if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
-                cell.targetVolume=2*T24BCCellVol
-                cell.lambdaVolume=cellGrowthLambdaVolume
-                print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
+            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types grow and then divide except for Vessel, LungNormal, and Dead, respectively (IC50Cis, and IC50Gem divide)
+                # if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
+                print 'inside growthSteppable for tumor cells, type is',cell.type,'age is', cell.dict["AgeHrs"]
+                if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
+                    cell.targetVolume=2*T24BCCellVol
+                    cell.lambdaVolume=cellGrowthLambdaVolume
+                    print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
         # alternatively if you want to make growth a function of chemical concentration uncomment lines below and comment lines above        
         # field=CompuCell.getConcentrationField(self.simulator,"PUT_NAME_OF_CHEMICAL_FIELD_HERE")
         # pt=CompuCell.Point3D()
@@ -325,11 +381,12 @@ class MitosisSteppable(MitosisSteppableBase):
                 print 'deathChance=',deathChance
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
-            # cell division time has been reached if volume has doubled (condition for GrowthSteppable)
+            # cell divides if volume has doubled (condition for GrowthSteppable)
             if cell.volume==2*T24BCCellVol:
                 cells_to_divide.append(cell)
-                print 'cell is dividing at AgeHrs',cell.dict["AgeHrs"]
+                print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
         for cell in cells_to_divide:
+            # shouldn't need conditional -- only cells that will divide should grow -- but leaving it in to avoid weird behavior
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
                 self.divideCellRandomOrientation(cell)
@@ -340,11 +397,10 @@ class MitosisSteppable(MitosisSteppableBase):
     def updateAttributes(self):
         #        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
         print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
+
         if len(self.cellListByType(self.VESSEL))<maxVesselCellCount:
             chanceToBeVessel = uniform(0,1)
-
             if chanceToBeVessel <= vesselPercentMetastasis:
-
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
                 self.parentCell.lambdaVolume = normalLambdaVolume
                 self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
@@ -358,8 +414,8 @@ class MitosisSteppable(MitosisSteppableBase):
                 self.childCell.dict["numDivisions"] += 0
                 self.childCell.dict["cisAccum"] = 0
                 self.childCell.dict["gemAccum"] = 0
-                print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
             else:
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
@@ -375,8 +431,8 @@ class MitosisSteppable(MitosisSteppableBase):
                 self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
                 self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
                 ## for cell in self.cellList:
-                print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
         else: # if cell has already divided once, do not become vessel
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
@@ -392,8 +448,8 @@ class MitosisSteppable(MitosisSteppableBase):
             self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
             self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
         ## for cell in self.cellList:
-            print 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-            print 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+            print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+            print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
         # for more control of what gets copied from parent to child use cloneAttributes function
         # self.cloneAttributes(sourceCell=self.parentCell, targetCell=self.childCell, no_clone_key_dict_list = [attrib1, attrib2] )
@@ -869,38 +925,9 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
         pass
     def step(self,mcs):
         for cell in self.cellList:
-            if cell.type==4:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCSG_BFTC_905):
-                    cell.type=13 # IC50Gem
-            if cell.type==5:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCSG_J82):
-                    cell.type=13 # IC50Gem
-            if cell.type==6:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCRG_RT4):
-                    cell.type=13 # IC50Gem
-            if cell.type==7:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCRG_HT_1197):
-                    cell.type=13 # IC50Gem
-            if cell.type==8:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCRG_SW780):
-                    cell.type=13 # IC50Gem
-            if cell.type==9:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCRG_KU_19_19):
-                    cell.type=13 # IC50Gem
-            if cell.type==10:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCSG_LB831_BLC):
-                    cell.type=13 # IC50Gem
-            if cell.type==11:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCSG_DSH1):
-                    cell.type=13 # IC50Gem 
+            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
+                if cell.dict["gemAccum"] > cell.dict["IC50Gem"]:
+                    cell.type=13
 
 
 
@@ -920,38 +947,9 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
         pass
     def step(self,mcs):
         for cell in self.cellList:
-            if cell.type==4:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_SCSG_BFTC_905):
-                    cell.type=13 # IC50Cis
-            if cell.type==5:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_SCSG_J82):
-                    cell.type=13 # IC50Cis
-            if cell.type==6:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_RCRG_RT4):
-                    cell.type=13 # IC50Cis
-            if cell.type==7:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_RCRG_HT_1197):
-                    cell.type=13 # IC50Cis
-            if cell.type==8:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_SCRG_SW780):
-                    cell.type=13 # IC50Cis
-            if cell.type==9:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_SCRG_KU_19_19):
-                    cell.type=13 # IC50Cis
-            if cell.type==10:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_RCSG_LB831_BLC):
-                    cell.type=13 # IC50Cis
-            if cell.type==11:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["cisAccum"]>=cisIC50_RCSG_DSH1):
-                    cell.type=13 # IC50Cis 
+            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
+                if cell.dict["cisAccum"] > cell.dict["IC50Cis"]:
+                    cell.type=13
 
 
 
