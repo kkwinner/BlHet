@@ -109,25 +109,25 @@ gemZeroConcTime=240*CisGem1Min
 
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
 ## also = concentration removed from voxel; microM/MCS * siteConcCis(microM)
-cispAccumFrac_SCSG_BFTC_905 = 0.3147446166   # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
-cispAccumFrac_SCSG_J82 = 0.3033715255	     # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
-cispAccumFrac_RCRG_RT4 = 0.2154448963	     # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
-cispAccumFrac_RCRG_HT_1197 = 0.1498013738    # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
-cispAccumFrac_SCRG_SW780 = 0.2691142767      # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
-cispAccumFrac_SCRG_KU_19_19 = 0.2847440491   # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
-cispAccumFrac_RCSG_LB831_BLC = 0.02925373453 # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
-cispAccumFrac_RCSG_DSH1 = 0.04556319402      # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
+cispAccumFrac_SCSG_BFTC_905 = 7.98701E-05       # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
+cispAccumFrac_SCSG_J82 = 7.69840E-05	     # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_RT4 = 5.46716E-05	     # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_HT_1197 = 3.80138E-05        # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
+cispAccumFrac_SCRG_SW780 = 6.82909E-05          # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
+cispAccumFrac_SCRG_KU_19_19 = 7.22571E-05       # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
+cispAccumFrac_RCSG_LB831_BLC = 7.42347E-06      # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
+cispAccumFrac_RCSG_DSH1 = 1.15622E-05           # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
 
 ## gemcitabine (possibly dFdCtP) accumulation per cell per time step, based on IC50 of bladder cancer cell line;
 ## also = concentration removed from voxel; microM/MCS * siteConcGem(microM)
-gemAccumFrac_SCSG_BFTC_905 = 4.41575E-03     # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
-gemAccumFrac_SCSG_J82 = 4.41565E-03          # (sensitive cis and gem)
-gemAccumFrac_RCRG_RT4 = 4.22858E-03          # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
-gemAccumFrac_RCRG_HT_1197 = 4.39190E-03      # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
-gemAccumFrac_SCRG_SW780 = 2.68443E-03        # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
-gemAccumFrac_SCRG_KU_19_19 = 4.18843E-03     # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
-gemAccumFrac_RCSG_LB831_BLC = 4.41518E-03    # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
-gemAccumFrac_RCSG_DSH1 = 4.41445E-03         # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
+gemAccumFrac_SCSG_BFTC_905 = 4.41575E-04     # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
+gemAccumFrac_SCSG_J82 = 4.41565E-04          # (sensitive cis and gem)
+gemAccumFrac_RCRG_RT4 = 4.22858E-04          # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
+gemAccumFrac_RCRG_HT_1197 = 4.39190E-04      # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
+gemAccumFrac_SCRG_SW780 = 2.68443E-04        # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
+gemAccumFrac_SCRG_KU_19_19 = 4.18843E-04     # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
+gemAccumFrac_RCSG_LB831_BLC = 4.41518E-04    # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
+gemAccumFrac_RCSG_DSH1 = 4.41445E-04         # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
 
 ## IC50s
 # based on accumulation calculated from fit to IC50 of bladder cancer cell line;
@@ -140,14 +140,14 @@ cisIC50_SCRG_KU_19_19 = 2.877213884          # (sens cis resist gem)	10.10456195
 cisIC50_RCSG_LB831_BLC = 6.586828431         # (resist cis sens gem)	225.1619678	IC50 microM	cisplatin
 cisIC50_RCSG_DSH1 = 6.586828431              # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
 
-gemIC50_SCSG_BFTC_905 = 0.000179231         # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
-gemIC50_SCSG_J82 =  0.257872655             # (sensitive cis and gem)
-gemIC50_RCRG_RT4 =  461.341639352           # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
-gemIC50_RCRG_HT_1197 = 61.068340312         # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
-gemIC50_SCRG_SW780 = 2,709.139285145        # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
-gemIC50_SCRG_KU_19_19 = 554.989029530       # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
-gemIC50_RCSG_LB831_BLC = 1.456441437        # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
-gemIC50_RCSG_DSH1 = 3.357389495             # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
+gemIC50_SCSG_BFTC_905 = 0.000017923         # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
+gemIC50_SCSG_J82 =  0.025787266             # (sensitive cis and gem)
+gemIC50_RCRG_RT4 =  46.134163935           # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
+gemIC50_RCRG_HT_1197 = 6.106834031         # (resistant cis and gem)	1.764248816	IC50 microM	gemcitabine				
+gemIC50_SCRG_SW780 = 270.913928515        # (sens cis resist gem)	128.0487435	IC50 microM	gemcitabine				
+gemIC50_SCRG_KU_19_19 = 55.498902953       # (sens cis resist gem)	16.81235445	IC50 microM	gemcitabine				
+gemIC50_RCSG_LB831_BLC = 0.145644144        # (resist cis sens gem)	0.041854289	IC50 microM	gemcitabine				
+gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
 
 
 
