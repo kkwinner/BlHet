@@ -154,7 +154,9 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
-cellGrowthLambdaVolume = 1.0
+cellGrowthLambdaVolume = 100.0
+deathLambdaVolume = 1000.0
+
 vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
 totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
 print "total cells in sim =",totalSimCellsPossible
@@ -225,7 +227,7 @@ class SetCellDictionaries(SteppableBasePy):
             # print 'AgeHrs distribution = ', cell.dict["AgeHrs"]
 
         # for cell in self.cellList:
-            # print 'cell.id=',cell.id,' dict=',cell.dict
+            print 'cell.id=',cell.id,' dict=',cell.dict
             # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
         print 'Members of SteppableBasePy class'
         print dir(cell)
@@ -236,7 +238,8 @@ class SetCellDictionaries(SteppableBasePy):
 
 
 # *****************************
-# INCREMENT AGE AND TIME SINCE DEATH
+# INCREMENT AGE
+# INCREMENT TIME SINCE DEATH
 class IncrementClocks(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
@@ -263,8 +266,8 @@ class IncrementClocks(SteppableBasePy):
 
 # ***************************** ALSO UNCOMMENT CELL DICTIONARY KEYS 1 AND 2 FOR CELL AGE ABOVE
 # VOLUMEPARAMSTEPPABLE
-# SETS CELL TARGET VOLUMES OR COMPRESSIBILITIES
-# VOLUME CONSTRAINTS
+# SET CELL TARGET VOLUMES OR COMPRESSIBILITIES
+# SET VOLUME CONSTRAINTS
 class VolumeParamSteppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
@@ -275,7 +278,6 @@ class VolumeParamSteppable(SteppableBasePy):
         print "This function (VolumeParamSteppable) is called once before simulation"
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
-            # if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
                 cell.targetVolume=T24BCCellVol
                 cell.lambdaVolume=normalLambdaVolume
                 # print 'cell.type=',cell.type,'cell.id=',cell.id,'cell.volume=',cell.targetVolume,'cell.lambdaVolume=',cell.lambdaVolume
@@ -297,7 +299,7 @@ class GrowthSteppable(SteppableBasePy):
             # if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
            if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
                 cell.targetVolume=2*T24BCCellVol
-                cell.lambdaVolume=1
+                cell.lambdaVolume=cellGrowthLambdaVolume
                 print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
         # alternatively if you want to make growth a function of chemical concentration uncomment lines below and comment lines above        
         # field=CompuCell.getConcentrationField(self.simulator,"PUT_NAME_OF_CHEMICAL_FIELD_HERE")
@@ -338,13 +340,6 @@ class MitosisSteppable(MitosisSteppableBase):
         for cell in cells_to_divide:
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
-                                # for neighbor , commonSurfaceArea in self.getCellNeighborDataList(self):
-                #     if neighbor:
-                #         print "neighbor.id",neighbor.id," commonSurfaceArea=",commonSurfaceArea
-                #     else:
-                #         print "Medium commonSurfaceArea=", commonSurfaceArea
-                #         #                neighbors=
-                # if self.CellNeighborData.type==0:
                 self.divideCellRandomOrientation(cell)
                 # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
                 # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
@@ -352,19 +347,18 @@ class MitosisSteppable(MitosisSteppableBase):
 
     def updateAttributes(self):
         #        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
-
         print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
         if len(self.cellListByType(self.VESSEL))<maxVesselCellCount:
             chanceToBeVessel = uniform(0,1)
             if chanceToBeVessel <= vesselPercentMetastasis:
 
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = 100
+                self.parentCell.lambdaVolume = normalLambdaVolume
                 self.cloneParent2Child() # copy all parent parameters
                 # over-write some parental parameters
                 self.childCell.type=1 # CHILD IS Vessel
                 self.childCell.targetVolume = 1
-                self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place
+                # self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place -- should stay without vol lambda, type is frozen
                 self.childCell.dict["AgeHrs"]=0
                 self.childCell.dict["HrsSinceDeath"]=0
                 self.childCell.dict["cisAccum"] = 0
@@ -376,11 +370,11 @@ class MitosisSteppable(MitosisSteppableBase):
             else:
                 self.parentCell.dict["generation"]+=1
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = 100 # make sure parent stays in place
+                self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
                 self.cloneParent2Child() # copy all parent parameters
                 # over-write some parental parameters
                 #            self.childCell.targetVolume = 1
-                #            self.childCell.lambdaVolume = 100  # make sure parent stays in place
+                #            self.childCell.lambdaVolume = normalLambdaVolume  # make sure parent stays in place
                 #            self.childCell.type=self.parentCell.type
                 # self.childCell.dict["generation"]=0
                 self.childCell.dict["AgeHrs"]=0
@@ -396,11 +390,11 @@ class MitosisSteppable(MitosisSteppableBase):
         else: # if cell has already divided once, do not become vessel
             self.parentCell.dict["generation"]+=1
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-            self.parentCell.lambdaVolume = 100 # make sure parent stays in place
+            self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
             self.cloneParent2Child() # copy all parent parameters
             # over-write some parental parameters
 #            self.childCell.targetVolume = 1
-#            self.childCell.lambdaVolume = 100  # make sure parent stays in place
+#            self.childCell.lambdaVolume = normalLambdaVolume  # make sure parent stays in place
 #            self.childCell.type=self.parentCell.type
             # self.childCell.dict["generation"]=0
             self.childCell.dict["AgeHrs"]=0
@@ -450,7 +444,7 @@ class RemoveDeadCells(SteppableBasePy):
                 if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
                     print 'removing dead cell.id', cell.id,'with cell volume',cell.volume,'cell.targetVolume',cell.targetVolume,'and cell.lambdaVolume',cell.lambdaVolume
                     cell.targetVolume=0
-                    cell.lambdaVolume=1000
+                    cell.lambdaVolume=deathLambdaVolume
                     
 
 

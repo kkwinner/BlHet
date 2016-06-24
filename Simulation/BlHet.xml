@@ -5,7 +5,9 @@
    <!-- </Metadata> -->
 
   <Potts>  
-    <!-- FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
+
+    <!-- !!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
+
     <!-- <Dimensions x="150" y="150" z="150" /> -->
     <!-- <Dimensions x="41" y="41" z="41" /> -->
     <!-- MEDIUM-SIZED TEST RUNS -->
@@ -17,6 +19,9 @@
         <Dimensions x="20" y="20" z="1" />
         <!-- <Dimensions x="200" y="200" z="1" /> -->
 
+    <!-- !!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
+
+    
     <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
     <Anneal>5</Anneal> 
 
