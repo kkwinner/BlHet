@@ -5,7 +5,7 @@
    <!-- </Metadata> -->
 
   <Potts>  
-    <!-- FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
+    <!-- !!!!!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
     <!-- <Dimensions x="150" y="150" z="150" /> -->
     <!-- <Dimensions x="41" y="41" z="41" /> -->
     <!-- MEDIUM-SIZED TEST RUNS -->
@@ -14,11 +14,12 @@
     <!-- <Dimensions x="20" y="20" z="20" /> -->
     <!-- <Dimensions x="10" y="10" z="10" /> -->
     <!-- 2-D -->
-        <Dimensions x="20" y="20" z="1" />
-        <!-- <Dimensions x="200" y="200" z="1" /> -->
+    <!-- <Dimensions x="20" y="20" z="1" /> -->
+    <Dimensions x="200" y="200" z="1" />
+    <!-- !!!!!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
 
     <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
-    <Anneal>5</Anneal> 
+    <Anneal>100</Anneal> 
 
     <!-- Cisplatin IV to bladder cancer cells, diam = T24 line: 6 hours = 3940.707651 MCS/h *6 = 23644.24591 MCS -->
     <!--  D(VX2 carcinoma xenograft) (Nugent 1984)
@@ -32,7 +33,7 @@
     <!-- 6d -->
     <!-- <Steps>567461.9018</Steps> -->
     <!-- 21d cycle-->
-    <!-- <Steps> 1986116.656</Steps> -->
+    <Steps> 1986116.656</Steps>
     <!-- 6x21d cycle -->
     <!-- <Steps>11916699.94</Steps> -->
     
@@ -634,40 +635,6 @@ IC50_RCSG_DSH1
 
     <!-- INITIALIZE QUADRANTS -->
     <!-- 20 x 20 x 1 TEST -->
-  <Steppable Type="UniformInitializer">
-    <Region>
-      <BoxMin x="5" y="5" z="0"/>
-      <BoxMax x="10" y="10" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types>SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-    <Region>
-      <BoxMin x="10" y="10" z="0"/>
-      <BoxMax x="15" y="15" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types> RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-    <Region>
-      <BoxMin x="10" y="5" z="0"/>
-      <BoxMax x="15" y="10" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types>  SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-    <Region>
-      <BoxMin x="5" y="10" z="0"/>
-      <BoxMax x="10" y="15" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types> RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-      </Steppable>
-
-
-
-    <!-- 200 x 200 x 1 TEST -->
   <!-- <Steppable Type="UniformInitializer"> -->
   <!--   <Region> -->
   <!--     <BoxMin x="5" y="5" z="0"/> -->
@@ -697,7 +664,41 @@ IC50_RCSG_DSH1
   <!--     <Width>1</Width> -->
   <!--     <Types> RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, Vessel, Vessel, Vessel, Vessel</Types> -->
   <!--   </Region> -->
-  <!-- </Steppable> -->
+  <!--     </Steppable> -->
+
+
+
+    <!-- 200 x 200 x 1 TEST -->
+  <Steppable Type="UniformInitializer">
+    <Region>
+      <BoxMin x="95" y="95" z="0"/>
+      <BoxMax x="100" y="100" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types>SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, Vessel, Vessel, Vessel, Vessel</Types>
+    </Region>
+    <Region>
+      <BoxMin x="100" y="100" z="0"/>
+      <BoxMax x="105" y="105" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types> RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, Vessel, Vessel, Vessel, Vessel</Types>
+    </Region>
+    <Region>
+      <BoxMin x="100" y="95" z="0"/>
+      <BoxMax x="105" y="100" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types>  SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, Vessel, Vessel, Vessel, Vessel</Types>
+    </Region>
+    <Region>
+      <BoxMin x="95" y="100" z="0"/>
+      <BoxMax x="100" y="105" z="1"/>
+      <Gap>0</Gap>
+      <Width>1</Width>
+      <Types> RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, Vessel, Vessel, Vessel, Vessel</Types>
+    </Region>
+  </Steppable>
 
 
   

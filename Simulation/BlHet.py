@@ -53,10 +53,6 @@ steppableRegistry=SteppableRegistry()
 
 
 ################################# DRUG DYNAMICS
-# from steppablesBlHet import CispIC50VisualizationSteppable
-# cispIC50VisualizationSteppable=CispIC50VisualizationSteppable (sim)
-# steppableRegistry.registerSteppable(cispIC50VisualizationSteppable)
-
 from steppablesBlHet import SecretionSteppableCisplatin
 secretionSteppableCisplatin=SecretionSteppableCisplatin(sim)
 steppableRegistry.registerSteppable(secretionSteppableCisplatin)
@@ -111,6 +107,14 @@ removeDeadCells=RemoveDeadCells(sim)
 steppableRegistry.registerSteppable(removeDeadCells)
 
 ################################# OUTPUTS
+from steppablesBlHet import CispAccumVisualizationSteppable
+cispAccumVisualizationSteppable=CispAccumVisualizationSteppable (sim)
+steppableRegistry.registerSteppable(cispAccumVisualizationSteppable)
+
+from steppablesBlHet import GemAccumVisualizationSteppable
+gemAccumVisualizationSteppable=GemAccumVisualizationSteppable (sim)
+steppableRegistry.registerSteppable(gemAccumVisualizationSteppable)
+
 """
 # from steppablesBlHet import PrintAllCells
 # printAllCells=PrintAllCells(sim)

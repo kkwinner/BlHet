@@ -1,3 +1,9 @@
+"""
+
+
+"""
+
+
 from PySteppables import *
 import CompuCell
 import CompuCellSetup
@@ -61,7 +67,7 @@ numIC50Cancer=0
 #INITIALIZE CHEMICAL THRESHOLDS
 
 # FINAL CISPLATIN IC50 = MISTRY 1992
-cisplatinIC50=52.71 # FINAL USED: muM (equiv to (equitoxic) 2h-IC-50 Mistry, 1992
+cisplatinIC50=52.71 # FINAL USED FOR OVARIAN MODEL: muM (equiv to (equitoxic) 2h-IC-50 Mistry, 1992
 # cisplatinIC50=38.3 # (MATCHES 2H DRUG TIME COURSE): muM (SD=12.6, in SKOV-3, 2h exposure; Table 1, Mistry, 1992)
 # cisplatinIC50=0.0001 #test
 # cisplatinIC50=126.63 # muM (+/- 12.06 micromols/L, in SKOV3ip1, 48h exposure; Fig. 3, Xu, 2008)
@@ -73,12 +79,12 @@ CisGem1Min = 65.678 # 65.678 mcs = 1 min of diffusion time for cells of diameter
 #IV CISPLATIN
 Infusion15Mins=15*CisGem1Min # 18107.745 MCS; subtract from runtime once begin using concentration time course
 cIVFirstPoint=(5.742+15)*CisGem1Min # 6931.79 MCS; five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
-cEndDataSet=(170.862*CisGem1Min)+Infusion15Mins
+cEndDataSet=(170.862*CisGem1Min)+cIVFirstPoint
 #### first five minutes (no data, linear fit from t=0, [iv]=0 to first time point
-# cFirst5Mins=5*465.189 # five minutes worth of MCSes in normal tissue (Swabb 1974?)
 cFirst5Mins=5*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 ####
 cFirst20Mins=20*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
+# cFirst5Mins=5*465.189 # five minutes worth of MCSes in normal tissue (Swabb 1974?)
 # cIVZero=math.exp(-16.094/-3.338)*1207.183 ##mcs mins, MCS scaled for diffusion in tumor tissue;Excel check, yintercept = 124.1449668
 # x-intercept of cisplatin IP-post-IV concentration function
 # cIPpostIV_zero=(0.386/0.5431)*465.... #mcs hrs, MCS scaled for diffusion in normal tissue
@@ -88,15 +94,29 @@ cFirst20Mins=20*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo
 #ip CISPLATIN
 # cIPFirstPt=0.2126*60*1207.183 #hrs, first time point
 # cIPFirstPt=7.386*1207.183 #7.386 min, first time point
-cIPFirstPtPlus15=(7.386+15.0)*CisGem1Min # = mcs to get to 7.386 min, first time point in IV infusion, plus 15 mins infusion time; initialize with floats
-#cIVFirstPtPlus15=(5.742+15.0)*1207.183 # = 25039.389786 MCS = 5.742 min, first time point, plus 15 mins infusion time
+# cIPFirstPtPlus15=(7.386+15.0)*CisGem1Min # = mcs to get to 7.386 min, first time point in IV infusion, plus 15 mins infusion time; initialize with floats
+# cIVFirstPtPlus15=(5.742+15.0)*1207.183 # = 25039.389786 MCS = 5.742 min, first time point, plus 15 mins infusion time
 
 # IV GEMCITABINE
 gem30Mins=30*CisGem1Min
-gemZeroConcTime=240*CisGem1Min
+gemZeroConcTime=240*CisGem1Min # time at final data point
+
+# aggressive bladder cancer regimen time frame, NCCN regimen for metastatic bl.canc. (list)
+#MCS for each step of Gem-Cis aggressive regimen; MCS at the end of each stage of regimen cycle:day:eventsTotal; e.g. gem infusion cycle 1: day 18: 3 infusions total to this point
+#	[MCS start of gem infusion 1:1:1, end of gem infusion 1:1:1,
+#        MCS end of week 1,	MCS end of gem infusion 1:8:2,
+#        MCS end of week 2,	MCS end of gem infusion 1:15:3
+#        MCS end of cycle 1, 21d
+aggressInfusTimesGem = [0, 15762.8306,
+                        662038.8854, 677801.716,
+                        1324077.771, 1339840.601,
+                        1986116.656]
+aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to end of cis infusion 1:1:1
+
+
 
 ## CELL IDs
-# TypeId="4" TypeName="SCSG_BFTC_# 905"
+# TypeId="4" TypeName="SCSG_BFTC_905"
 # TypeId="5" TypeName="SCSG_J82"
 # TypeId="6" TypeName="RCRG_RT4"
 # TypeId="7" TypeName="RCRG_HT_1197"
@@ -110,8 +130,8 @@ gemZeroConcTime=240*CisGem1Min
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
 ## also = concentration removed from voxel; microM/MCS * siteConcCis(microM)
 cispAccumFrac_SCSG_BFTC_905 = 7.98701E-05       # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
-cispAccumFrac_SCSG_J82 = 7.69840E-05	     # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
-cispAccumFrac_RCRG_RT4 = 5.46716E-05	     # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
+cispAccumFrac_SCSG_J82 = 7.69840E-05            # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
+cispAccumFrac_RCRG_RT4 = 5.46716E-05            # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
 cispAccumFrac_RCRG_HT_1197 = 3.80138E-05        # (resist cis and gem)	43.97041406	IC50 microM	cisplatin				
 cispAccumFrac_SCRG_SW780 = 6.82909E-05          # (sens cis resist gem)	14.02708355	IC50 microM	cisplatin					
 cispAccumFrac_SCRG_KU_19_19 = 7.22571E-05       # (sens cis resist gem)	10.10456195	IC50 microM	cisplatin
@@ -157,8 +177,11 @@ normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 100.0
 deathLambdaVolume = 100.0
 
+## VASCULARITY
 vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
-totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
+totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 20*20*20 #CHANGE WITH SIM DIMENSIONS!
 print "total cells in sim =",totalSimCellsPossible
 maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible)
 global maxVesselCellCount
@@ -176,20 +199,6 @@ phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
 # PRINT SIMULATION START TIME
 now = datetime.now()
 print "SIMULATION START TIME =",now
-
-
-
-
-class CispIC50VisualizationSteppable(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.scalarCLField=self.createScalarFieldCellLevelPy("NetAccumulatedCispl")
-    def step(self,mcs):
-        self.scalarCLField.clear()
-        for cell in self.cellList:
-            if cell.type==4 or cell.type==5 or cell.type==6 or cell.type==7 or cell.type==8 or cell.type==9 or cell.type==10 or cell.type==11:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                self.scalarCLField[cell]=dictionaryAttrib[3]
 
 
 
@@ -219,61 +228,35 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
             cell.dict["resistance"]=1
+            cell.dict["IC50Cis"]=0
+            cell.dict["IC50Gem"]=0
             if cell.type==4:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
+                cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
             if cell.type==5:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_J82
+                cell.dict["IC50Gem"]=gemIC50_SCSG_J82
             if cell.type==6:
                 cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
+                cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
             if cell.type==7:
                 cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
+                cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
             if cell.type==8:
                 cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
+                cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
             if cell.type==9:
                 cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
+                cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
             if cell.type==10:
                 cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
+                cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
             if cell.type==11:
                 cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
+                cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
 
-                
-                    
-            if cell.type==4:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCSG_BFTC_905):
-                    cell.type=13 # IC50Gem
-            if cell.type==5:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCSG_J82):
-                    cell.type=13 # IC50Gem
-            if cell.type==6:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCRG_RT4):
-                    cell.type=13 # IC50Gem
-            if cell.type==7:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCRG_HT_1197):
-                    cell.type=13 # IC50Gem
-            if cell.type==8:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCRG_SW780):
-                    cell.type=13 # IC50Gem
-            if cell.type==9:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_SCRG_KU_19_19):
-                    cell.type=13 # IC50Gem
-            if cell.type==10:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCSG_LB831_BLC):
-                    cell.type=13 # IC50Gem
-            if cell.type==11:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                if (cell.dict["gemAccum"]>=gemIC50_RCSG_DSH1):
-                    cell.type=13 # IC50Gem 
-
-                
             # print initial dictionary vals for each cell
-            print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
+            # print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
         # "TO GET ALL CELL ATTRIBUTES" (to see what cell attributes can be accessed/changed in Python):
         print 'Members of SteppableBasePy class'
         print dir(cell)
@@ -298,7 +281,9 @@ class IncrementClocks(SteppableBasePy):
     def step(self,mcs):
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
-            # print cell.dict["AgeHrs"]
+#            print 'inside incrementAge'
+#            print 'cell.type=',cell.type,'cell.id=',cell.id
+#            print cell.dict
             cell.dict["AgeHrs"]+= MCSFractionOfHour
             if cell.type==3:
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
@@ -389,35 +374,61 @@ class MitosisSteppable(MitosisSteppableBase):
             # shouldn't need conditional -- only cells that will divide should grow -- but leaving it in to avoid weird behavior
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
+                print 'cells to divide increment'
                 self.divideCellRandomOrientation(cell)
                 # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
                 # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
-
+        print 'cells to divide == '
+        print cells_to_divide
+                
     def updateAttributes(self):
         #        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
         print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
 
-        if len(self.cellListByType(self.VESSEL))<maxVesselCellCount:
-            chanceToBeVessel = uniform(0,1)
-            if chanceToBeVessel <= vesselPercentMetastasis:
-                self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = normalLambdaVolume
-                self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
-                self.parentCell.dict["numDivisions"] += 1
+        if len(self.cellListByType(self.VESSEL)) < maxVesselCellCount:
+            print 'inside first vessel IF for total vessel percentage'
+            if self.parentCell.dict["generation"] > 3:
+                print 'inside second vessel IF for generation'
+                chanceToBeVessel = uniform(0,1)
+                if chanceToBeVessel <= vesselPercentMetastasis:
+                    print 'mitosis, vessel = child'
+                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                    self.parentCell.lambdaVolume = normalLambdaVolume
+                    self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
+                    self.parentCell.dict["numDivisions"] += 1
+                    
+                    self.cloneParent2Child() # copy all parent parameters, then over-write
+                    self.childCell.type=1 # CHILD IS VESSEL
+                    self.childCell.targetVolume = 1
+                    # self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place -- should stay without vol lambda, type is frozen
+                    self.childCell.dict["generation"]+=1
+                    self.childCell.dict["numDivisions"] += 0
+                    self.childCell.dict["cisAccum"] = 0
+                    self.childCell.dict["gemAccum"] = 0
+                    print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                    print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                    
+                else:
+                    print 'mitosis, chance at vessel failed'
+                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                    self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
+                    self.parentCell.dict["AgeHrs"] = 0
+                    self.parentCell.dict["numDivisions"] += 1
 
-                self.cloneParent2Child() # copy all parent parameters, then over-write
-                self.childCell.type=1 # CHILD IS VESSEL
-                self.childCell.targetVolume = 1
-                # self.childCell.lambdaVolume = 100000000  # make sure vessel stays in place -- should stay without vol lambda, type is frozen
-                self.childCell.dict["generation"]+=1
-                self.childCell.dict["numDivisions"] += 0
-                self.childCell.dict["cisAccum"] = 0
-                self.childCell.dict["gemAccum"] = 0
-                print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                    self.cloneParent2Child() # copy all parent parameters, then over-write
+                    self.childCell.dict["generation"]+=1
+                    self.childCell.dict["numDivisions"] += 0
+                    self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+                    self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+                    self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+                    self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+                    ## for cell in self.cellList:
+                    print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                    print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
             else:
+                print 'mitosis, no chance at vessel'
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
                 self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
                 self.parentCell.dict["AgeHrs"] = 0
@@ -431,15 +442,16 @@ class MitosisSteppable(MitosisSteppableBase):
                 self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
                 self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
                 ## for cell in self.cellList:
-                print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
-        else: # if cell has already divided once, do not become vessel
+        else:
+            print 'mitosis, no chance at vessel'
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
             self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
             self.parentCell.dict["AgeHrs"] = 0
             self.parentCell.dict["numDivisions"] += 1
-            
+
             self.cloneParent2Child() # copy all parent parameters, then over-write
             self.childCell.dict["generation"]+=1
             self.childCell.dict["numDivisions"] += 0
@@ -447,7 +459,7 @@ class MitosisSteppable(MitosisSteppableBase):
             self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
             self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
             self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-        ## for cell in self.cellList:
+            ## for cell in self.cellList:
             print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
             print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
@@ -519,6 +531,7 @@ class RemoveDeadCells(SteppableBasePy):
 # CELLS ACCUMULATE CISPLATIN AND REMOVE IT FROM SURFACE OF CELL
 # limit of cellular cisplatin absorption not known
 class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
+    
 # MEDIUM is a null pointer, not a true cell type, and cannot secrete (conversation w/CC3D developer Maciek Swat, July 2014); must add another medium-like cell type to secrete
     def __init__(self,_simulator,_frequency=1):
         SecretionBasePy.__init__(self,_simulator, _frequency)
@@ -531,131 +544,132 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
         # profile = cProfile.Profile()
         # profile.enable()
 
-        for cell in self.cellList:
-            if cell.type==4:  # SCSG_BFTC_905
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt) # get concentration at center of mass
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
-                    accumC=(cisplatin * cispAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcCis = (-0.8242 * IC50 + 67.2261) * siteConcCis/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
+        if mcs > aggressInfusTimeDay1Cis[1] and mcs < aggressInfusTimeDay1Cis[2]:
+            for cell in self.cellList:
+                if cell.type==4:  # SCSG_BFTC_905
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt) # get concentration at center of mass
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
+                        accumC=(cisplatin * cispAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcCis = (-0.8242 * IC50 + 67.2261) * siteConcCis/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
 
-                    # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==5: # SCSG_J82
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_SCSG_J82) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==6: # RCRG_RT4
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_RCRG_RT4) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==7: # RCRG_HT_1197
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_RCRG_HT_1197) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==8: # SCRG_SW780
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==9: # SCRG_KU_19_19
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_SCRG_KU_19_19) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==10: # RCSG_LB831_BLC
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_RCSG_LB831_BLC) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-            if cell.type==11: # RCSG_DSH1
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_RCSG_DSH1) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-                    
-            # lung, dead(filled with active phagocytes), IC50cis, and IC50gem, equal to middle-of-the-road-least-sensitive line SCRG_SW780
-            if cell.type==2 or cell.type==3 or cell.type==12 or cell.type==13: 
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt)
-                attrSecretor=self.getFieldSecretor("Cisplatin")
-                if cisplatin > 0:
-                    dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                    accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
-                    cell.dict["cisAccum"]+=accumC
-                    attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary
-
+                        # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==5: # SCSG_J82
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_SCSG_J82) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==6: # RCRG_RT4
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_RCRG_RT4) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==7: # RCRG_HT_1197
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_RCRG_HT_1197) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==8: # SCRG_SW780
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==9: # SCRG_KU_19_19
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_SCRG_KU_19_19) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==10: # RCSG_LB831_BLC
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_RCSG_LB831_BLC) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                if cell.type==11: # RCSG_DSH1
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_RCSG_DSH1) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
+                
+                # lung, dead(filled with active phagocytes), IC50cis, and IC50gem, equal to middle-of-the-road-least-sensitive line SCRG_SW780
+                if cell.type==2 or cell.type==3 or cell.type==12 or cell.type==13: 
+                    comPt=CompuCell.Point3D()
+                    field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+                    comPt.x=int(cell.xCM)
+                    comPt.y=int(cell.yCM)
+                    comPt.z=int(cell.zCM)
+                    cisplatin=field.get(comPt)
+                    attrSecretor=self.getFieldSecretor("Cisplatin")
+                    if cisplatin > 0:
+                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                        accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
+                        cell.dict["cisAccum"]+=accumC
+                        attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary
+                        
             # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
 
 
@@ -688,10 +702,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
         print "This function (SecretionSteppableGemcitabine) is called at every MCS"
 
     def step(self,mcs):
-        ## START PROFILER
-        # profile = cProfile.Profile()
-        # profile.enable()
-        if mcs<gemZeroConcTime:
+        if mcs < aggressInfusTimesGem[2] or (mcs > aggressInfusTimesGem[3] and mcs < aggressInfusTimesGem[4]) or (mcs > aggressInfusTimesGem[5] and mcs < aggressInfusTimesGem[6]):
              for cell in self.cellList:
                 if cell.type==4:  # SCSG_BFTC_905
                     comPt=CompuCell.Point3D()
@@ -718,7 +729,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                     comPt.z=int(cell.zCM)
                     gemcitabine=field.get(comPt)
                     attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    print 'gemcitabine=',gemcitabine
+                    # print 'gemcitabine=',gemcitabine
                     if gemcitabine > 0:
                         dictionaryAttrib = CompuCell.getPyAttrib(cell)
                         accumG=(gemcitabine * gemAccumFrac_SCSG_J82) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
@@ -834,42 +845,40 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
-
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
-        # INTRAVENOUS DRUG CONCENTRATION
-        # tMins=mcs/465.189 # diffusion time for one cell diameter in normal tissue
-#         if 0<=mcs<cFirst5Mins:
-        if 0<=mcs<Infusion15Mins:
-            tMins=mcs/CisGem1Min
-            IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
+        if aggressInfusTimeDay1Cis[1] < mcs < aggressInfusTimeDay1Cis[2]: # at correct time in regimen
+            #         if 0<=mcs<cFirst5Mins:
+            if aggressInfusTimeDay1Cis[1] <= mcs < aggressInfusTimeDay1Cis[1] + Infusion15Mins:
+                tMins= (mcs - aggressInfusTimeDay1Cis[1]) / CisGem1Min # time since injection
+                IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+                IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+                self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+                self.updateXML()
 
-        elif Infusion15Mins<=mcs<cIVFirstPoint:
-            IVtMins = 5.59 # highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
-
-        elif cIVFirstPoint<=mcs<cEndDataSet:        # prior to end of IV data se
-            tMins=(mcs/CisGem1Min) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
-            IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
-
+            elif aggressInfusTimeDay1Cis[1] + Infusion15Mins <= mcs < aggressInfusTimeDay1Cis[1] + cIVFirstPoint: # plateau for 5.7m
+                IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+                IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+                self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+                self.updateXML()
+                
+            elif aggressInfusTimeDay1Cis[1] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1] + cEndDataSet:        # prior to end of IV data set 
+                tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
+                IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+                IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+                IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+                self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+                self.updateXML()
+                
     def finish(self):
         # Finish Function gets called after the last MCS
         pass
 
 
-            #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
-            # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
-#             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+    #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
+    # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
+    #             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
 
 
 
@@ -882,11 +891,15 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
+        
+        # if mcs < 15762.8306 | mcs > 
         # if mcs>gemZeroConcTime or  gemZeroConcTime1<mcs>cycle2Gem:
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
         # INTRAVENOUS DRUG CONCENTRATION
         # tMins=mcs/465.189 # diffusion time for one cell diameter in normal tissue
-#         if 0<=mcs<cFirst5Mins:
+        #         if 0<=mcs<cFirst5Mins:
+        # gemZero = 
+        # gem30Mins = gemInfus1+
         if 0<=mcs<gem30Mins:
             tMins=mcs/CisGem1Min
             IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
@@ -925,7 +938,9 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
         pass
     def step(self,mcs):
         for cell in self.cellList:
-            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
+            if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
+                print 'inside GemAccum'
+                # print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["gemAccum"] > cell.dict["IC50Gem"]:
                     cell.type=13
 
@@ -939,15 +954,13 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
         self.simulator=_simulator
         self.inventory=self.simulator.getPotts().getCellInventory()
         self.cellList=CellList(self.inventory)
-          # 2 lines following are mentioned in the manual, but are not in Listing 17,
-          #    or the demo (cellsort_2D_field_modules.py)
-          # self.dim=self.simulator.getPotts().getCellFieldG().getDim()
-          # self.fieldName="FGF"
     def start(self):
         pass
     def step(self,mcs):
         for cell in self.cellList:
-            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
+            if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
+                print 'inside CisAccum'
+                # print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["cisAccum"] > cell.dict["IC50Cis"]:
                     cell.type=13
 
@@ -957,6 +970,96 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& DATA RECORDING FUNCTIONS
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
+class CispAccumVisualizationSteppable(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedCispl")
+    def step(self,mcs):
+        self.scalarCLField.clear()
+        for cell in self.cellList:
+            # if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types except Vessel, LungNormal, and Dead, respectively
+                self.scalarCLField[cell]=cell.dict["cisAccum"]
+
+
+
+
+class GemAccumVisualizationSteppable(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedGem")
+    def step(self,mcs):
+        self.scalarCLField.clear()
+        for cell in self.cellList:
+            # if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types except Vessel, LungNormal, and Dead, respectively
+                self.scalarCLField[cell]=cell.dict["gemAccum"]
+
+
+
+
+class PlotCellPops(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+
+    def start(self):
+        self.pW=self.addNewPlotWindow(_title='Cell Populations',_xAxisTitle='MonteCarlo Step (MCS)',_yAxisTitle='Variables', _xScaleType='linear',_yScaleType='linear')
+        self.pW.addPlot('DATA_SERIES_1',_style='Dots',_color='red',_size=5)
+        self.pW.addPlot('DATA_SERIES_2',_style='Steps',_size=1)
+        self.pW.addPlot("SCSG_BFTC_905_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("SCSG_J82_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("RCRG_RT4_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("RCRG_HT_1197_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("SCRG_SW780_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("SCRG_KU_19_19_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("RCSG_LB831_BLC_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("RCSG_DSH1_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("IC50Cis_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("IC50Gem_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("LungNormal_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("Vessel_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("Dead_pop",_style='Dots',_color='red',_size=5)
+
+    def step(self, mcs):
+        
+# TypeId="4" TypeName="SCSG_BFTC_905"
+# TypeId="5" TypeName="SCSG_J82"
+# TypeId="6" TypeName="RCRG_RT4"
+# TypeId="7" TypeName="RCRG_HT_1197"
+# TypeId="8" TypeName="SCRG_SW780"
+# TypeId="9" TypeName="SCRG_KU_19_19"
+# TypeId="10" TypeName="RCSG_LB831_BLC"
+# TypeId="11" TypeName="RCSG_DSH1"
+# TypeId="12" TypeName="IC50Cis"
+# TypeId="13" TypeName="IC50Gem"
+
+        self.pW.addDataPoint("SCSG_BFTC_905_pop",mcs,SCSG_BFTC_905_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("SCSG_J82_pop",mcs,SCSG_J82_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCRG_RT4_pop",mcs,RCRG_RT4_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCRG_HT_1197_pop",mcs,RCRG_HT_1197_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("SCRG_SW780_pop",mcs,SCRG_SW780_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("SCRG_KU_19_19_pop",mcs,SCRG_KU_19_19_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCSG_LB831_BLC_pop",mcs,RCSG_LB831_BLC_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCSG_DSH1_pop",mcs,RCSG_DSH1_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("IC50Cis_pop",mcs,IC50Cis_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("IC50Gem_pop",mcs,IC50Gem_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("LungNormal_pop",mcs,LungNormal_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("Vessel_pop",mcs,Vessel_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("Dead_pop",mcs,Dead_pop) # arguments are (name of the data series, x, y)
+        
+        
+        self.pW.eraseAllData()
+
+        
+    def finish(self):
+        self.pW.savePlotAsPNG(fileName,1000,1000) # here we specify size of the image saved (1000x1000) - default is 400 x 400
+        self.pW.savePlotAsData(fileName)
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 class PrintAllCells(SteppableBasePy):
 
     def __init__(self,_simulator,_frequency=1):
