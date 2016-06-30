@@ -26,7 +26,7 @@
       <e Name="TabIndex" Type="int">1</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1</e>
+      <e Name="ArrowLength" Type="float">1.0</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -66,7 +66,7 @@
          </e>
          <e Name="AccumulatedGem" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1</e>
+            <e Name="ArrowLength" Type="float">1.0</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -137,15 +137,15 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">447.06285942,458.352325567</e>
-            <e Name="cameraFocalPoint" Type="floatlist">70.6570732363,96.2138159015,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">70.6570732363,96.2138159015,451.578645879</e>
+            <e Name="cameraClippingRange" Type="floatlist">654.544732477,671.073639863</e>
+            <e Name="cameraFocalPoint" Type="floatlist">405.101138656,193.692195483,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">405.101138656,193.692195483,661.156295432</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
             <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cell_Field</e>
-            <e Name="sceneType" Type="str">CellField</e>
+            <e Name="sceneName" Type="str">AccumulatedGem</e>
+            <e Name="sceneType" Type="str">ScalarFieldCellLevel</e>
             <e Name="winPosition" Type="point">0,0</e>
             <e Name="winSize" Type="size">2303,868</e>
             <e Name="winType" Type="str">Graphics</e>
@@ -156,14 +156,14 @@
       <e Name="LastVersionCheckDate" Type="str">20160607</e>
       <e Name="OutputLocation" Type="str">/Users/squirrel/CC3DWorkspace</e>
       <e Name="ProjectLocation" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet</e>
-      <e Name="RecentFile" Type="str">/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
+      <e Name="RecentFile" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
       <e Name="ScalarIsoValues" Type="str"/>
       <e Name="Types3DInvisible" Type="str">0</e>
    </Settings>
    <Settings Type="bool">
       <e Name="BoundingBoxOn" Type="bool">True</e>
       <e Name="CC3DOutputOn" Type="bool">True</e>
-      <e Name="CellBordersOn" Type="bool">True</e>
+      <e Name="CellBordersOn" Type="bool">False</e>
       <e Name="CellGlyphScaleByVolumeOn" Type="bool">True</e>
       <e Name="CellGlyphsOn" Type="bool">False</e>
       <e Name="CellsOn" Type="bool">True</e>

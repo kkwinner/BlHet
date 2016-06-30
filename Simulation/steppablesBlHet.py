@@ -233,27 +233,43 @@ class SetCellDictionaries(SteppableBasePy):
             if cell.type==4:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
                 cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
+                cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
             if cell.type==5:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_J82
                 cell.dict["IC50Gem"]=gemIC50_SCSG_J82
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
+                cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
             if cell.type==6:
                 cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
                 cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
+                cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
             if cell.type==7:
                 cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
                 cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
+                cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
             if cell.type==8:
                 cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
                 cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
+                cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
             if cell.type==9:
                 cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
                 cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
+                cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
             if cell.type==10:
                 cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
                 cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
+                cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
             if cell.type==11:
                 cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
                 cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
+                cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
 
             # print initial dictionary vals for each cell
             # print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
@@ -329,11 +345,11 @@ class GrowthSteppable(SteppableBasePy):
         for cell in self.cellList:
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types grow and then divide except for Vessel, LungNormal, and Dead, respectively (IC50Cis, and IC50Gem divide)
                 # if cell.dict["AgeHrs"]>=divisionCycleTimeHrs:
-                print 'inside growthSteppable for tumor cells, type is',cell.type,'age is', cell.dict["AgeHrs"]
+                # print 'inside growthSteppable for tumor cells, type is',cell.type,'age is', cell.dict["AgeHrs"]
                 if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
                     cell.targetVolume=2*T24BCCellVol
                     cell.lambdaVolume=cellGrowthLambdaVolume
-                    print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
+                    # print 'I am cell.type',cell.type,'cell.id',cell.id,'targetVolume',cell.targetVolume,'targetLambda',cell.lambdaVolume,'and I want to grow so I can divide.'
         # alternatively if you want to make growth a function of chemical concentration uncomment lines below and comment lines above        
         # field=CompuCell.getConcentrationField(self.simulator,"PUT_NAME_OF_CHEMICAL_FIELD_HERE")
         # pt=CompuCell.Point3D()
@@ -363,33 +379,33 @@ class MitosisSteppable(MitosisSteppableBase):
             # print 'cell.id=',cell.id,' dict=',cell.dict
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
                 deathChance = uniform(0,1)
-                print 'deathChance=',deathChance
+                # print 'deathChance=',deathChance
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
             # cell divides if volume has doubled (condition for GrowthSteppable)
             if cell.volume==2*T24BCCellVol:
                 cells_to_divide.append(cell)
-                print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
+                # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
         for cell in cells_to_divide:
             # shouldn't need conditional -- only cells that will divide should grow -- but leaving it in to avoid weird behavior
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
-                print 'cells to divide increment'
+                # print 'cells to divide increment'
                 self.divideCellRandomOrientation(cell)
                 # self.divideCellOrientationVectorBased(cell,1,0,0)                 # this is a valid option
                 # self.divideCellAlongMajorAxis(cell)                               # this is a valid option
                 # self.divideCellAlongMinorAxis(cell)                               # this is a valid option
-        print 'cells to divide == '
-        print cells_to_divide
-                
+        # print 'cells to divide == '
+        # print cells_to_divide
+
     def updateAttributes(self):
         #        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
         print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
 
         if len(self.cellListByType(self.VESSEL)) < maxVesselCellCount:
-            print 'inside first vessel IF for total vessel percentage'
+            # print 'inside first vessel IF for total vessel percentage'
             if self.parentCell.dict["generation"] > 3:
-                print 'inside second vessel IF for generation'
+                #print 'inside second vessel IF for generation'
                 chanceToBeVessel = uniform(0,1)
                 if chanceToBeVessel <= vesselPercentMetastasis:
                     print 'mitosis, vessel = child'
@@ -397,7 +413,7 @@ class MitosisSteppable(MitosisSteppableBase):
                     self.parentCell.lambdaVolume = normalLambdaVolume
                     self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
                     self.parentCell.dict["numDivisions"] += 1
-                    
+
                     self.cloneParent2Child() # copy all parent parameters, then over-write
                     self.childCell.type=1 # CHILD IS VESSEL
                     self.childCell.targetVolume = 1
@@ -408,7 +424,7 @@ class MitosisSteppable(MitosisSteppableBase):
                     self.childCell.dict["gemAccum"] = 0
                     print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
                     print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
-                    
+
                 else:
                     print 'mitosis, chance at vessel failed'
                     self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
@@ -493,11 +509,11 @@ class RemoveDeadCells(SteppableBasePy):
                     print 'removing dead cell.id', cell.id,'with cell volume',cell.volume,'cell.targetVolume',cell.targetVolume,'and cell.lambdaVolume',cell.lambdaVolume
                     cell.targetVolume=0
                     cell.lambdaVolume=deathLambdaVolume
-                    
 
 
 
-            # <!-- CISPLATIN -->
+
+                    # <!-- CISPLATIN -->
   # D(VX2 carcinoma for sodium fluorescein, MW376 (Nugent 1984)
   #      = 1207.18273728686 cell diam^2 / 1 min (= 5.64um^2 (voxel edge) / 1/60hr)
   #      = 1 cell diam^2 / 1/1207.183 min (= 5.64um^2 (voxel edge) / 1/1207.183min)
@@ -531,7 +547,7 @@ class RemoveDeadCells(SteppableBasePy):
 # CELLS ACCUMULATE CISPLATIN AND REMOVE IT FROM SURFACE OF CELL
 # limit of cellular cisplatin absorption not known
 class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
-    
+
 # MEDIUM is a null pointer, not a true cell type, and cannot secrete (conversation w/CC3D developer Maciek Swat, July 2014); must add another medium-like cell type to secrete
     def __init__(self,_simulator,_frequency=1):
         SecretionBasePy.__init__(self,_simulator, _frequency)
@@ -654,7 +670,7 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                         accumC=(cisplatin * cispAccumFrac_RCSG_DSH1) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
                         cell.dict["cisAccum"]+=accumC
                         attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary of cell
-                
+
                 # lung, dead(filled with active phagocytes), IC50cis, and IC50gem, equal to middle-of-the-road-least-sensitive line SCRG_SW780
                 if cell.type==2 or cell.type==3 or cell.type==12 or cell.type==13: 
                     comPt=CompuCell.Point3D()
@@ -669,8 +685,8 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                         accumC=(cisplatin * cispAccumFrac_SCRG_SW780) #  microM/MCS * siteConcCis  =	microM cis accumulation / MCS * frac50uMCis
                         cell.dict["cisAccum"]+=accumC
                         attrSecretor.uptakeInsideCellAtCOM(cell,accumC,1.0) # uM secretion from pixels at outer boundary
-                        
-            # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
+
+        # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
 
 
 
@@ -684,8 +700,6 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                 # if efflux>0:
                 #     dictionaryAttrib[3]-=efflux
                 #     attrSecretor.secreteInsideCellAtBoundary(cell,efflux) # uM secretion from pixels at outer boundary of cell
-                
-
 
 
 
@@ -718,7 +732,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                         # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
                         accumG=(gemcitabine * gemAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcGem = (-0.8242 * IC50 + 67.2261) * siteConcGem/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM gem accumulation / MCS * frac50uMGem
                         cell.dict["gemAccum"]+=accumG
-                        
+
                         # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                         attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
                 if cell.type==5: # SCSG_J82
@@ -816,7 +830,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                         accumG=(gemcitabine * gemAccumFrac_RCSG_DSH1) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
                         cell.dict["gemAccum"]+=accumG
                         attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                        
+
                 # lung, dead(filled with active phagocytes), IC50gem, and IC50gem, equal to middle-of-the-road-least-sensitive line SCRG_SW780
                 if cell.type==2 or cell.type==3 or cell.type==12 or cell.type==13: 
                     comPt=CompuCell.Point3D()
@@ -862,7 +876,7 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
                 IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
                 self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
                 self.updateXML()
-                
+
             elif aggressInfusTimeDay1Cis[1] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1] + cEndDataSet:        # prior to end of IV data set 
                 tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
                 IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
@@ -1023,7 +1037,7 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addPlot("Dead_pop",_style='Dots',_color='red',_size=5)
 
     def step(self, mcs):
-        
+
 # TypeId="4" TypeName="SCSG_BFTC_905"
 # TypeId="5" TypeName="SCSG_J82"
 # TypeId="6" TypeName="RCRG_RT4"
@@ -1048,11 +1062,9 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addDataPoint("LungNormal_pop",mcs,LungNormal_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Vessel_pop",mcs,Vessel_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Dead_pop",mcs,Dead_pop) # arguments are (name of the data series, x, y)
-        
-        
+
         self.pW.eraseAllData()
 
-        
     def finish(self):
         self.pW.savePlotAsPNG(fileName,1000,1000) # here we specify size of the image saved (1000x1000) - default is 400 x 400
         self.pW.savePlotAsData(fileName)
@@ -1307,6 +1319,3 @@ class CellListToFileSteppable(SteppableBasePy):
     def finish(self):
         # pass
         self.file.close() # close the file
-
-
-
