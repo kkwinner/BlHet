@@ -179,8 +179,8 @@ deathLambdaVolume = 100.0
 
 ## VASCULARITY
 vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
-totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
-# totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
+totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
 # totalSimCellsPossible = 20*20*20 #CHANGE WITH SIM DIMENSIONS!
 print "total cells in sim =",totalSimCellsPossible
 maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible)
@@ -440,22 +440,22 @@ class MitosisSteppable(MitosisSteppableBase):
                     ## for cell in self.cellList:
                     print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
                     print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
-            else:
-                print 'mitosis, no chance at vessel'
-                self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
-                self.parentCell.dict["AgeHrs"] = 0
-                self.parentCell.dict["numDivisions"] += 1
-                self.cloneParent2Child() # copy all parent parameters, then over-write
-                self.childCell.dict["generation"]+=1
-                self.childCell.dict["numDivisions"] += 0
-                self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-                self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-                self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-                self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-                ## for cell in self.cellList:
-                print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+        else:
+            print 'mitosis, no chance at vessel'
+            self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+            self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
+            self.parentCell.dict["AgeHrs"] = 0
+            self.parentCell.dict["numDivisions"] += 1
+            self.cloneParent2Child() # copy all parent parameters, then over-write
+            self.childCell.dict["generation"]+=1
+            self.childCell.dict["numDivisions"] += 0
+            self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+            self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+            self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+            self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+            ## for cell in self.cellList:
+            print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+            print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
 
         # else:
         #     print 'mitosis, no chance at vessel'
@@ -802,7 +802,7 @@ class CispAccumVisualizationSteppable(SteppableBasePy):
         self.scalarCLField.clear()
         for cell in self.cellList:
             # if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types except Vessel, LungNormal, and Dead, respectively
-                self.scalarCLField[cell]=cell.dict["cisAccum"]
+            self.scalarCLField[cell]=cell.dict["cisAccum"]
 
 
 
@@ -814,8 +814,9 @@ class GemAccumVisualizationSteppable(SteppableBasePy):
     def step(self,mcs):
         self.scalarCLField.clear()
         for cell in self.cellList:
+            print cell.dict
             # if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types except Vessel, LungNormal, and Dead, respectively
-                self.scalarCLField[cell]=cell.dict["gemAccum"]
+            self.scalarCLField[cell]=cell.dict["gemAccum"]
 
 
 
