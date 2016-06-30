@@ -825,7 +825,7 @@ class GemAccumVisualizationSteppable(SteppableBasePy):
 
 
 class PlotCellPops(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
+    def __init__(self,_simulator,_frequency=(65.68*60)): # = MCS per min * 60 min
         SteppableBasePy.__init__(self,_simulator,_frequency)
 
     def start(self):

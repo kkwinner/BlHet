@@ -15,7 +15,7 @@
     <!-- <Dimensions x="10" y="10" z="10" /> -->
     <!-- 2-D -->
     <!-- <Dimensions x="20" y="20" z="1" /> -->
-    <Dimensions x="200" y="200" z="1" />
+    <!-- <Dimensions x="200" y="200" z="1" /> -->
     <!-- !!!!!! FOR CORRECT VASCULAR DENSITY, ALSO CHANGE DIMENSIONS AT TOP OF STEPPABLESBLHET.PY -->
 
     <!-- Anneal = # of steps run @ 0 Temperature after simulation's end --> 
@@ -221,7 +221,7 @@ IC50_RCSG_DSH1
     <Energy Type1="RCSG_DSH1" Type2="Medium">0</Energy>
     <Energy Type1="IC50Cis" Type2="Medium">0</Energy>
     <Energy Type1="IC50Gem" Type2="Medium">0</Energy>
-    <Energy Type1="Dead" Type2="Medium">5</Energy>
+    <Energy Type1="Dead" Type2="Medium">0</Energy>
 
     <!-- tumor and normal lung stick to vessel with same adhesion as tumor-tumor -->
     <Energy Type1="Vessel" Type2="Vessel">5</Energy>
