@@ -174,13 +174,13 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
-cellGrowthLambdaVolume = 10.0
+cellGrowthLambdaVolume = 90.0
 deathLambdaVolume = 100.0
 
 ## VASCULARITY
 vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
-# totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
-totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
+totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
 # totalSimCellsPossible = 20*20*20 #CHANGE WITH SIM DIMENSIONS!
 print "total cells in sim =",totalSimCellsPossible
 maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible)
