@@ -174,7 +174,7 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
-cellGrowthLambdaVolume = 1000.0
+cellGrowthLambdaVolume = 100.0
 deathLambdaVolume = 100.0
 
 ## VASCULARITY
