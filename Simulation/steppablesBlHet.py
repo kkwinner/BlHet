@@ -718,135 +718,39 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
     def step(self,mcs):
         if mcs < aggressInfusTimesGem[2] or (mcs > aggressInfusTimesGem[3] and mcs < aggressInfusTimesGem[4]) or (mcs > aggressInfusTimesGem[5] and mcs < aggressInfusTimesGem[6]):
              for cell in self.cellList:
-                if cell.type==4:  # SCSG_BFTC_905
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt) # get concentration at center of mass
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
-                        accumG=(gemcitabine * gemAccumFrac_SCSG_BFTC_905) #  microM/MCS * siteConcGem = (-0.8242 * IC50 + 67.2261) * siteConcGem/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
+                 if cell.type!=1 and cell.type!=2 and cell.type!=3:  # Vessel(no accum), LungNormal(below), Dead (below)
+                     comPt=CompuCell.Point3D()
+                     field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
+                     # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
+                     comPt.x=int(cell.xCM)
+                     comPt.y=int(cell.yCM)
+                     comPt.z=int(cell.zCM)
+                     gemcitabine=field.get(comPt) # get concentration at center of mass
+                     attrSecretor=self.getFieldSecretor("Gemcitabine")
+                     if gemcitabine > 0:
+                         dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                         # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
+                         accumG=(gemcitabine * cell.dict["accumRtGem"]) #  siteConcGem * microM/MCS = (-0.8242 * IC50 + 67.2261) * siteConcGem/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM gem accumulation / MCS * frac50uMGem
+                         cell.dict["gemAccum"]+=accumG
 
-                        # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==5: # SCSG_J82
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    # print 'gemcitabine=',gemcitabine
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_SCSG_J82) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        # print 'accumulation=',accumG
-                        # print 'cell.dict=',cell.dict["gemAccum"]
-                        cell.dict["gemAccum"]+=accumG
-                        # print 'incremented cell.dict=',cell.dict["gemAccum"]
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==6: # RCRG_RT4
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_RCRG_RT4) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==7: # RCRG_HT_1197
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_RCRG_HT_1197) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==8: # SCRG_SW780
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_SCRG_SW780) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==9: # SCRG_KU_19_19
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_SCRG_KU_19_19) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==10: # RCSG_LB831_BLC
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_RCSG_LB831_BLC) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
-                if cell.type==11: # RCSG_DSH1
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_RCSG_DSH1) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
+                         # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
+                         attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
+                     # lung, dead(filled with active phagocytes): equal to middle-of-the-road-least-sensitive line SCRG_SW780
+                     if cell.type==2 or cell.type==3:
+                         comPt=CompuCell.Point3D()
+                         field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
+                         comPt.x=int(cell.xCM)
+                         comPt.y=int(cell.yCM)
+                         comPt.z=int(cell.zCM)
+                         gemcitabine=field.get(comPt)
+                         attrSecretor=self.getFieldSecretor("Gemcitabine")
+                         if gemcitabine > 0:
+                             dictionaryAttrib = CompuCell.getPyAttrib(cell)
+                             accumG=(gemcitabine * gemAccumFrac_SCRG_SW780) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
+                             cell.dict["gemAccum"]+=accumG
+                             attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary
 
-                # lung, dead(filled with active phagocytes), IC50gem, and IC50gem, equal to middle-of-the-road-least-sensitive line SCRG_SW780
-                if cell.type==2 or cell.type==3 or cell.type==12 or cell.type==13: 
-                    comPt=CompuCell.Point3D()
-                    field=CompuCell.getConcentrationField(self.simulator,"Gemcitabine")
-                    comPt.x=int(cell.xCM)
-                    comPt.y=int(cell.yCM)
-                    comPt.z=int(cell.zCM)
-                    gemcitabine=field.get(comPt)
-                    attrSecretor=self.getFieldSecretor("Gemcitabine")
-                    if gemcitabine > 0:
-                        dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                        accumG=(gemcitabine * gemAccumFrac_SCRG_SW780) #  microM/MCS * siteConcGem  =	microM gem accumulation / MCS * frac50uMGem
-                        cell.dict["gemAccum"]+=accumG
-                        attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary
-
-                # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["gemAccum"],'microM gemcitabine.'
+            # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["gemAccum"],'microM gemcitabine.'
 
 
 
