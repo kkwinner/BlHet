@@ -115,6 +115,10 @@ from steppablesBlHet import GemAccumVisualizationSteppable
 gemAccumVisualizationSteppable=GemAccumVisualizationSteppable (sim)
 steppableRegistry.registerSteppable(gemAccumVisualizationSteppable)
 
+from steppablesBlHet import PlotCellPops
+plotCellPops=PlotCellPops(sim)
+steppableRegistry.registerSteppable(plotCellPops)
+
 """
 # from steppablesBlHet import PrintAllCells
 # printAllCells=PrintAllCells(sim)

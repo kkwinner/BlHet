@@ -831,10 +831,11 @@ class PlotCellPops(SteppableBasePy):
         SteppableBasePy.__init__(self,_simulator,_frequency)
 
     def start(self):
+        # hex color codes from http://www.discoveryplayground.com/computer-programming-for-kids/rgb-colors/
         self.pW=self.addNewPlotWindow(_title='Cell Populations',_xAxisTitle='MonteCarlo Step (MCS)',_yAxisTitle='Variables', _xScaleType='linear',_yScaleType='linear')
         self.pW.addPlot('DATA_SERIES_1',_style='Dots',_color='red',_size=5)
         self.pW.addPlot('DATA_SERIES_2',_style='Steps',_size=1)
-        self.pW.addPlot("SCSG_BFTC_905_pop",_style='Dots',_color='',_size=5)
+        self.pW.addPlot("SCSG_BFTC_905_pop",_style='Dots',_color='7fffd4',_size=5)
         self.pW.addPlot("SCSG_J82_pop",_style='Dots',_color='red',_size=5)
         self.pW.addPlot("RCRG_RT4_pop",_style='Dots',_color='red',_size=5)
         self.pW.addPlot("RCRG_HT_1197_pop",_style='Dots',_color='red',_size=5)
