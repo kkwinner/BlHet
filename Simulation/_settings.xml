@@ -137,15 +137,15 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">791.999126298,811.999104235</e>
-            <e Name="cameraFocalPoint" Type="floatlist">100.0,100.0,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">100.0,100.0,799.999117473</e>
+            <e Name="cameraClippingRange" Type="floatlist">54.0946059899,55.4606313936</e>
+            <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">10.0,10.0,54.6410161514</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
             <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cell_Field</e>
-            <e Name="sceneType" Type="str">CellField</e>
+            <e Name="sceneName" Type="str">AccumulatedGem</e>
+            <e Name="sceneType" Type="str">ScalarFieldCellLevel</e>
             <e Name="winPosition" Type="point">0,0</e>
             <e Name="winSize" Type="size">2303,868</e>
             <e Name="winType" Type="str">Graphics</e>
@@ -179,7 +179,7 @@
       <e Name="FPPLinksOn" Type="bool">False</e>
       <e Name="FixedArrowColorOn" Type="bool">False</e>
       <e Name="FloatingWindows" Type="bool">False</e>
-      <e Name="ImageOutputOn" Type="bool">True</e>
+      <e Name="ImageOutputOn" Type="bool">False</e>
       <e Name="LatticeOutputOn" Type="bool">False</e>
       <e Name="LegendEnable" Type="bool">True</e>
       <e Name="MaxRangeFixed" Type="bool">False</e>

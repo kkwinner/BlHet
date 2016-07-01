@@ -77,7 +77,7 @@ cisplatinIC50=52.71 # FINAL USED FOR OVARIAN MODEL: muM (equiv to (equitoxic) 2h
 CisGem1Min = 65.678 # 65.678 mcs = 1 min of diffusion time for cells of diameter T24 bladder cancer cell line, for drugs with diffusion coeff. of sodium fluorescein
 
 #IV CISPLATIN
-Infusion15Mins=15*CisGem1Min # 18107.745 MCS; subtract from runtime once begin using concentration time course
+drug15Mins=15*CisGem1Min # 18107.745 MCS; subtract from runtime once begin using concentration time course
 cIVFirstPoint=(5.742+15)*CisGem1Min # 6931.79 MCS; five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 cEndDataSet=(170.862*CisGem1Min)+cIVFirstPoint
 #### first five minutes (no data, linear fit from t=0, [iv]=0 to first time point
@@ -98,7 +98,7 @@ cFirst20Mins=20*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo
 # cIVFirstPtPlus15=(5.742+15.0)*1207.183 # = 25039.389786 MCS = 5.742 min, first time point, plus 15 mins infusion time
 
 # IV GEMCITABINE
-gem30Mins=30*CisGem1Min
+drug30Mins=30*CisGem1Min
 gemZeroConcTime=240*CisGem1Min # time at final data point
 
 # aggressive bladder cancer regimen time frame, NCCN regimen for metastatic bl.canc. (list)
@@ -174,7 +174,7 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 ## CELL PARAMETERS
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
-cellGrowthLambdaVolume = 90.0
+cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing cells from replacing pre-existing cells
 deathLambdaVolume = 100.0
 
 ## VASCULARITY
@@ -183,16 +183,16 @@ vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in
 totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
 # totalSimCellsPossible = 20*20*20 #CHANGE WITH SIM DIMENSIONS!
 print "total cells in sim =",totalSimCellsPossible
-maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible)
+maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible) # used in mitosis to limit global vessel nums; not in use as of 6-30-2016
 global maxVesselCellCount
 print "max vessels = ",maxVesselCellCount
 
 ## TIME FRAMES
 MCSFractionOfHour = 0.0002537615293 # hours per MCS, based on diffusion time for one T24 cell diameter of sodium fluorescein, proxy for cisplatin and gemcitabine
-# divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
-# phagocytosisEndTime = 24 # dead cells removed at 24 hours
-divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in
-phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
+divisionCycleTimeHrs = 30 # average time to division / replication from several cancer cell lines in vitro
+phagocytosisEndTime = 24 # dead cells removed at 24 hours
+# divisionCycleTimeHrs = 0.001 # TEST average time to division / replication from several cancer cell lines in
+# phagocytosisEndTime = 0.001 # TEST dead cells removed at x hours
 
 
 
@@ -400,8 +400,8 @@ class MitosisSteppable(MitosisSteppableBase):
 
     def updateAttributes(self):
         #        if self.parentCell.dict["generation"]<=4:  # if cell has already divided once, do not become vessel
-        print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
-        print "total cells:", len(self.cellList)
+        # print "number of cells that are type vessel:", len(self.cellListByType(self.VESSEL))
+        # print "total cells:", len(self.cellList)
         vesselCells = float(len(self.cellListByType(self.VESSEL)))
         totalCells = float(len(self.cellList))
         percentVesselCellsInAllCells = (vesselCells / float(totalCells))
@@ -463,6 +463,7 @@ class MitosisSteppable(MitosisSteppableBase):
             print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
             print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
             
+        # uncomment when adding in the generational limitation on mitosis to vessel
         # else:
         #     print 'mitosis, no chance at vessel'
         #     self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
@@ -561,8 +562,10 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
         ## START PROFILER
         # profile = cProfile.Profile()
         # profile.enable()
-
-        if mcs > aggressInfusTimeDay1Cis[1] and mcs < aggressInfusTimeDay1Cis[2]:
+        print aggressInfusTimeDay1Cis
+        print aggressInfusTimeDay1Cis[0]
+        print aggressInfusTimeDay1Cis[1]
+        if mcs > aggressInfusTimeDay1Cis[0] and mcs < aggressInfusTimeDay1Cis[1]:
             for cell in self.cellList:
                 if cell.type!=1 and cell.type!=2 and cell.type!=3:  # Vessel(no accum), LungNormal(below), Dead (below)
                     comPt=CompuCell.Point3D()
@@ -597,9 +600,6 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
 
         # print "I am cell.id",cell.id,'cell.type',cell.type,'and I have accumulated',cell.dict["cisAccum"],'microM cisplatin.'
 
-
-
-
                  #     # REMOVE EMPIRICALLY-DETERMINED EFFLUXED DRUG FROM ACCUMULATED DRUG IN CELL
                 #     # IF IMPLEMENTING EFFLUX AFTER EXTERNAL DRUG = 0, ADD EFFLUX FROM TOTAL DRUG ACCUMULATED PER CELL BACK INTO EXTERNAL DRUG CONCENTRATION. Net accumulation empirical measurements include efflux.
                 # #EFFLUX (REMOVE FROM DICTIONARY, ADD TO FIELD)
@@ -625,7 +625,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
         print "This function (SecretionSteppableGemcitabine) is called at every MCS"
 
     def step(self,mcs):
-        if (mcs < aggressInfusTimesGem[2]) or (aggressInfusTimesGem[3] < mcs < aggressInfusTimesGem[4]) or (aggressInfusTimesGem[5] < mcs < aggressInfusTimesGem[6]):
+        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):
              for cell in self.cellList:
                  if cell.type!=1 and cell.type!=2 and cell.type!=3:  # Vessel(no accum), LungNormal(below), Dead (below)
                      comPt=CompuCell.Point3D()
@@ -672,35 +672,27 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
         pass
     def step(self,mcs):
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
-        if aggressInfusTimeDay1Cis[1] < mcs < aggressInfusTimeDay1Cis[2]: # at correct time in regimen
-            #         if 0<=mcs<cFirst5Mins:
-            if aggressInfusTimeDay1Cis[1] <= mcs < aggressInfusTimeDay1Cis[1] + Infusion15Mins:
-                tMins= (mcs - aggressInfusTimeDay1Cis[1]) / CisGem1Min # time since injection
+        if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
+
+            # infusion
+            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins: # FLOATS; USE CONDITIONALS WITHOUT "="
+                tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
                 IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-                IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-                IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-                self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-                self.updateXML()
-
-            elif aggressInfusTimeDay1Cis[1] + Infusion15Mins <= mcs < aggressInfusTimeDay1Cis[1] + cIVFirstPoint: # plateau for 5.7m
+            elif aggressInfusTimeDay1Cis[0] + drug15Mins < mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
                 IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-                IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-                IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-                self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-                self.updateXML()
-
-            elif aggressInfusTimeDay1Cis[1] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1] + cEndDataSet:        # prior to end of IV data set 
+            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint < mcs < aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set 
                 tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
                 IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-                IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-                IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-                self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-                self.updateXML()
+
+            # update IV conc    
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
                 
     def finish(self):
         # Finish Function gets called after the last MCS
         pass
-
 
     #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
     # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
@@ -717,26 +709,31 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
-        
-        # if mcs < 15762.8306 | mcs > 
-        # if mcs>gemZeroConcTime or  gemZeroConcTime1<mcs>cycle2Gem:
-        ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
-        # INTRAVENOUS DRUG CONCENTRATION
-        # tMins=mcs/465.189 # diffusion time for one cell diameter in normal tissue
-        #         if 0<=mcs<cFirst5Mins:
-        # gemZero = 
-        # gem30Mins = gemInfus1+
-        if 0<=mcs<gem30Mins:
-            tMins=mcs/CisGem1Min
-            IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            IVxml=IVtMins            # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
+        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="            
 
-        elif gem30Mins<=mcs:
-            tMins=(mcs/CisGem1Min) - 15.0 # diffusion time for one cell diameter in tumor tissue; take away added infusion time so fit is correct; use floats
-            IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+            # first infusion
+            if mcs < drug30Mins:
+                tMins = mcs/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
+            elif drug30Mins < mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
+                tMins=(mcs/CisGem1Min) - 30.0 # take away infusion time so fit is correct, starting at t = 0; use floats
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+            # second infusion
+            elif aggressInfusTimesGem[2] < mcs < drug30Mins + aggressInfusTimesGem[2]:
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            elif aggressInfusTimesGem[2] + drug30Mins < mcs < aggressInfusTimesGem[3]:
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+            # third infusion
+            elif aggressInfusTimesGem[4] < mcs < drug30Mins + aggressInfusTimesGem[4]:
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            elif aggressInfusTimesGem[4] + drug30Mins < mcs < aggressInfusTimesGem[5]:
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+
+            # update IV conc    
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
             IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
@@ -763,9 +760,9 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
+        print 'inside GemAccum'
         for cell in self.cellList:
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
-                print 'inside GemAccum'
                 # print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["gemAccum"] > cell.dict["IC50Gem"]:
                     cell.type=13
@@ -784,8 +781,8 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
         pass
     def step(self,mcs):
         for cell in self.cellList:
+            print 'inside CisAccum'
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
-                print 'inside CisAccum'
                 # print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["cisAccum"] > cell.dict["IC50Cis"]:
                     cell.type=13
