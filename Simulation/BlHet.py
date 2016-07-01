@@ -61,13 +61,13 @@ from steppablesBlHet import DiffusionSolverFESteeringGemcitabineIV
 diffusionSolverFESteeringGemcitabineIV=DiffusionSolverFESteeringGemcitabineIV(sim)
 steppableRegistry.registerSteppable(diffusionSolverFESteeringGemcitabineIV)
 
-from steppablesBlHet import SecretionSteppableCisplatin
-secretionSteppableCisplatin=SecretionSteppableCisplatin(sim)
-steppableRegistry.registerSteppable(secretionSteppableCisplatin)
+# from steppablesBlHet import SecretionSteppableCisplatin
+# secretionSteppableCisplatin=SecretionSteppableCisplatin(sim)
+# steppableRegistry.registerSteppable(secretionSteppableCisplatin)
 
-from steppablesBlHet import SecretionSteppableGemcitabine
-secretionSteppableGemcitabine=SecretionSteppableGemcitabine(sim)
-steppableRegistry.registerSteppable(secretionSteppableGemcitabine)
+# from steppablesBlHet import SecretionSteppableGemcitabine
+# secretionSteppableGemcitabine=SecretionSteppableGemcitabine(sim)
+# steppableRegistry.registerSteppable(secretionSteppableGemcitabine)
 
 from steppablesBlHet import ChangeAtGemIC50Steppable
 changeAtGemIC50Steppable=ChangeAtGemIC50Steppable(sim)

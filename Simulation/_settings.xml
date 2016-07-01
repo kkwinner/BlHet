@@ -26,7 +26,7 @@
       <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -66,7 +66,7 @@
          </e>
          <e Name="AccumulatedGem" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -137,9 +137,9 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">80.4081849087,82.4386946286</e>
-            <e Name="cameraFocalPoint" Type="floatlist">35.2164677639,8.66975107375,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">35.2164677639,8.66975107375,81.2203887966</e>
+            <e Name="cameraClippingRange" Type="floatlist">791.999126298,811.999104235</e>
+            <e Name="cameraFocalPoint" Type="floatlist">100.0,100.0,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">100.0,100.0,799.999117473</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
