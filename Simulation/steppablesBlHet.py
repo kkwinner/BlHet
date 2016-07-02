@@ -507,7 +507,7 @@ class RemoveDeadCells(SteppableBasePy):
     def step(self,mcs):
         for cell in self.cellList:
             if cell.type==3:
-                print 'I am dead cell.id', cell.id, 'and I died',cell.dict["HrsSinceDeath"],'hrs ago.'
+                # print 'I am dead cell.id', cell.id, 'and I died',cell.dict["HrsSinceDeath"],'hrs ago.'
                 if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
                     print 'removing dead cell.id', cell.id,'with cell volume',cell.volume,'cell.targetVolume',cell.targetVolume,'and cell.lambdaVolume',cell.lambdaVolume
                     cell.targetVolume=0
@@ -562,9 +562,6 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
         ## START PROFILER
         # profile = cProfile.Profile()
         # profile.enable()
-        print aggressInfusTimeDay1Cis
-        print aggressInfusTimeDay1Cis[0]
-        print aggressInfusTimeDay1Cis[1]
         if mcs > aggressInfusTimeDay1Cis[0] and mcs < aggressInfusTimeDay1Cis[1]:
             for cell in self.cellList:
                 if cell.type!=1 and cell.type!=2 and cell.type!=3:  # Vessel(no accum), LungNormal(below), Dead (below)
@@ -604,7 +601,7 @@ class SecretionSteppableCisplatin(SecretionBasePy,SteppableBasePy):
                 #     # IF IMPLEMENTING EFFLUX AFTER EXTERNAL DRUG = 0, ADD EFFLUX FROM TOTAL DRUG ACCUMULATED PER CELL BACK INTO EXTERNAL DRUG CONCENTRATION. Net accumulation empirical measurements include efflux.
                 # #EFFLUX (REMOVE FROM DICTIONARY, ADD TO FIELD)
                 # dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                # # efflux=3.58E-06*dictionaryAttrib[3] # for normal tissue
+                 # # efflux=3.58E-06*dictionaryAttrib[3] # for normal tissue
                 # efflux=1.38E-06*dictionaryAttrib[3] # for tumor tissue
                 # if efflux>0:
                 #     dictionaryAttrib[3]-=efflux
@@ -671,21 +668,45 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
+        # #TEST
+        # print 'mcs=',mcs
+        # if -1 < mcs < 20: # FLOATS; USE CONDITIONALS WITHOUT "="
+        #     tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
+        #     IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+        #     print 'pre-20 IVtMins=',IVtMins
+        # elif 20 <= mcs < 40: # plateau for 5.7m
+        #     IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+        #     print 'pre-40 IVtMins=',IVtMins
+        # elif 40 <= mcs < 60:        # prior to end of IV data set 
+        #     tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
+        #     IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+        #     print 'pre-20 IVtMins=',IVtMins
+
+        # print 'test IVtMins=',IVtMins
+        print 'test Python rounding calculations that combine floats and ints:', drug30Mins + aggressInfusTimesGem[2]
+    
+        
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
         if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
 
             # infusion
-            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins: # FLOATS; USE CONDITIONALS WITHOUT "="
+            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
                 tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
                 IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-            elif aggressInfusTimeDay1Cis[0] + drug15Mins < mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
+                print 'infusion cis IVtMins=',IVtMins
+            elif aggressInfusTimeDay1Cis[0] + drug15Mins <= mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
                 IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint < mcs < aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set 
+                print 'plateau cis IVtMins=',IVtMins
+            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set 
                 tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
                 IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+                print 'decay cis tMins=',tMins
+                print 'decay cis IVtMins=',IVtMins
+
 
             # update IV conc    
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            print 'IVtMins=',IVtMins
             IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
             self.updateXML()
@@ -715,21 +736,23 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
             if mcs < drug30Mins:
                 tMins = mcs/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
-            elif drug30Mins < mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
+                print 'infusion 1 gem IVtMins=',IVtMins
+            elif drug30Mins <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
                 tMins=(mcs/CisGem1Min) - 30.0 # take away infusion time so fit is correct, starting at t = 0; use floats
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+                print 'decay 1 gem IVtMins=',IVtMins
             # second infusion
-            elif aggressInfusTimesGem[2] < mcs < drug30Mins + aggressInfusTimesGem[2]:
+            elif aggressInfusTimesGem[2] <= mcs < drug30Mins + aggressInfusTimesGem[2]:
                 tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3
-            elif aggressInfusTimesGem[2] + drug30Mins < mcs < aggressInfusTimesGem[3]:
+            elif aggressInfusTimesGem[2] + drug30Mins <= mcs < aggressInfusTimesGem[3]:
                 tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
             # third infusion
-            elif aggressInfusTimesGem[4] < mcs < drug30Mins + aggressInfusTimesGem[4]:
+            elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
                 tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3
-            elif aggressInfusTimesGem[4] + drug30Mins < mcs < aggressInfusTimesGem[5]:
+            elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
                 tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
 
@@ -780,8 +803,8 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
+        print 'inside CisAccum'
         for cell in self.cellList:
-            print 'inside CisAccum'
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
                 # print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["cisAccum"] > cell.dict["IC50Cis"]:
@@ -833,8 +856,8 @@ class PlotCellPops(SteppableBasePy):
     def start(self):
         # hex color codes from http://www.discoveryplayground.com/computer-programming-for-kids/rgb-colors/
         self.pW=self.addNewPlotWindow(_title='Cell Populations',_xAxisTitle='MonteCarlo Step (MCS)',_yAxisTitle='Variables', _xScaleType='linear',_yScaleType='linear')
-        self.pW.addPlot('DATA_SERIES_1',_style='Dots',_color='red',_size=5)
-        self.pW.addPlot('DATA_SERIES_2',_style='Steps',_size=1)
+#        self.pW.addPlot('DATA_SERIES_1',_style='Dots',_color='red',_size=5)
+#        self.pW.addPlot('DATA_SERIES_2',_style='Steps',_size=1)
         self.pW.addPlot("SCSG_BFTC_905_pop",_style='Dots',_color='7fffd4',_size=5)
         self.pW.addPlot("SCSG_J82_pop",_style='Dots',_color='red',_size=5)
         self.pW.addPlot("RCRG_RT4_pop",_style='Dots',_color='red',_size=5)
@@ -861,6 +884,19 @@ class PlotCellPops(SteppableBasePy):
 # TypeId="11" TypeName="RCSG_DSH1"
 # TypeId="12" TypeName="IC50Cis"
 # TypeId="13" TypeName="IC50Gem"
+        SCSG_BFTC_905_pop = float(len(self.cellListByType(self.SCSG_BFTC_905)))
+        SCSG_J82_pop = float(len(self.cellListByType(self.SCSG_J82)))
+        RCRG_RT4_pop = float(len(self.cellListByType(self.RCRG_RT4)))
+        RCRG_HT_1197_pop = float(len(self.cellListByType(self.RCRG_HT_1197)))
+        SCRG_SW780_pop = float(len(self.cellListByType(self.SCRG_SW780)))
+        SCRG_KU_19_19_pop = float(len(self.cellListByType(self.SCRG_KU_19_19)))
+        RCSG_LB831_BLC_pop = float(len(self.cellListByType(self.RCSG_LB831_BLC)))
+        RCSG_DSH1_pop = float(len(self.cellListByType(self.RCSG_DSH1)))
+        IC50Cis_pop = float(len(self.cellListByType(self.IC50Cis)))
+        IC50Gem_pop = float(len(self.cellListByType(self.IC50Gem)))
+        LungNormal_pop = float(len(self.cellListByType(self.LungNormal)))
+        Vessel_pop = float(len(self.cellListByType(self.Vessel)))
+        Dead_pop = float(len(self.cellListByType(self.Dead)))
 
         self.pW.addDataPoint("SCSG_BFTC_905_pop",mcs,SCSG_BFTC_905_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("SCSG_J82_pop",mcs,SCSG_J82_pop) # arguments are (name of the data series, x, y)
@@ -876,11 +912,11 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addDataPoint("Vessel_pop",mcs,Vessel_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Dead_pop",mcs,Dead_pop) # arguments are (name of the data series, x, y)
 
-        self.pW.eraseAllData()
+        # self.pW.eraseAllData()
 
     def finish(self):
-        self.pW.savePlotAsPNG(fileName,1000,1000) # here we specify size of the image saved (1000x1000) - default is 400 x 400
-        self.pW.savePlotAsData(fileName)
+        self.pW.savePlotAsPNG(CellPops,1000,1000) # here we specify size of the image saved (1000x1000) - default is 400 x 400
+        self.pW.savePlotAsData(CellPops.txt)
 
 
 
