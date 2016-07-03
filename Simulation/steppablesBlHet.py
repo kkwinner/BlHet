@@ -546,6 +546,121 @@ class RemoveDeadCells(SteppableBasePy):
 # Cisplatin intravenous concentration fitted curve (dosage =100mg/m^2) -3.338ln(t) + 16.094 muM, t=min   Himmelstein, 1981 (Fig. )
 # Cisplatin post-IV peritoneal concentration fitted curve [IV(tMins)]*( -2E-07*tMins^3 + 0.0002*tMins^2 - 0.0197*tMins + 0.9963) # goes to zero when t = 896.305 (Wolfram Alpha cubic polynomial solver); Linear solution:  (0.5431*t - 0.386) muM, t=h; y = [IV(t)]*0.0091t - 0.386, R^2= 0.9509, t=,min; Sugarbaker, 1996
 
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.simulator=_simulator
+    def start(self):
+        pass
+    def step(self,mcs):
+        #TEST
+        print 'mcs=',mcs
+        if -1 < mcs < 20: # FLOATS; USE CONDITIONALS WITHOUT "="
+            tMins= (mcs + aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
+            IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+            print 'pre-20 IVtMins=',IVtMins
+        elif 20 <= mcs < 40: # plateau for 5.7m
+            IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+            print 'pre-40 IVtMins=',IVtMins
+        elif 40 <= mcs < 60:        # prior to end of IV data set
+            tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
+            IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+            print 'pre-60 IVtMins=',IVtMins
+
+        print 'conditional inner loop', (aggressInfusTimeDay1Cis[0] + cEndDataSet)
+        print 'conditional outer loop', (aggressInfusTimeDay1Cis[1])
+        print 'test IVtMins=',IVtMins
+        print 'test Python rounding calculations that combine floats and ints:', drug30Mins + aggressInfusTimesGem[2]
+
+
+        ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
+        if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
+
+            # infusion
+            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
+                tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
+                IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                print 'infusion cis IVtMins=',IVtMins
+            elif aggressInfusTimeDay1Cis[0] + drug15Mins <= mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
+                IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                print 'plateau cis IVtMins=',IVtMins
+            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1]:
+            # aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set
+                tMins=((mcs - aggressInfusTimeDay1Cis[0])/CisGem1Min) - (5.742+15) # take away added infusion and plateau time so fit is correct; use floats
+                IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+                if IVtMins < 0:
+                    IVtMins=0 # in case time frame goes past where fit becomes negative
+                print 'decay cis tMins=',tMins
+                print 'decay cis IVtMins= ',IVtMins
+
+
+            # update IV conc
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            print 'IVtMins=',IVtMins
+            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
+
+            def finish(self):
+                # Finish Function gets called after the last MCS
+                pass
+
+    #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
+    # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
+    #             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.simulator=_simulator
+    def start(self):
+        pass
+    def step(self,mcs):
+        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
+
+            # first infusion
+            if mcs < drug30Mins:
+                tMins = mcs/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
+                print 'infusion 1 gem IVtMins=',IVtMins
+            elif drug30Mins <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
+                tMins=(mcs/CisGem1Min) - 30.0 # take away infusion time so fit is correct, starting at t = 0; use floats
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+                print 'decay 1 gem IVtMins=',IVtMins
+            # second infusion
+            elif aggressInfusTimesGem[2] <= mcs < drug30Mins + aggressInfusTimesGem[2]:
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            elif aggressInfusTimesGem[2] + drug30Mins <= mcs < aggressInfusTimesGem[3]:
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+            # third infusion
+            elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+
+            # update IV conc
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
+
+    def finish(self):
+        # Finish Function gets called after the last MCS
+        pass
+
+
+
+
 # *****************************
 # CELLS ACCUMULATE CISPLATIN AND REMOVE IT FROM SURFACE OF CELL
 # limit of cellular cisplatin absorption not known
@@ -660,116 +775,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
 
 
 
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.simulator=_simulator
-    def start(self):
-        pass
-    def step(self,mcs):
-        # #TEST
-        # print 'mcs=',mcs
-        # if -1 < mcs < 20: # FLOATS; USE CONDITIONALS WITHOUT "="
-        #     tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
-        #     IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-        #     print 'pre-20 IVtMins=',IVtMins
-        # elif 20 <= mcs < 40: # plateau for 5.7m
-        #     IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-        #     print 'pre-40 IVtMins=',IVtMins
-        # elif 40 <= mcs < 60:        # prior to end of IV data set 
-        #     tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
-        #     IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-        #     print 'pre-20 IVtMins=',IVtMins
-
-        # print 'test IVtMins=',IVtMins
-        print 'test Python rounding calculations that combine floats and ints:', drug30Mins + aggressInfusTimesGem[2]
-    
-        
-        ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
-        if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
-
-            # infusion
-            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
-                tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
-                IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-                print 'infusion cis IVtMins=',IVtMins
-            elif aggressInfusTimeDay1Cis[0] + drug15Mins <= mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
-                IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-                print 'plateau cis IVtMins=',IVtMins
-            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set 
-                tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) - (5.742+15) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
-                IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-                print 'decay cis tMins=',tMins
-                print 'decay cis IVtMins=',IVtMins
-
-
-            # update IV conc    
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            print 'IVtMins=',IVtMins
-            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
-                
-    def finish(self):
-        # Finish Function gets called after the last MCS
-        pass
-
-    #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
-    # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
-    #             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-
-
-
-
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.simulator=_simulator
-    def start(self):
-        pass
-    def step(self,mcs):
-        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="            
-
-            # first infusion
-            if mcs < drug30Mins:
-                tMins = mcs/CisGem1Min
-                IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
-                print 'infusion 1 gem IVtMins=',IVtMins
-            elif drug30Mins <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
-                tMins=(mcs/CisGem1Min) - 30.0 # take away infusion time so fit is correct, starting at t = 0; use floats
-                IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
-                print 'decay 1 gem IVtMins=',IVtMins
-            # second infusion
-            elif aggressInfusTimesGem[2] <= mcs < drug30Mins + aggressInfusTimesGem[2]:
-                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
-                IVtMins = 6.8*(tMins/15 - 1) + 7.3
-            elif aggressInfusTimesGem[2] + drug30Mins <= mcs < aggressInfusTimesGem[3]:
-                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
-                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
-            # third infusion
-            elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
-                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
-                IVtMins = 6.8*(tMins/15 - 1) + 7.3
-            elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
-                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
-                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
-
-            # update IV conc    
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
-
-    def finish(self):
-        # Finish Function gets called after the last MCS
-        pass
-
-
-
-
-######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
+            ######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
 class ChangeAtGemIC50Steppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator, _frequency)
