@@ -132,8 +132,13 @@ aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:
 # TypeId="12" TypeName="IC50Cis"
 # TypeId="13" TypeName="IC50Gem"
 
+## ACCUMULATION RATES
+## IC50 cells have same accumulation rate as cell line they came from (rate is carried as part of dictionary)
+## Dead cells and LungNormal are set in the SecretionSteppables to be same as middle-of-the-road-least-sensitive line SCRG_SW780
+## Dead cells presumedly have active macrophages in their space collecting drug for 24 hours after death
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
-## also = concentration removed from voxel; microM/MCS * siteConcCis(microM)
+##            see Table for fits of IC50s to accumulations
+## drugAccumFrac_x = concentration removed from voxel: microM/MCS, * siteConcCis(microM) in SecretionSteppable
 cispAccumFrac_SCSG_BFTC_905 = 7.98701E-05       # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
 cispAccumFrac_SCSG_J82 = 7.69840E-05            # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
 cispAccumFrac_RCRG_RT4 = 5.46716E-05            # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
@@ -144,7 +149,7 @@ cispAccumFrac_RCSG_LB831_BLC = 7.42347E-06      # (resist cis sens gem)	225.1619
 cispAccumFrac_RCSG_DSH1 = 1.15622E-05           # (resist cis sens gem)	144.5646771	IC50 microM	cisplatin				
 
 ## gemcitabine (possibly dFdCtP) accumulation per cell per time step, based on IC50 of bladder cancer cell line;
-## also = concentration removed from voxel; microM/MCS * siteConcGem(microM)
+#  siteConcGem * microM/MCS = (-0.8242 * IC50 + 67.2261) * siteConcGem/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM gem accumulation / MCS * frac50uMGem
 gemAccumFrac_SCSG_BFTC_905 = 4.41575E-04     # (sensitive cis and gem)	5.15E-06	IC50 microM	gemcitabine			
 gemAccumFrac_SCSG_J82 = 4.41565E-04          # (sensitive cis and gem)
 gemAccumFrac_RCRG_RT4 = 4.22858E-04          # (resistant cis and gem)	13.84278281	IC50 microM	gemcitabine				
@@ -155,7 +160,7 @@ gemAccumFrac_RCSG_LB831_BLC = 4.41518E-04    # (resist cis sens gem)	0.041854289
 gemAccumFrac_RCSG_DSH1 = 4.41445E-04         # (resist cis sens gem)	0.096498675	IC50 microM	gemcitabine
 
 ## IC50s
-# based on accumulation calculated from fit to IC50 of bladder cancer cell line;
+# from the GDSC database, June 2016
 cisIC50_SCSG_BFTC_905 = 0.8106177157         # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
 cisIC50_SCSG_J82 = 1.647223153               # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
 cisIC50_RCRG_RT4 = 5.923917064               # (resist cis and gem)	27.49620513	IC50 microM	cisplatin				
@@ -181,14 +186,15 @@ cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing ce
 deathLambdaVolume = 100.0
 
 ## VASCULARITY
-vesselPercentMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
+vesselPercentInMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
+## use if using percent vessel in total sim area to limit vessel growth; not in use as of 6-30-2016
 # totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
-totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
 # totalSimCellsPossible = 20*20*20 #CHANGE WITH SIM DIMENSIONS!
-print "total cells in sim =",totalSimCellsPossible
-maxVesselCellCount = round(vesselPercentMetastasis*totalSimCellsPossible) # used in mitosis to limit global vessel nums; not in use as of 6-30-2016
-global maxVesselCellCount
-print "max vessels = ",maxVesselCellCount
+# print "total cells in sim =",totalSimCellsPossible
+# maxVesselCellCount = round(vesselPercentInMetastasis*totalSimCellsPossible) # used in mitosis to limit global vessel nums
+# global maxVesselCellCount
+# print "max vessels = ",maxVesselCellCount
 
 
 
@@ -335,6 +341,8 @@ class VolumeParamSteppable(SteppableBasePy):
 
 # *****************************
 # GROW CELLS WHEN READY TO DIVIDE
+# cells grow anytime there is an adjacent space if they have passed a division time;
+# this means any spaces that open up in the inner tumor volume will be quickly filled.
 class GrowthSteppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
@@ -372,17 +380,18 @@ class MitosisSteppable(MitosisSteppableBase):
     def step(self,mcs):
         # print "INSIDE MITOSIS STEPPABLE"
         cells_to_divide=[]
-        for cell in self.cellList:
-            # print 'cell.id=',cell.id,' dict=',cell.dict
-            if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
+        if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
+            if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
                 deathChance = uniform(0,1)
-                # print 'deathChance=',deathChance
+                print 'deathChance=',deathChance
                 if deathChance<=0.5:
                     cell.type=3 # cell dies with 50% chance
-            # cell divides if volume has doubled (condition for GrowthSteppable)
-            if cell.volume==2*T24BCCellVol:
-                cells_to_divide.append(cell)
-                # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
+                    print 'cell.type', cell.type,'cell.id', cell.id, 'died'
+                if cell.type != 3 and cell.volume == 2*T24BCCellVol:
+                    cells_to_divide.append(cell)
+        if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time and only divide if they have doubled in size
+            cells_to_divide.append(cell)
+            # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
         for cell in cells_to_divide:
             # shouldn't need conditional -- only cells that will divide should grow -- but leaving it in to avoid weird behavior
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
@@ -402,63 +411,76 @@ class MitosisSteppable(MitosisSteppableBase):
         vesselCells = float(len(self.cellListByType(self.VESSEL)))
         totalCells = float(len(self.cellList))
         percentVesselCellsInAllCells = (vesselCells / float(totalCells))
-        # print 'vessel count = ',vesselCells,'total cell count = ', totalCells, 'percent vessel = ',percentVesselCellsInAllCells,'compared to', vesselPercentMetastasis
-        if percentVesselCellsInAllCells < vesselPercentMetastasis: # prev used maxVesselCellCount based on sim dimensions
-            # print 'inside first vessel IF for total vessel percentage'
-            # if self.parentCell.dict["generation"] > 5:
-            chanceToBeVessel = uniform(0,1)
-            # for cell in self.cellList:
-            #     for neighbor, commonSurfaceArea in self.getCellNeighborDataList(cell):
-            #         print "commonSurfaceArea=",commonSurfaceArea
-            #         #if neighbor and (neighbor.type==self.BACTERIA) and commonSurfaceArea>=0.0:
-            #         #    NhbdBacteria.append(neighbor)
-            if chanceToBeVessel <= vesselPercentMetastasis:
-                print 'mitosis, vessel = child'
-                self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                self.parentCell.lambdaVolume = normalLambdaVolume
-                self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
-                self.parentCell.dict["numDivisions"] += 1
-                self.cloneParent2Child() # copy all parent parameters, then over-write
-                self.childCell.type=1 # CHILD IS VESSEL
-                self.childCell.targetVolume = 1
-                self.childCell.dict["generation"]+=1
-                self.childCell.dict["numDivisions"] += 0
-                self.childCell.dict["cisAccum"] = 0
-                self.childCell.dict["gemAccum"] = 0
-                print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+        # print 'vessel count = ',vesselCells,'total cell count = ', totalCells, 'percent vessel = ',percentVesselCellsInAllCells,'compared to', vesselPercentInMetastasis
+        if cell.type!=12 or cell.type!=13:  # if cells are IC50Cis or IC50Gem
+            # cell divides if volume has doubled (condition for GrowthSteppable)
+            if percentVesselCellsInAllCells < vesselPercentInMetastasis: # prev used maxVesselCellCount based on sim dimensions
+                # if self.parentCell.dict["generation"] > 5:
+                chanceToBeVessel = uniform(0,1)
+                if chanceToBeVessel <= vesselPercentInMetastasis:
+                    print 'mitosis, vessel = child'
+                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                    self.parentCell.lambdaVolume = normalLambdaVolume
+                    self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
+                    self.parentCell.dict["numDivisions"] += 1
+                    self.cloneParent2Child() # copy all parent parameters, then over-write
+                    self.childCell.type=1 # CHILD IS VESSEL
+                    self.childCell.targetVolume = 1
+                    self.childCell.dict["generation"]+=1
+                    self.childCell.dict["numDivisions"] = 0
+                    self.childCell.dict["cisAccum"] = 0
+                    self.childCell.dict["gemAccum"] = 0
+                    print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                    print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+                else:
+                    print 'mitosis, chance at vessel failed'
+                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                    self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
+                    self.parentCell.dict["AgeHrs"] = 0
+                    self.parentCell.dict["numDivisions"] += 1
+                    self.cloneParent2Child() # copy all parent parameters, then over-write
+                    self.childCell.dict["generation"]+=1
+                    self.childCell.dict["numDivisions"] = 0
+                    self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+                    self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+                    self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
+                    self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
+                    ## for cell in self.cellList:
+                    print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                    print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
             else:
-                print 'mitosis, chance at vessel failed'
+                print 'mitosis, no chance at vessel'
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
                 self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
                 self.parentCell.dict["AgeHrs"] = 0
                 self.parentCell.dict["numDivisions"] += 1
                 self.cloneParent2Child() # copy all parent parameters, then over-write
                 self.childCell.dict["generation"]+=1
-                self.childCell.dict["numDivisions"] += 0
+                self.childCell.dict["numDivisions"] = 0
                 self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
                 self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
                 self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
                 self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
                 ## for cell in self.cellList:
-                print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
-        else:
-            print 'mitosis, no chance at vessel'
+                print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+
+        elif cell.type!=12 or cell.type!=13:  # if cells are IC50Cis or IC50Gem
+            print 'mitosis of IC50 cells, no chance at vessel'
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
             self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
             self.parentCell.dict["AgeHrs"] = 0
             self.parentCell.dict["numDivisions"] += 1
             self.cloneParent2Child() # copy all parent parameters, then over-write
             self.childCell.dict["generation"]+=1
-            self.childCell.dict["numDivisions"] += 0
+            self.childCell.dict["numDivisions"] = 0
             self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
             self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
             self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
             self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
             ## for cell in self.cellList:
             print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-            print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+            print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume`
             
         # uncomment when adding in the generational limitation on mitosis to vessel
         # else:
@@ -749,7 +771,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
                      if gemcitabine > 0:
                          dictionaryAttrib = CompuCell.getPyAttrib(cell)
                          # ADD EMPIRICALLY-DETERMINED FRACTION OF CURRENT CONCENTRATION AT CELL COM TO ACCUMULATED CONCENTRATION IN CELL (DICTIONARY)
-                         accumG=(gemcitabine * cell.dict["accumRtGem"]) #  siteConcGem * microM/MCS = (-0.8242 * IC50 + 67.2261) * siteConcGem/50 * 1/1.5E6 * 1/10^9 * 1/$B$6 * $B$9 * 10^6    =	microM gem accumulation / MCS * frac50uMGem
+                         accumG=(gemcitabine * cell.dict["accumRtGem"]) 
                          cell.dict["gemAccum"]+=accumG
                          # REMOVE ACCUMULATED DRUG FROM EXTERNAL CONCENTRATION
                          attrSecretor.uptakeInsideCellAtCOM(cell,accumG,1.0) # uM secretion from pixels at outer boundary of cell
@@ -773,7 +795,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
 
 
 
-            ######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
+######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
 class ChangeAtGemIC50Steppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator, _frequency)
@@ -787,10 +809,9 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
-        # print 'inside GemAccum'
         for cell in self.cellList:
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
-                # print 'celltype=',cell.type,', cell.dict=',cell.dict
+                # print 'inside gemAcuum: celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["gemAccum"] > cell.dict["IC50Gem"]:
                     cell.type=13
 
@@ -807,10 +828,9 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
     def start(self):
         pass
     def step(self,mcs):
-        # print 'inside CisAccum'
         for cell in self.cellList:
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
-                # print 'celltype=',cell.type,', cell.dict=',cell.dict
+                # print 'inside cisAcuum: print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["cisAccum"] > cell.dict["IC50Cis"]:
                     cell.type=13
 
@@ -1146,7 +1166,7 @@ class CellAccumToFileSteppable(SteppableBasePy):
                 comPt.z=int(cell.zCM)
                 cisplatin=field.get(comPt) # get concentration at center of mass
                 self.file.write('%d %d %f %f \n' %(mcs,cell.type,cisplatin,dictionaryAttrib[3])) # WRITE A LINE FOR EACH CELL 
-    def finish(self):
+    defs finish(self):
         # pass
         self.file.close() # close the file
 
@@ -1190,4 +1210,13 @@ class CellListToFileSteppable(SteppableBasePy):
     def finish(self):
         # pass
         self.file.close() # close the file
+
+
+#### OTHER USEFUL CODE SNIPPETS
+            # for cell in self.cellList:
+            #     for neighbor, commonSurfaceArea in self.getCellNeighborDataList(cell):
+            #         print "commonSurfaceArea=",commonSurfaceArea
+            #         #if neighbor and (neighbor.type==self.BACTERIA) and commonSurfaceArea>=0.0:
+            #         #    NhbdBacteria.append(neighbor)
+
 """
