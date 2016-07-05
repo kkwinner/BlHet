@@ -380,20 +380,18 @@ class MitosisSteppable(MitosisSteppableBase):
     def step(self,mcs):
         # print "INSIDE MITOSIS STEPPABLE"
         cells_to_divide=[]
-        if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
-            if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
-                deathChance = uniform(0,1)
-                print 'deathChance=',deathChance
-                if deathChance<=0.5:
-                    cell.type=3 # cell dies with 50% chance
-                    print 'cell.type', cell.type,'cell.id', cell.id, 'died'
-                if cell.type != 3 and cell.volume == 2*T24BCCellVol:
-                    cells_to_divide.append(cell)
-        if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time and only divide if they have doubled in size
-            cells_to_divide.append(cell)
+        for cell in self.cellList:
+            if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
+                if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
+                    deathChance = uniform(0,1)
+                    print 'deathChance=',deathChance
+                    if deathChance<=0.5:
+                        cell.type=3 # cell dies with 50% chance
+                        print 'cell.type', cell.type,'cell.id', cell.id, 'died'
+            if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time and only divide if they have doubled in size
+                cells_to_divide.append(cell) # if cell is already dead but doubled size, it won't divide below
             # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
         for cell in cells_to_divide:
-            # shouldn't need conditional -- only cells that will divide should grow -- but leaving it in to avoid weird behavior
             if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
                 # print 'cells to divide increment'
@@ -412,44 +410,27 @@ class MitosisSteppable(MitosisSteppableBase):
         totalCells = float(len(self.cellList))
         percentVesselCellsInAllCells = (vesselCells / float(totalCells))
         # print 'vessel count = ',vesselCells,'total cell count = ', totalCells, 'percent vessel = ',percentVesselCellsInAllCells,'compared to', vesselPercentInMetastasis
-        if cell.type!=12 or cell.type!=13:  # if cells are IC50Cis or IC50Gem
-            # cell divides if volume has doubled (condition for GrowthSteppable)
-            if percentVesselCellsInAllCells < vesselPercentInMetastasis: # prev used maxVesselCellCount based on sim dimensions
-                # if self.parentCell.dict["generation"] > 5:
-                chanceToBeVessel = uniform(0,1)
-                if chanceToBeVessel <= vesselPercentInMetastasis:
-                    print 'mitosis, vessel = child'
-                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                    self.parentCell.lambdaVolume = normalLambdaVolume
-                    self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
-                    self.parentCell.dict["numDivisions"] += 1
-                    self.cloneParent2Child() # copy all parent parameters, then over-write
-                    self.childCell.type=1 # CHILD IS VESSEL
-                    self.childCell.targetVolume = 1
-                    self.childCell.dict["generation"]+=1
-                    self.childCell.dict["numDivisions"] = 0
-                    self.childCell.dict["cisAccum"] = 0
-                    self.childCell.dict["gemAccum"] = 0
-                    print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                    print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
-                else:
-                    print 'mitosis, chance at vessel failed'
-                    self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
-                    self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
-                    self.parentCell.dict["AgeHrs"] = 0
-                    self.parentCell.dict["numDivisions"] += 1
-                    self.cloneParent2Child() # copy all parent parameters, then over-write
-                    self.childCell.dict["generation"]+=1
-                    self.childCell.dict["numDivisions"] = 0
-                    self.childCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-                    self.childCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-                    self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
-                    self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
-                    ## for cell in self.cellList:
-                    print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                    print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+        # cell divides if volume has doubled (condition for GrowthSteppable)
+        if percentVesselCellsInAllCells < vesselPercentInMetastasis: # prev used maxVesselCellCount based on sim dimensions
+            # if self.parentCell.dict["generation"] > 5:
+            chanceToBeVessel = uniform(0,1)
+            if chanceToBeVessel <= vesselPercentInMetastasis:
+                print 'mitosis, vessel = child'
+                self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
+                self.parentCell.lambdaVolume = normalLambdaVolume
+                self.parentCell.dict["AgeHrs"] = 0 # re-set cell to keep distribution of vessel more even in sim field -- no more vessel in this region for the time of a cell cycle -- when using % vessel in overall space as control for vascular density
+                self.parentCell.dict["numDivisions"] += 1
+                self.cloneParent2Child() # copy all parent parameters, then over-write
+                self.childCell.type=1 # CHILD IS VESSEL
+                self.childCell.targetVolume = 1
+                self.childCell.dict["generation"]+=1
+                self.childCell.dict["numDivisions"] = 0
+                self.childCell.dict["cisAccum"] = 0
+                self.childCell.dict["gemAccum"] = 0
+                print 'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                print   'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
             else:
-                print 'mitosis, no chance at vessel'
+                print 'mitosis, chance at vessel failed'
                 self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
                 self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
                 self.parentCell.dict["AgeHrs"] = 0
@@ -462,11 +443,10 @@ class MitosisSteppable(MitosisSteppableBase):
                 self.parentCell.dict["cisAccum"] = 0.5 * self.parentCell.dict["cisAccum"]
                 self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
                 ## for cell in self.cellList:
-                print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-                print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
-
-        elif cell.type!=12 or cell.type!=13:  # if cells are IC50Cis or IC50Gem
-            print 'mitosis of IC50 cells, no chance at vessel'
+                print  'childCell.type=',self.childCell.type,'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
+                print  'parentCell.type=',self.parentCell.type,  'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+        else:
+            print 'mitosis, no chance at vessel'
             self.parentCell.targetVolume /= 2.0 # reduce parent target volume by increasing; = ratio to parent vol
             self.parentCell.lambdaVolume = normalLambdaVolume # make sure parent stays in place
             self.parentCell.dict["AgeHrs"] = 0
@@ -480,8 +460,9 @@ class MitosisSteppable(MitosisSteppableBase):
             self.parentCell.dict["gemAccum"] = 0.5 * self.parentCell.dict["gemAccum"]
             ## for cell in self.cellList:
             print  'childCell.type=',self.childCell.type, 'childCell.id=',self.childCell.id,' dict=',self.childCell.dict,'childCell.targetVolume=', self.childCell.targetVolume,'childCell.lambdaVolume=', self.childCell.lambdaVolume
-            print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume`
-            
+            print 'parentCell.type=',self.parentCell.type, 'parentCell.id=',self.parentCell.id,' dict=',self.parentCell.dict,'parentCell.targetVolume=', self.parentCell.targetVolume,'parentCell.lambdaVolume=', self.parentCell.lambdaVolume
+
+
         # uncomment when adding in the generational limitation on mitosis to vessel
         # else:
         #     print 'mitosis, no chance at vessel'
