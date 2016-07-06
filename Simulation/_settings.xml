@@ -20,7 +20,7 @@
       <e Name="Projection" Type="int">0</e>
       <e Name="SaveImageFrequency" Type="int">3941</e>
       <e Name="SaveLatticeFrequency" Type="int">100000</e>
-      <e Name="ScreenUpdateFrequency" Type="int">1</e>
+      <e Name="ScreenUpdateFrequency" Type="int">3941</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
       <e Name="TabIndex" Type="int">0</e>
@@ -137,9 +137,9 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">218.352875433,223.866836934</e>
-            <e Name="cameraFocalPoint" Type="floatlist">48.241139676,47.7820828746,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">48.241139676,47.7820828746,220.558460034</e>
+            <e Name="cameraClippingRange" Type="floatlist">218.352875434,223.866836935</e>
+            <e Name="cameraFocalPoint" Type="floatlist">50.2466017757,53.7984691736,0.0</e>
+            <e Name="cameraPosition" Type="floatlist">50.2466017757,53.7984691736,220.558460034</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
@@ -193,8 +193,8 @@
       <e Name="FPPLinksOn" Type="bool">False</e>
       <e Name="FixedArrowColorOn" Type="bool">False</e>
       <e Name="FloatingWindows" Type="bool">False</e>
-      <e Name="ImageOutputOn" Type="bool">False</e>
-      <e Name="LatticeOutputOn" Type="bool">False</e>
+      <e Name="ImageOutputOn" Type="bool">True</e>
+      <e Name="LatticeOutputOn" Type="bool">True</e>
       <e Name="LegendEnable" Type="bool">True</e>
       <e Name="MaxRangeFixed" Type="bool">False</e>
       <e Name="MinRangeFixed" Type="bool">True</e>
