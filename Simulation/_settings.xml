@@ -10,7 +10,7 @@
    <Settings Type="int">
       <e Name="CellGlyphPhiRes" Type="int">2</e>
       <e Name="CellGlyphThetaRes" Type="int">2</e>
-      <e Name="FieldIndex" Type="int">1</e>
+      <e Name="FieldIndex" Type="int">0</e>
       <e Name="GraphicsWinHeight" Type="int">400</e>
       <e Name="GraphicsWinWidth" Type="int">400</e>
       <e Name="NumberAccuracy" Type="int">2</e>
@@ -23,7 +23,7 @@
       <e Name="ScreenUpdateFrequency" Type="int">100</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">2</e>
+      <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
       <e Name="ArrowLength" Type="float">1</e>
@@ -66,7 +66,7 @@
          </e>
          <e Name="AccumulatedGem%IC50" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1</e>
+            <e Name="ArrowLength" Type="float">1.0</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>

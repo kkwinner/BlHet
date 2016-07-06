@@ -430,7 +430,7 @@ class MitosisSteppable(MitosisSteppableBase):
                 if cell.dict["cycleHrs"]<cell.dict["AgeHrs"]:
                 # if cell.dict["cycleHrs"]<cell.dict["AgeHrs"] and cell.dict["AgeHrs"]<cell.dict["AgeHrs"] + 1/60.0: # if IC50 age is within a minute of cycle time
                     deathChance = uniform(0,1)
-                    print 'deathChance=',deathChance
+                    # print 'deathChance=',deathChance
                     if deathChance<=0.5:
                         cell.type=3 # cell dies with 50% chance
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
@@ -872,9 +872,9 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
 
 
 class CispAccumVisualizationSteppable(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
+    def __init__(self,_simulator,_frequency=10):
         SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedCispl%IC50")
+        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedCisplFractionIC50")
     def step(self,mcs):
         self.scalarCLField.clear()
         for cell in self.cellList:
@@ -887,9 +887,9 @@ class CispAccumVisualizationSteppable(SteppableBasePy):
 
 
 class GemAccumVisualizationSteppable(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
+    def __init__(self,_simulator,_frequency=10):
         SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedGem%IC50")
+        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedGemFractionIC50")
     def step(self,mcs):
         self.scalarCLField.clear()
         for cell in self.cellList:
