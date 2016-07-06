@@ -233,6 +233,7 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["resistance"]=1
             cell.dict["IC50Cis"]=0
             cell.dict["IC50Gem"]=0
+            ### NO DRUG SYNERGY
             if cell.type==4:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
                 cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
@@ -273,6 +274,49 @@ class SetCellDictionaries(SteppableBasePy):
                 cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
                 cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
+
+            # ### DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
+            # ### remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            # if cell.type==4:
+            #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
+            #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
+            # if cell.type==5:
+            #     cell.dict["IC50Cis"]=cisIC50_SCSG_J82
+            #     cell.dict["IC50Gem"]=gemIC50_SCSG_J82
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
+            # if cell.type==6:
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
+            #     cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
+            # if cell.type==7:
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197*2.5
+            #     cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
+            # if cell.type==8:
+            #     cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
+            #     cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
+            # if cell.type==9:
+            #     cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
+            #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
+            # if cell.type==10:
+            #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
+            #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
+            # if cell.type==11:
+            #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
+            #     cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
 
             # print initial dictionary vals for each cell
             # print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
@@ -341,8 +385,9 @@ class VolumeParamSteppable(SteppableBasePy):
 
 # *****************************
 # GROW CELLS WHEN READY TO DIVIDE
-# cells grow anytime there is an adjacent space if they have passed a division time;
+# cells grow any time there is an adjacent space if they have passed a division time;
 # this means any spaces that open up in the inner tumor volume will be quickly filled.
+# cells that are at IC50 have a chance to die only once each time they reach division cycle time
 class GrowthSteppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
@@ -382,13 +427,14 @@ class MitosisSteppable(MitosisSteppableBase):
         cells_to_divide=[]
         for cell in self.cellList:
             if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
-                if cell.dict["AgeHrs"]>=cell.dict["cycleHrs"]:
+                if cell.dict["cycleHrs"]<cell.dict["AgeHrs"]:
+                # if cell.dict["cycleHrs"]<cell.dict["AgeHrs"] and cell.dict["AgeHrs"]<cell.dict["AgeHrs"] + 1/60.0: # if IC50 age is within a minute of cycle time
                     deathChance = uniform(0,1)
                     print 'deathChance=',deathChance
                     if deathChance<=0.5:
                         cell.type=3 # cell dies with 50% chance
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
-            if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time and only divide if they have doubled in size
+            if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time, and only divide if they have doubled in size
                 cells_to_divide.append(cell) # if cell is already dead but doubled size, it won't divide below
             # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
         for cell in cells_to_divide:
