@@ -183,7 +183,8 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing cells from replacing pre-existing cells
-deathLambdaVolume = 1000.0
+phagocytosisLambdaVolume = 100.0
+deadLambdaVolume = 1000.0
 
 ## VASCULARITY
 vesselPercentInMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
@@ -433,6 +434,7 @@ class MitosisSteppable(MitosisSteppableBase):
                     # print 'deathChance=',deathChance
                     if deathChance<=0.5:
                         cell.type=3 # cell dies with 50% chance
+                        cell.lambdaVolume=deadLambdaVolume
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
             if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time, and only divide if they have doubled in size
                 cells_to_divide.append(cell) # if cell is already dead but doubled size, it won't divide below
@@ -557,7 +559,7 @@ class RemoveDeadCells(SteppableBasePy):
                 if cell.dict["HrsSinceDeath"]>=phagocytosisEndTime:
                     print 'removing dead cell.id', cell.id,'with cell volume',cell.volume,'cell.targetVolume',cell.targetVolume,'and cell.lambdaVolume',cell.lambdaVolume
                     cell.targetVolume=0
-                    cell.lambdaVolume=deathLambdaVolume
+                    cell.lambdaVolume=phagocytosisLambdaVolume
 
 
 
