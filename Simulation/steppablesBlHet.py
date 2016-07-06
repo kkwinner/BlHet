@@ -874,14 +874,14 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
 class CispAccumVisualizationSteppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedCispl")
+        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedCispl%IC50")
     def step(self,mcs):
         self.scalarCLField.clear()
         for cell in self.cellList:
-            # if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types except Vessel, LungNormal, and Dead, respectively
-            # print cell.type, cell.id
-            # print cell.dict
-            self.scalarCLField[cell]=cell.dict["cisAccum"]
+            if cell.type!=1 and cell.type!=2: # all cell types except Vessel, LungNormal, respectively
+                # print cell.type, cell.id
+                # print cell.dict
+                self.scalarCLField[cell]=cell.dict["cisAccum"]/cell.dict["IC50Cis"]
 
 
 
@@ -889,20 +889,20 @@ class CispAccumVisualizationSteppable(SteppableBasePy):
 class GemAccumVisualizationSteppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedGem")
+        self.scalarCLField=self.createScalarFieldCellLevelPy("AccumulatedGem%IC50")
     def step(self,mcs):
         self.scalarCLField.clear()
         for cell in self.cellList:
             # print cell.dict
-            # if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types except Vessel, LungNormal, and Dead, respectively
-            self.scalarCLField[cell]=cell.dict["gemAccum"]
+            if cell.type!=1 and cell.type!=2: # all cell types except Vessel, LungNormal, respectively
+                self.scalarCLField[cell]=cell.dict["gemAccum"]/cell.dict["IC50Gem"]
 
 
 
 
 class PlotCellPops(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=(10)):
-    # def __init__(self,_simulator,_frequency=(65.68*60)): # = MCS per min * 60 min
+    # def __init__(self,_simulator,_frequency=(10)):
+    def __init__(self,_simulator,_frequency=(65.68*60)): # = MCS per min * 60 min
         SteppableBasePy.__init__(self,_simulator,_frequency)
 
     def start(self):
@@ -988,9 +988,13 @@ class PlotCellPops(SteppableBasePy):
 
     def finish(self):
         pass
+
+
+
+
+
 """
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-class PrintAllCells(SteppableBasePy):
+PrintAllCells(SteppableBasePy):
 
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
