@@ -183,7 +183,7 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing cells from replacing pre-existing cells
-deathLambdaVolume = 100.0
+deathLambdaVolume = 1000.0
 
 ## VASCULARITY
 vesselPercentInMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
@@ -902,7 +902,7 @@ class GemAccumVisualizationSteppable(SteppableBasePy):
 
 class PlotCellPops(SteppableBasePy):
     # def __init__(self,_simulator,_frequency=(10)):
-    def __init__(self,_simulator,_frequency=(65.68*60)): # = MCS per min * 60 min
+    def __init__(self,_simulator,_frequency=(3941)): # = MCS per min * 60 min
         SteppableBasePy.__init__(self,_simulator,_frequency)
 
     def start(self):
