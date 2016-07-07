@@ -231,7 +231,8 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["HrsSinceDeath"]=0
             cell.dict["cisAccum"]=0
             cell.dict["gemAccum"]=0
-            cell.dict["resistance"]=1
+            cell.dict["cisResistance"]=1
+            cell.dict["gemResistance"]=1
             cell.dict["IC50Cis"]=0
             cell.dict["IC50Gem"]=0
             ### NO DRUG SYNERGY
@@ -436,6 +437,16 @@ class MitosisSteppable(MitosisSteppableBase):
                         cell.type=3 # cell dies with 50% chance
                         cell.lambdaVolume=deadLambdaVolume
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
+                    else:
+                        if cell.type==12:
+                            cell.type = 14
+                            cell.dict["cisResistance"] += 1
+                            cell.dict["IC50Cis"] = cell.dict["IC50Cis"] * cell.dict["cisResistance"]
+                        if cell.type==13:
+                            cell.type=15
+                            cell.dict["gemResistance"]+=1
+                            cell.dict["IC50Gem"] = cell.dict["IC50Gem"] * cell.dict["gemResistance"]
+                        cell.dict["AgeHrs"] = 0 # reset cell cycle; cells that haven't grown don't have a chance to 
             if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time, and only divide if they have doubled in size
                 cells_to_divide.append(cell) # if cell is already dead but doubled size, it won't divide below
             # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
@@ -992,6 +1003,209 @@ class PlotCellPops(SteppableBasePy):
         pass
 
 
+
+
+class PlotDrugs(SteppableBasePy):
+    # def __init__(self,_simulator,_frequency=(10)):
+    def __init__(self,_simulator,_frequency=(3941)): # = MCS per min * 60 min
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+
+    def start(self):
+        # hex color codes from http://www.discoveryplayground.com/computer-programming-for-kids/rgb-colors/
+        self.pW=self.addNewPlotWindow(_title='Cell Populations',_xAxisTitle='MonteCarlo Step (MCS)',_yAxisTitle='Variables', _xScaleType='linear',_yScaleType='linear')
+#        self.pW.addPlot('DATA_SERIES_1',_style='Dots',_color='red',_size=5)
+#        self.pW.addPlot('DATA_SERIES_2',_style='Steps',_size=1)
+        self.pW.addPlot("SCSG_BFTC_905_pop",_style='Dots',_color='Aquamarine',_size=5)
+        self.pW.addPlot("SCSG_J82_pop",_style='Dots',_color='Green Yellow',_size=5)
+        self.pW.addPlot("RCRG_RT4_pop",_style='Dots',_color='Medium Blue',_size=5)
+        self.pW.addPlot("RCRG_HT_1197_pop",_style='Dots',_color='Dark Slate Blue',_size=5)
+        self.pW.addPlot("SCRG_SW780_pop",_style='Dots',_color='Light Sea Green',_size=5)
+        self.pW.addPlot("SCRG_KU_19_19_pop",_style='Dots',_color='Forest Green',_size=5)
+        self.pW.addPlot("RCSG_LB831_BLC_pop",_style='Dots',_color='Lawn Green',_size=5)
+        self.pW.addPlot("RCSG_DSH1_pop",_style='Dots',_color='Chartreuse',_size=5)
+        self.pW.addPlot("IC50Cis_pop",_style='Dots',_color='Blue',_size=5)
+        self.pW.addPlot("IC50Gem_pop",_style='Dots',_color='Blue Violet',_size=5)
+        self.pW.addPlot("LungNormal_pop",_style='Dots',_color='Deep Pink',_size=5)
+        self.pW.addPlot("Vessel_pop",_style='Dots',_color='red',_size=5)
+        self.pW.addPlot("Dead_pop",_style='Dots',_color='Light Slate Gray',_size=5)
+
+    def step(self, mcs):
+
+        # TypeId="4" TypeName="SCSG_BFTC_905"
+        # TypeId="5" TypeName="SCSG_J82"
+        # TypeId="6" TypeName="RCRG_RT4"
+        # TypeId="7" TypeName="RCRG_HT_1197"
+        # TypeId="8" TypeName="SCRG_SW780"
+        # TypeId="9" TypeName="SCRG_KU_19_19"
+        # TypeId="10" TypeName="RCSG_LB831_BLC"
+        # TypeId="11" TypeName="RCSG_DSH1"
+        # TypeId="12" TypeName="IC50Cis"
+        # TypeId="13" TypeName="IC50Gem"
+        # # initialize in case cell type isn't yet present
+        # SCSG_BFTC_905_pop = 0
+        # SCSG_J82_pop = 0
+        # RCRG_RT4_pop = 0
+        # RCRG_HT_1197_pop = 0
+        # SCRG_SW780_pop = 0
+        # SCRG_KU_19_19_pop = 0
+        # RCSG_LB831_BLC_pop = 0
+        # RCSG_DSH1_pop = 0
+        # IC50Cis_pop = 0
+        # IC50Gem_pop = 0
+        # LungNormal_pop = 0
+        # Vessel_pop = 0
+        # Dead_pop = 0
+
+        SCSG_BFTC_905_pop = float(len(self.cellListByType(self.SCSG_BFTC_905)))
+        SCSG_J82_pop = float(len(self.cellListByType(self.SCSG_J82)))
+        RCRG_RT4_pop = float(len(self.cellListByType(self.RCRG_RT4)))
+        RCRG_HT_1197_pop = float(len(self.cellListByType(self.RCRG_HT_1197)))
+        SCRG_SW780_pop = float(len(self.cellListByType(self.SCRG_SW780)))
+        SCRG_KU_19_19_pop = float(len(self.cellListByType(self.SCRG_KU_19_19)))
+        RCSG_LB831_BLC_pop = float(len(self.cellListByType(self.RCSG_LB831_BLC)))
+        RCSG_DSH1_pop = float(len(self.cellListByType(self.RCSG_DSH1)))
+        IC50Cis_pop = float(len(self.cellListByType(self.IC50CIS)))
+        IC50Gem_pop = float(len(self.cellListByType(self.IC50GEM)))
+        LungNormal_pop = float(len(self.cellListByType(self.LUNGNORMAL)))
+        Vessel_pop = float(len(self.cellListByType(self.VESSEL)))
+        Dead_pop = float(len(self.cellListByType(self.DEAD)))
+
+
+
+
+    class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.simulator=_simulator
+    def start(self):
+        pass
+    def step(self,mcs):
+        # #TEST
+        # print 'mcs=',mcs
+        # if -1 < mcs < 20: # FLOATS; USE CONDITIONALS WITHOUT "="
+        #     tMins= (mcs + aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
+        #     IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+        #     print 'pre-20 IVtMins=',IVtMins
+        # elif 20 <= mcs < 40: # plateau for 5.7m
+        #     IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+        #     print 'pre-40 IVtMins=',IVtMins
+        # elif 40 <= mcs < 60:        # prior to end of IV data set
+        #     tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
+        #     IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+        #     print 'pre-60 IVtMins=',IVtMins
+
+        # print 'conditional inner loop', (aggressInfusTimeDay1Cis[0] + cEndDataSet)
+        # print 'conditional outer loop', (aggressInfusTimeDay1Cis[1])
+        # print 'test IVtMins=',IVtMins
+        # print 'test Python rounding calculations that combine floats and ints:', drug30Mins + aggressInfusTimesGem[2]
+
+
+        ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
+        if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
+
+            # infusion
+            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
+                tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
+                IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                print 'infusion cis IVtMins=',IVtMins
+            elif aggressInfusTimeDay1Cis[0] + drug15Mins <= mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
+                IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                print 'plateau cis IVtMins=',IVtMins
+            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1]:
+            # aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set
+                tMins=((mcs - aggressInfusTimeDay1Cis[0])/CisGem1Min) - (5.742+15) # take away added infusion and plateau time so fit is correct; use floats
+                IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+                if IVtMins < 0:
+                    IVtMins=0 # in case time frame goes past where fit becomes negative
+                print 'decay cis tMins=',tMins
+                print 'decay cis IVtMins= ',IVtMins
+
+
+            # update IV conc
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            # print 'IVtMins=',IVtMins
+            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
+
+            def finish(self):
+                # Finish Function gets called after the last MCS
+                pass
+
+    #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
+    # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
+    #             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=1):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+        self.simulator=_simulator
+    def start(self):
+        pass
+    def step(self,mcs):
+        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
+
+            # first infusion
+            if mcs < drug30Mins:
+                tMins = mcs/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
+                # print 'infusion 1 gem IVtMins=',IVtMins
+            elif drug30Mins <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
+                tMins=(mcs/CisGem1Min) - 30.0 # take away infusion time so fit is correct, starting at t = 0; use floats
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+                # print 'decay 1 gem IVtMins=',IVtMins
+            # second infusion
+            elif aggressInfusTimesGem[2] <= mcs < drug30Mins + aggressInfusTimesGem[2]:
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            elif aggressInfusTimesGem[2] + drug30Mins <= mcs < aggressInfusTimesGem[3]:
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+            # third infusion
+            elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
+                IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+
+            # update IV conc
+            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
+            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
+            self.updateXML()
+
+    def finish(self):
+        # Finish Function gets called after the last MCS
+        pass
+
+        hrs=mcs/CisGem1Min/60.0
+        days=hrs/24.0
+        self.pW.addDataPoint("SCSG_BFTC_905_pop",days,SCSG_BFTC_905_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("SCSG_J82_pop",days,SCSG_J82_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCRG_RT4_pop",days,RCRG_RT4_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCRG_HT_1197_pop",days,RCRG_HT_1197_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("SCRG_SW780_pop",days,SCRG_SW780_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("SCRG_KU_19_19_pop",days,SCRG_KU_19_19_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCSG_LB831_BLC_pop",days,RCSG_LB831_BLC_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("RCSG_DSH1_pop",days,RCSG_DSH1_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("IC50Cis_pop",days,IC50Cis_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("IC50Gem_pop",days,IC50Gem_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("LungNormal_pop",days,LungNormal_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("Vessel_pop",days,Vessel_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("Dead_pop",days,Dead_pop) # arguments are (name of the data series, x, y)
+
+        # self.pW.eraseAllData()
+
+        self.pW.savePlotAsPNG('CellPops.png',1000,1000) # here we specify size of the image saved (1000x1000) - default is 400 x 400
+        self.pW.savePlotAsData('CellPops.txt')
+
+    def finish(self):
+        pass
 
 
 
