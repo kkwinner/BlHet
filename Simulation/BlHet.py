@@ -119,6 +119,10 @@ from steppablesBlHet import PlotCellPops
 plotCellPops=PlotCellPops(sim)
 steppableRegistry.registerSteppable(plotCellPops)
 
+from steppablesBlHet import PrintCellData
+printCellData=PrintCellData(sim)
+steppableRegistry.registerSteppable(printCellData)
+
 """
 # from steppablesBlHet import PrintAllCells
 # printAllCells=PrintAllCells(sim)

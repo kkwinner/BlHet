@@ -10,7 +10,7 @@
    <Settings Type="int">
       <e Name="CellGlyphPhiRes" Type="int">2</e>
       <e Name="CellGlyphThetaRes" Type="int">2</e>
-      <e Name="FieldIndex" Type="int">3</e>
+      <e Name="FieldIndex" Type="int">0</e>
       <e Name="GraphicsWinHeight" Type="int">400</e>
       <e Name="GraphicsWinWidth" Type="int">400</e>
       <e Name="NumberAccuracy" Type="int">2</e>
@@ -23,7 +23,7 @@
       <e Name="ScreenUpdateFrequency" Type="int">100</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">2</e>
+      <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
       <e Name="ArrowLength" Type="float">1.0</e>
@@ -146,10 +146,10 @@
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
             <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Gemcitabine</e>
-            <e Name="sceneType" Type="str">ConField</e>
-            <e Name="winPosition" Type="point">512,0</e>
-            <e Name="winSize" Type="size">511,517</e>
+            <e Name="sceneName" Type="str">Cell_Field</e>
+            <e Name="sceneType" Type="str">CellField</e>
+            <e Name="winPosition" Type="point">1152,0</e>
+            <e Name="winSize" Type="size">1150,1090</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
          <e Name="Cell Populations" Type="dict">
@@ -163,7 +163,7 @@
             <e Name="sceneName" Type="str">Cell Populations</e>
             <e Name="sceneType" Type="str"/>
             <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">512,517</e>
+            <e Name="winSize" Type="size">1152,1090</e>
             <e Name="winType" Type="str">plot</e>
          </e>
       </e>
@@ -198,8 +198,8 @@
       <e Name="ImageOutputOn" Type="bool">False</e>
       <e Name="LatticeOutputOn" Type="bool">False</e>
       <e Name="LegendEnable" Type="bool">True</e>
-      <e Name="MaxRangeFixed" Type="bool">False</e>
-      <e Name="MinRangeFixed" Type="bool">True</e>
+      <e Name="MaxRangeFixed" Type="bool">True</e>
+      <e Name="MinRangeFixed" Type="bool">False</e>
       <e Name="OutputToProjectOn" Type="bool">False</e>
       <e Name="OverlayVectorsOn" Type="bool">False</e>
       <e Name="PixelizedScalarField" Type="bool">True</e>

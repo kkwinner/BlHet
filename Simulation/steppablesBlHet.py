@@ -1151,39 +1151,46 @@ class PlotDrugs(SteppableBasePy):
 
     
 class PrintCellData(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=(10)):
+    def __init__(self,_simulator,_frequency=(3941)):
         SteppableBasePy.__init__(self,_simulator,_frequency)
-#        self.simulator=_simulator
-#        self.inventory=self.simulator.getPotts().getCellInventory()
-#        self.cellList=CellList(self.inventory)
+        #        self.simulator=_simulator
+        #        self.inventory=self.simulator.getPotts().getCellInventory()
+        #        self.cellList=CellList(self.inventory)
         datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
         fileName=('CellData_' + datestring)
-#        self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
+        #        self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
         # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
         # self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
         self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
         print 'output file =',fileName
     def start(self):
-        self.file.write('MCS CellType CellID AgeHrs cycleHrs generation numDivisions HrsSinceDeath cisAccum gemAccum resistance IC50Cis IC50Gem accumRtCis accumRtGem cell.lambdaVolume cell.targetVolume\n')
+        self.file.write('MCS CellType CellID AgeHrs cycleHrs generation numDivisions HrsSinceDeath cisAccum gemAccum cisResistance gemResistance IC50Cis IC50Gem accumRtCis accumRtGem cell.lambdaVolume cell.targetVolume\n')
     def step(self, mcs):
         for cell in self.cellList:
-            mcs
-            cell.type
-            cell.id
-            cell.dict["AgeHrs"]=y
-            cell.dict["cycleHrs"]=x
-            cell.dict["generation"]=0
-            cell.dict["numDivisions"] = 0
-            cell.dict["HrsSinceDeath"]=0
-            cell.dict["cisAccum"]=0
-            cell.dict["gemAccum"]=0
-            cell.dict["resistance"]=1
-            cell.dict["IC50Cis"]=0
-            cell.dict["IC50Gem"]
-            cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
-            cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
-            cell.lambdaVolume
-            cell.targetVolume
+            print cell.type,            cell.id,            cell.dict["AgeHrs"],            cell.dict["cycleHrs"],            cell.dict["generation"],            cell.dict["numDivisions"],            cell.dict["HrsSinceDeath"],            cell.dict["cisAccum"],            cell.dict["gemAccum"],            cell.dict["cisResistance"],            cell.dict["gemResistance"],            cell.dict["IC50Cis"],            cell.dict["IC50Gem"],            cell.dict["accumRtCis"],            cell.dict["accumRtGem"],            cell.lambdaVolume,            cell.targetVolume
+            self.file.write("%d %d %d %f %f %d %d %f %f %f %f %f %f %f %f %f %f %f \n" %(mcs,
+                                                                       cell.type,
+                                                                       cell.id,
+                                                                       cell.dict["AgeHrs"],
+                                                                       cell.dict["cycleHrs"],
+                                                                       cell.dict["generation"],
+                                                                       cell.dict["numDivisions"],
+                                                                       cell.dict["HrsSinceDeath"],
+                                                                       cell.dict["cisAccum"],
+                                                                       cell.dict["gemAccum"],
+                                                                       cell.dict["cisResistance"],
+                                                                       cell.dict["gemResistance"],
+                                                                       cell.dict["IC50Cis"],
+                                                                       cell.dict["IC50Gem"],
+                                                                       cell.dict["accumRtCis"],
+                                                                       cell.dict["accumRtGem"],
+                                                                       cell.lambdaVolume,
+                                                                       cell.targetVolume))
+                                                                                      #            self.file.write("%d %d %d %f %f %f %f %f %f %f %f %f %f %f %f %f %f \n" %(mcs,cell.type,cell.id
+                                                                                      #,,,,,,))
+
+    def finish(self):
+        self.file.close() # close the file               
 
 
 

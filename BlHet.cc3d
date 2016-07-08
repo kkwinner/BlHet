@@ -2,6 +2,4 @@
    <XMLScript Type="XMLScript">Simulation/BlHet.xml</XMLScript>
    <PythonScript Type="PythonScript">Simulation/BlHet.py</PythonScript>
    <Resource Type="Python">Simulation/steppablesBlHet.py</Resource>
-   <SerializeSimulation AllowMultipleRestartDirectories="True" FileFormat="text" OutputFrequency="3941"/>
-   <RestartSimulation RestartDirectory="restart"/>
 </Simulation>
