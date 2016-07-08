@@ -235,6 +235,8 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["gemResistance"]=1
             cell.dict["IC50Cis"]=0
             cell.dict["IC50Gem"]=0
+            cell.dict["accumRtCis"]=0
+            cell.dict["accumRtGem"]=0
             ### NO DRUG SYNERGY
             if cell.type==4:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
@@ -1147,7 +1149,88 @@ class PlotDrugs(SteppableBasePy):
 
 
 
+    
+class PrintCellData(SteppableBasePy):
+    def __init__(self,_simulator,_frequency=(10)):
+        SteppableBasePy.__init__(self,_simulator,_frequency)
+#        self.simulator=_simulator
+#        self.inventory=self.simulator.getPotts().getCellInventory()
+#        self.cellList=CellList(self.inventory)
+        datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
+        fileName=('CellData_' + datestring)
+#        self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
+        # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
+        # self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
+        self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
+        print 'output file =',fileName
+    def start(self):
+        self.file.write('MCS CellType CellID AgeHrs cycleHrs generation numDivisions HrsSinceDeath cisAccum gemAccum resistance IC50Cis IC50Gem accumRtCis accumRtGem cell.lambdaVolume cell.targetVolume\n')
+    def step(self, mcs):
+        for cell in self.cellList:
+            mcs
+            cell.type
+            cell.id
+            cell.dict["AgeHrs"]=y
+            cell.dict["cycleHrs"]=x
+            cell.dict["generation"]=0
+            cell.dict["numDivisions"] = 0
+            cell.dict["HrsSinceDeath"]=0
+            cell.dict["cisAccum"]=0
+            cell.dict["gemAccum"]=0
+            cell.dict["resistance"]=1
+            cell.dict["IC50Cis"]=0
+            cell.dict["IC50Gem"]
+            cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
+            cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
+            cell.lambdaVolume
+            cell.targetVolume
+
+
+
+                
 """
+class CisplatinToFileSteppable(SteppableBasePy):
+    # def __init__(self,_simulator,_frequency=4650): # ten minutes of diffusion, 1 cell diameter/MCS in normal tissue
+    def __init__(self,_simulator,_frequency=1207): # one minutes of diffusion, 1 cell diameter/MCS in tumor tissue
+    # def __init__(self,_simulator,_frequency=24240): # twenty minutes of diffusion, 1 cell diameter/MCS in tumor tissue
+        SteppableBasePy.__init__(self,_simulator, _frequency)
+        self.simulator=_simulator
+        self.inventory=self.simulator.getPotts().getCellInventory()
+        self.cellList=CellList(self.inventory)
+        datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
+        fileName=(datestring+'_'+ drug+'_' +size+'_' +vess+'_' +'Concentrations_')
+#        self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
+        # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
+        # self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
+        self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
+        print 'output file =',fileName
+    def start(self):
+        # self.file.write('CellID CellType CellVolume\n')
+        self.file.write('MCS CellType CellID COMx COMy COMz Cisplatin(uM)\n')
+    def step(self,mcs):
+        # print "cisplatin-concentration-to-file function is called every 4650 MCS (10 real-time minutes for Cisplatin in normal tissue)"
+        print "cisplatin-concentration-to-file function is called every 12070 MCS (10 real-time minutes for Cisplatin in tumor tissue)"
+        for cell in self.cellList:
+            comPt=CompuCell.Point3D()
+            field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
+            # WORKS WHEN cell vol = 1 voxel; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
+            # comPt.x=int(cell.xCM)
+            # comPt.y=int(cell.yCM)
+            # comPt.z=int(cell.zCM)
+            comPt.x=int(round(cell.xCM/float(cell.volume))) # "divide by float = 0 error, 4-19-2013"
+            comPt.y=int(round(cell.yCM/float(cell.volume)))
+            comPt.z=int(round(cell.zCM/float(cell.volume)))
+            cisplatin=field.get(comPt) # get concentration at center of mass
+            # print 'cisplatin =',cisplatin
+            # self.file.write('CELL ID=%d CELL TYPE=%d volume=%d\n' %(cell.id,cell.type,cell.volume))
+            self.file.write('%d %d %d %d %d %d %f \n' %(mcs,cell.type,cell.id,comPt.x,comPt.y,comPt.z,cisplatin))
+    def finish(self):
+        # pass
+        self.file.close() # close the file
+
+
+
+
 PrintAllCells(SteppableBasePy):
 
     def __init__(self,_simulator,_frequency=1):
@@ -1207,47 +1290,6 @@ class InfoPrinterSteppable(SteppablePy):
 
             # file.write("CELL ID=%d CELL TYPE=%d volume=%d\n" %(cell.id,cell.type,cell.volume))
 
-
-
-
-class CisplatinToFileSteppable(SteppableBasePy):
-    # def __init__(self,_simulator,_frequency=4650): # ten minutes of diffusion, 1 cell diameter/MCS in normal tissue
-    def __init__(self,_simulator,_frequency=1207): # one minutes of diffusion, 1 cell diameter/MCS in tumor tissue
-    # def __init__(self,_simulator,_frequency=24240): # twenty minutes of diffusion, 1 cell diameter/MCS in tumor tissue
-        SteppableBasePy.__init__(self,_simulator, _frequency)
-        self.simulator=_simulator
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-        datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
-        fileName=(datestring+'_'+ drug+'_' +size+'_' +vess+'_' +'Concentrations_')
-#        self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
-        # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
-        # self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
-        self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
-        print 'output file =',fileName
-    def start(self):
-        # self.file.write('CellID CellType CellVolume\n')
-        self.file.write('MCS CellType CellID COMx COMy COMz Cisplatin(uM)\n')
-    def step(self,mcs):
-        # print "cisplatin-concentration-to-file function is called every 4650 MCS (10 real-time minutes for Cisplatin in normal tissue)"
-        print "cisplatin-concentration-to-file function is called every 12070 MCS (10 real-time minutes for Cisplatin in tumor tissue)"
-        for cell in self.cellList:
-            comPt=CompuCell.Point3D()
-            field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-            # WORKS WHEN cell vol = 1 voxel; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
-            # comPt.x=int(cell.xCM)
-            # comPt.y=int(cell.yCM)
-            # comPt.z=int(cell.zCM)
-            comPt.x=int(round(cell.xCM/float(cell.volume))) # "divide by float = 0 error, 4-19-2013"
-            comPt.y=int(round(cell.yCM/float(cell.volume)))
-            comPt.z=int(round(cell.zCM/float(cell.volume)))
-            cisplatin=field.get(comPt) # get concentration at center of mass
-            # print 'cisplatin =',cisplatin
-            # self.file.write('CELL ID=%d CELL TYPE=%d volume=%d\n' %(cell.id,cell.type,cell.volume))
-            self.file.write('%d %d %d %d %d %d %f \n' %(mcs,cell.type,cell.id,comPt.x,comPt.y,comPt.z,cisplatin))
-    def finish(self):
-        # pass
-        self.file.close() # close the file
 
 
 
