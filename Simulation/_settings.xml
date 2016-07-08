@@ -10,7 +10,7 @@
    <Settings Type="int">
       <e Name="CellGlyphPhiRes" Type="int">2</e>
       <e Name="CellGlyphThetaRes" Type="int">2</e>
-      <e Name="FieldIndex" Type="int">1</e>
+      <e Name="FieldIndex" Type="int">3</e>
       <e Name="GraphicsWinHeight" Type="int">400</e>
       <e Name="GraphicsWinWidth" Type="int">400</e>
       <e Name="NumberAccuracy" Type="int">2</e>
@@ -20,13 +20,13 @@
       <e Name="Projection" Type="int">0</e>
       <e Name="SaveImageFrequency" Type="int">3941</e>
       <e Name="SaveLatticeFrequency" Type="int">100000</e>
-      <e Name="ScreenUpdateFrequency" Type="int">1</e>
+      <e Name="ScreenUpdateFrequency" Type="int">100</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
       <e Name="TabIndex" Type="int">2</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -46,14 +46,14 @@
    </Settings>
    <Settings Type="dict">
       <e Name="FieldParams" Type="dict">
-         <e Name="AccumulatedCispl%IC50" Type="dict">
+         <e Name="AccumulatedCisplFractionIC50" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
-            <e Name="MaxRange" Type="float">2.0</e>
-            <e Name="MaxRangeFixed" Type="bool">False</e>
+            <e Name="MaxRange" Type="float">1.0</e>
+            <e Name="MaxRangeFixed" Type="bool">True</e>
             <e Name="MinRange" Type="float">0.0</e>
             <e Name="MinRangeFixed" Type="bool">False</e>
             <e Name="NumberAccuracy" Type="int">2</e>
@@ -64,9 +64,9 @@
             <e Name="ScaleArrowsOn" Type="bool">False</e>
             <e Name="ShowPlotAxes" Type="bool">True</e>
          </e>
-         <e Name="AccumulatedGem%IC50" Type="dict">
+         <e Name="AccumulatedGemFractionIC50" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -84,7 +84,7 @@
          </e>
          <e Name="Cisplatin" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -102,7 +102,7 @@
          </e>
          <e Name="Gemcitabine" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -126,6 +126,8 @@
          <e Name="11" Type="color">#80ff00</e>
          <e Name="12" Type="color">#0000ff</e>
          <e Name="13" Type="color">#8000ff</e>
+         <e Name="14" Type="color">#66ccff</e>
+         <e Name="15" Type="color">#cc66ff</e>
          <e Name="2" Type="color">#ff6fcf</e>
          <e Name="3" Type="color">#808080</e>
          <e Name="4" Type="color">#66ffcc</e>
@@ -144,8 +146,8 @@
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
             <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cell_Field</e>
-            <e Name="sceneType" Type="str">CellField</e>
+            <e Name="sceneName" Type="str">Gemcitabine</e>
+            <e Name="sceneType" Type="str">ConField</e>
             <e Name="winPosition" Type="point">512,0</e>
             <e Name="winSize" Type="size">511,517</e>
             <e Name="winType" Type="str">Graphics</e>
@@ -170,14 +172,14 @@
       <e Name="LastVersionCheckDate" Type="str">20160607</e>
       <e Name="OutputLocation" Type="str">/Users/squirrel/CC3DWorkspace</e>
       <e Name="ProjectLocation" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet</e>
-      <e Name="RecentFile" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
+      <e Name="RecentFile" Type="str">/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
       <e Name="ScalarIsoValues" Type="str"/>
       <e Name="Types3DInvisible" Type="str">0</e>
    </Settings>
    <Settings Type="bool">
       <e Name="BoundingBoxOn" Type="bool">True</e>
       <e Name="CC3DOutputOn" Type="bool">True</e>
-      <e Name="CellBordersOn" Type="bool">False</e>
+      <e Name="CellBordersOn" Type="bool">True</e>
       <e Name="CellGlyphScaleByVolumeOn" Type="bool">True</e>
       <e Name="CellGlyphsOn" Type="bool">False</e>
       <e Name="CellsOn" Type="bool">True</e>
@@ -196,11 +198,11 @@
       <e Name="ImageOutputOn" Type="bool">False</e>
       <e Name="LatticeOutputOn" Type="bool">False</e>
       <e Name="LegendEnable" Type="bool">True</e>
-      <e Name="MaxRangeFixed" Type="bool">True</e>
-      <e Name="MinRangeFixed" Type="bool">False</e>
+      <e Name="MaxRangeFixed" Type="bool">False</e>
+      <e Name="MinRangeFixed" Type="bool">True</e>
       <e Name="OutputToProjectOn" Type="bool">False</e>
       <e Name="OverlayVectorsOn" Type="bool">False</e>
-      <e Name="PixelizedScalarField" Type="bool">False</e>
+      <e Name="PixelizedScalarField" Type="bool">True</e>
       <e Name="ScaleArrowsOn" Type="bool">False</e>
       <e Name="Show3DAxes" Type="bool">True</e>
       <e Name="ShowAxes" Type="bool">True</e>

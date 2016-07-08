@@ -184,7 +184,7 @@ T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing cells from replacing pre-existing cells
 phagocytosisLambdaVolume = 100.0
-deadLambdaVolume = 1000.0
+deadLambdaVolume = 100.0
 
 ## VASCULARITY
 vesselPercentInMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
@@ -933,6 +933,8 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addPlot("RCSG_DSH1_pop",_style='Dots',_color='Chartreuse',_size=5)
         self.pW.addPlot("IC50Cis_pop",_style='Dots',_color='Blue',_size=5)
         self.pW.addPlot("IC50Gem_pop",_style='Dots',_color='Blue Violet',_size=5)
+        self.pW.addPlot("CisResist_pop",_style='Dots',_color='Light Sky Blue',_size=5)
+        self.pW.addPlot("GemResist_pop",_style='Dots',_color='Orchid',_size=5)
         self.pW.addPlot("LungNormal_pop",_style='Dots',_color='Deep Pink',_size=5)
         self.pW.addPlot("Vessel_pop",_style='Dots',_color='red',_size=5)
         self.pW.addPlot("Dead_pop",_style='Dots',_color='Light Slate Gray',_size=5)
@@ -974,6 +976,8 @@ class PlotCellPops(SteppableBasePy):
         RCSG_DSH1_pop = float(len(self.cellListByType(self.RCSG_DSH1)))
         IC50Cis_pop = float(len(self.cellListByType(self.IC50CIS)))
         IC50Gem_pop = float(len(self.cellListByType(self.IC50GEM)))
+        CisResist_pop = float(len(self.cellListByType(self.CISRESIST)))
+        GemResist_pop = float(len(self.cellListByType(self.GEMRESIST)))
         LungNormal_pop = float(len(self.cellListByType(self.LUNGNORMAL)))
         Vessel_pop = float(len(self.cellListByType(self.VESSEL)))
         Dead_pop = float(len(self.cellListByType(self.DEAD)))
@@ -990,6 +994,8 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addDataPoint("RCSG_DSH1_pop",days,RCSG_DSH1_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("IC50Cis_pop",days,IC50Cis_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("IC50Gem_pop",days,IC50Gem_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("CisResist_pop",days,CisResist_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("GemResist_pop",days,GemResist_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("LungNormal_pop",days,LungNormal_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Vessel_pop",days,Vessel_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Dead_pop",days,Dead_pop) # arguments are (name of the data series, x, y)
@@ -1070,36 +1076,6 @@ class PlotDrugs(SteppableBasePy):
         Vessel_pop = float(len(self.cellListByType(self.VESSEL)))
         Dead_pop = float(len(self.cellListByType(self.DEAD)))
 
-
-
-
-    class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.simulator=_simulator
-    def start(self):
-        pass
-    def step(self,mcs):
-        # #TEST
-        # print 'mcs=',mcs
-        # if -1 < mcs < 20: # FLOATS; USE CONDITIONALS WITHOUT "="
-        #     tMins= (mcs + aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
-        #     IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-        #     print 'pre-20 IVtMins=',IVtMins
-        # elif 20 <= mcs < 40: # plateau for 5.7m
-        #     IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-        #     print 'pre-40 IVtMins=',IVtMins
-        # elif 40 <= mcs < 60:        # prior to end of IV data set
-        #     tMins=((aggressInfusTimeDay1Cis[1] + mcs)/CisGem1Min) # diffusion time for one cell diameter in tumor tissue; take away added infusion and plateau time so fit is correct; use floats
-        #     IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-        #     print 'pre-60 IVtMins=',IVtMins
-
-        # print 'conditional inner loop', (aggressInfusTimeDay1Cis[0] + cEndDataSet)
-        # print 'conditional outer loop', (aggressInfusTimeDay1Cis[1])
-        # print 'test IVtMins=',IVtMins
-        # print 'test Python rounding calculations that combine floats and ints:', drug30Mins + aggressInfusTimesGem[2]
-
-
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
         if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
 
@@ -1120,34 +1096,6 @@ class PlotDrugs(SteppableBasePy):
                 print 'decay cis tMins=',tMins
                 print 'decay cis IVtMins= ',IVtMins
 
-
-            # update IV conc
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            # print 'IVtMins=',IVtMins
-            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
-
-            def finish(self):
-                # Finish Function gets called after the last MCS
-                pass
-
-    #IVtMins=-3.338*math.log(tMins) + 16.094 # fit for patient [cisplatin IV], t=min #(Sugarbaker)
-    # IVtMins=2.1996*tMins # linear fit for first 5 min (from [C]=0.0 to [C]=~11muM, t=min)#(Sugarbaker)
-    #             IVtMins = 0.9731*tMins # linear fit for first 5 min (Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-
-
-
-
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-        self.simulator=_simulator
-    def start(self):
-        pass
-    def step(self,mcs):
-        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
 
             # first infusion
             if mcs < drug30Mins:
@@ -1172,16 +1120,6 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
             elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
                 tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
-
-            # update IV conc
-            IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
-            self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
-            self.updateXML()
-
-    def finish(self):
-        # Finish Function gets called after the last MCS
-        pass
 
         hrs=mcs/CisGem1Min/60.0
         days=hrs/24.0
