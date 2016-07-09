@@ -279,8 +279,8 @@ class SetCellDictionaries(SteppableBasePy):
                 cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
 
-            # ### DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
-            # ### remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            ### DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
+            ### remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
             # if cell.type==4:
             #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
             #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
@@ -311,10 +311,11 @@ class SetCellDictionaries(SteppableBasePy):
             #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
             #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
             #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
+            # # **** non-synergistic 7-8-2016
             # if cell.type==10:
             #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
             #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
             #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
             # if cell.type==11:
             #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1

@@ -137,36 +137,7 @@
          <e Name="8" Type="color">#008080</e>
          <e Name="9" Type="color">#008000</e>
       </e>
-      <e Name="WindowsLayout" Type="dict">
-         <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">54.0946059899,55.4606313936</e>
-            <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">10.0,10.0,54.6410161514</e>
-            <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
-            <e Name="is3D" Type="bool">False</e>
-            <e Name="planeName" Type="str">XY</e>
-            <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cell_Field</e>
-            <e Name="sceneType" Type="str">CellField</e>
-            <e Name="winPosition" Type="point">1152,0</e>
-            <e Name="winSize" Type="size">1150,1090</e>
-            <e Name="winType" Type="str">Graphics</e>
-         </e>
-         <e Name="Cell Populations" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist"/>
-            <e Name="cameraFocalPoint" Type="floatlist"/>
-            <e Name="cameraPosition" Type="floatlist"/>
-            <e Name="cameraViewUp" Type="floatlist"/>
-            <e Name="is3D" Type="bool">False</e>
-            <e Name="planeName" Type="str"/>
-            <e Name="planePosition" Type="int">-1</e>
-            <e Name="sceneName" Type="str">Cell Populations</e>
-            <e Name="sceneType" Type="str"/>
-            <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">1152,1090</e>
-            <e Name="winType" Type="str">plot</e>
-         </e>
-      </e>
+      <e Name="WindowsLayout" Type="dict"/>
    </Settings>
    <Settings Type="str">
       <e Name="LastVersionCheckDate" Type="str">20160607</e>
