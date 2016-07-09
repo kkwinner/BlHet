@@ -237,81 +237,37 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["IC50Gem"]=0
             cell.dict["accumRtCis"]=0
             cell.dict["accumRtGem"]=0
-            ### NO DRUG SYNERGY
-            if cell.type==4:
-                cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
-                cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
-                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
-                cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
-            if cell.type==5:
-                cell.dict["IC50Cis"]=cisIC50_SCSG_J82
-                cell.dict["IC50Gem"]=gemIC50_SCSG_J82
-                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
-                cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
-            if cell.type==6:
-                cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
-                cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
-                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
-                cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
-            if cell.type==7:
-                cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
-                cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
-                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
-                cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
-            if cell.type==8:
-                cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
-                cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
-                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
-                cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
-            if cell.type==9:
-                cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
-                cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
-                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
-                cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            if cell.type==10:
-                cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
-                cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
-                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
-                cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
-            if cell.type==11:
-                cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
-                cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
-                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
-                cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
-
-            ### DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
-            ### remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            # ### NO DRUG SYNERGY
             # if cell.type==4:
             #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
             #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
             #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
             # if cell.type==5:
             #     cell.dict["IC50Cis"]=cisIC50_SCSG_J82
             #     cell.dict["IC50Gem"]=gemIC50_SCSG_J82
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
             #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
             # if cell.type==6:
             #     cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
             #     cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
             #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
             # if cell.type==7:
-            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197*2.5
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
             #     cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
             #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
             # if cell.type==8:
             #     cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
             #     cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
             #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
             # if cell.type==9:
             #     cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
             #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
             #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            # # **** non-synergistic 7-8-2016
             # if cell.type==10:
             #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
             #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
@@ -320,8 +276,52 @@ class SetCellDictionaries(SteppableBasePy):
             # if cell.type==11:
             #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
             #     cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
             #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
+
+            ##DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
+            ##remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            if cell.type==4:
+                cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
+                cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
+            if cell.type==5:
+                cell.dict["IC50Cis"]=cisIC50_SCSG_J82
+                cell.dict["IC50Gem"]=gemIC50_SCSG_J82
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
+            if cell.type==6:
+                cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
+                cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
+            if cell.type==7:
+                cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197*2.5
+                cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
+            if cell.type==8:
+                cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
+                cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
+            if cell.type==9:
+                cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
+                cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
+            # **** non-synergistic 7-8-2016
+            if cell.type==10:
+                cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
+                cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
+                cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
+            if cell.type==11:
+                cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
+                cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+                cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
 
             # print initial dictionary vals for each cell
             # print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
