@@ -188,7 +188,7 @@ IC50_RCSG_DSH1
     
     <CellType TypeId="1" TypeName="Vessel" Freeze=""/>
     <CellType TypeId="2"  TypeName="LungNormal" Freeze=""/>
-    <CellType TypeId="3" TypeName="Dead" />
+    <CellType TypeId="3" TypeName="Dead" Freeze=""/>
     
     <CellType TypeId="4" TypeName="SCSG_BFTC_905" />
     <CellType TypeId="5" TypeName="SCSG_J82" />

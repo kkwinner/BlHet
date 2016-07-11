@@ -23,10 +23,10 @@
       <e Name="ScreenUpdateFrequency" Type="int">100</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">0</e>
+      <e Name="TabIndex" Type="int">1</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1</e>
+      <e Name="ArrowLength" Type="float">1.0</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -36,7 +36,7 @@
       <e Name="ArrowColor" Type="color">#ffffff</e>
       <e Name="Axes3DColor" Type="color">#ffffff</e>
       <e Name="AxesColor" Type="color">#ffffff</e>
-      <e Name="BorderColor" Type="color">#000000</e>
+      <e Name="BorderColor" Type="color">#ffffff</e>
       <e Name="BoundingBoxColor" Type="color">#ffffff</e>
       <e Name="BrushColor" Type="color">#ffffff</e>
       <e Name="ClusterBorderColor" Type="color">#0000ff</e>
@@ -48,7 +48,7 @@
       <e Name="FieldParams" Type="dict">
          <e Name="AccumulatedCisplFractionIC50" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1</e>
+            <e Name="ArrowLength" Type="float">1.0</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -135,39 +135,10 @@
          <e Name="8" Type="color">#008080</e>
          <e Name="9" Type="color">#008000</e>
       </e>
-      <e Name="WindowsLayout" Type="dict">
-         <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">47.5199475779,48.7199462541</e>
-            <e Name="cameraFocalPoint" Type="floatlist">9.62418933061,9.24652686078,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">9.62418933061,9.24652686078,47.9999470484</e>
-            <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
-            <e Name="is3D" Type="bool">False</e>
-            <e Name="planeName" Type="str">XY</e>
-            <e Name="planePosition" Type="int">0</e>
-            <e Name="sceneName" Type="str">Cell_Field</e>
-            <e Name="sceneType" Type="str">CellField</e>
-            <e Name="winPosition" Type="point">512,0</e>
-            <e Name="winSize" Type="size">511,515</e>
-            <e Name="winType" Type="str">Graphics</e>
-         </e>
-         <e Name="Cell Populations" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist"/>
-            <e Name="cameraFocalPoint" Type="floatlist"/>
-            <e Name="cameraPosition" Type="floatlist"/>
-            <e Name="cameraViewUp" Type="floatlist"/>
-            <e Name="is3D" Type="bool">False</e>
-            <e Name="planeName" Type="str"/>
-            <e Name="planePosition" Type="int">-1</e>
-            <e Name="sceneName" Type="str">Cell Populations</e>
-            <e Name="sceneType" Type="str"/>
-            <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">512,515</e>
-            <e Name="winType" Type="str">plot</e>
-         </e>
-      </e>
+      <e Name="WindowsLayout" Type="dict"/>
    </Settings>
    <Settings Type="str">
-      <e Name="LastVersionCheckDate" Type="str">20160607</e>
+      <e Name="LastVersionCheckDate" Type="str">20160630</e>
       <e Name="OutputLocation" Type="str">/Users/squirrel/CC3DWorkspace</e>
       <e Name="ProjectLocation" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet</e>
       <e Name="RecentFile" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
@@ -213,6 +184,8 @@
    <Settings Type="strlist">
       <e Name="RecentSimulations" Type="strlist">
          <e Name="e" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
+         <e Name="e" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHetVolMitosis_Generated/BlHetVolMitosis_Generated.cc3d</e>
+         <e Name="e" Type="str">/Applications/CC3D_3.7.5</e>
          <e Name="e" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/Simulation/BlHet.xml</e>
       </e>
    </Settings>
