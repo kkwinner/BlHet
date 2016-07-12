@@ -438,18 +438,20 @@ class MitosisSteppable(MitosisSteppableBase):
                     deathChance = uniform(0,1)
                     # print 'deathChance=',deathChance
                     if deathChance<=0.5:
-                        cell.type=3 # cell dies with 50% chance
+                        cell.type=3 # cell dies with 50% chance at cell division attempt
                         cell.lambdaVolume=deadLambdaVolume
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
                     else:
                         if cell.type==12:
                             cell.type = 14
-                            cell.dict["cisResistance"] += 1
-                            cell.dict["IC50Cis"] = cell.dict["IC50Cis"] * cell.dict["cisResistance"]
+                            if cell.dict["cisResistance"] <= 29: # Max multiple of IC50 in cell lines gaining resistance to cisplatin within 1-2yrs culturing; Vallo et al., 2015
+                                cell.dict["cisResistance"] += 1
+                                cell.dict["IC50Cis"] = cell.dict["IC50Cis"] * cell.dict["cisResistance"]
                         if cell.type==13:
                             cell.type=15
-                            cell.dict["gemResistance"]+=1
-                            cell.dict["IC50Gem"] = cell.dict["IC50Gem"] * cell.dict["gemResistance"]
+                            if cell.dict["gemResistance"] <= 73: # Max multiple of IC50 in cell lines gaining resistance to gemcitabine within 1-2yrs culturing; Vallo et al., 2015
+                                cell.dict["gemResistance"] += 1
+                                cell.dict["IC50Gem"] = cell.dict["IC50Gem"] * cell.dict["gemResistance"]
                         cell.dict["AgeHrs"] = 0 # reset cell cycle; cells that haven't grown don't have a chance to 
             if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time, and only divide if they have doubled in size
                 cells_to_divide.append(cell) # if cell is already dead but doubled size, it won't divide below
