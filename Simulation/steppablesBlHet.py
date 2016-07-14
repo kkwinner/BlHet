@@ -649,11 +649,11 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             # infusion
             if aggressInfusTimeDay1Cis[0] <= mcs < aggressInfusTimeDay1Cis[0] + cis70EndInfus:
                 tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
-                IVtMins = 0.11*tMins**3 - 0.83*tMins**2 + 2.2*x - 2.6e-16 # cubic fit for 3h infusion (de Jongh, 2001; max = 2.11uM)
+                IVtMins = 0.11*tMins**3 - 0.83*tMins**2 + 2.2*tMins - 2.6e-16 # cubic fit for 3h infusion (de Jongh, 2001; max = 2.11uM)
                 print 'infusion cis IVtMins=',IVtMins
             elif aggressInfusTimeDay1Cis[0] + cis70EndInfus <= mcs < aggressInfusTimeDay1Cis[1]:
                 tMins=((mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min) # DO NOT SUBTRACT INFUSION TIME
-                IVtMins = 57.4124 * exp(-1.0927 * tMins) # exponential fit for post-3h infusion (de Jongh, 2001; max = 2.11uM)
+                IVtMins = 57.4124 * math.exp(-1.0927 * tMins) # exponential fit for post-3h infusion (de Jongh, 2001; max = 2.11uM)
                 print 'decay cis tMins=',tMins
                 print 'decay cis IVtMins= ',IVtMins
 
