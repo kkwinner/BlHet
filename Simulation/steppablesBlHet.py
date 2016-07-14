@@ -75,6 +75,8 @@ phagocytosisEndTime = 24 # dead cells removed at 24 hours
 
 ###CISPLATIN
 #IV CISPLATIN
+cis70EndInfus=180*CisGem1Min # end of 3-h infusion (de Jongh, 2001)
+
 drug15Mins=15*CisGem1Min # 18107.745 MCS; subtract from runtime once begin using concentration time course
 cIVFirstPoint=(5.742+15)*CisGem1Min # 6931.79 MCS; five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 cEndDataSet=(170.862*CisGem1Min)+cIVFirstPoint
@@ -102,7 +104,7 @@ cisplatinIC50=52.71 # FINAL USED FOR OVARIAN MODEL: muM (equiv to (equitoxic) 2h
 
 
 # IV GEMCITABINE
-drug30Mins=30*CisGem1Min
+drug30Mins=30*CisGem1Min # = 
 gemZeroConcTime=240*CisGem1Min # time at final data point
 
 
@@ -116,7 +118,8 @@ aggressInfusTimesGem = [0, 15762.8306,
                         662038.8854, 677801.716,
                         1324077.771, 1339840.601,
                         1986116.656]
-aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to end of cis infusion 1:1:1
+#aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to approximate cis = 0  for Casper 1984, 60 mg/m^2
+aggressInfusTimeDay1Cis = [15762.8306, 43347.78416]	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
 
 
 # CELLULAR PARAMETERS: IC50, ACCUMULATION OF DRUG
@@ -238,91 +241,91 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["IC50Gem"]=0
             cell.dict["accumRtCis"]=0
             cell.dict["accumRtGem"]=0
-            # ## NO DRUG SYNERGY
-            # if cell.type==4:
-            #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
-            #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
-            # if cell.type==5:
-            #     cell.dict["IC50Cis"]=cisIC50_SCSG_J82
-            #     cell.dict["IC50Gem"]=gemIC50_SCSG_J82
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
-            # if cell.type==6:
-            #     cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
-            #     cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
-            # if cell.type==7:
-            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
-            #     cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
-            # if cell.type==8:
-            #     cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
-            #     cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
-            # if cell.type==9:
-            #     cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
-            #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            # if cell.type==10:
-            #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
-            #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
-            # if cell.type==11:
-            #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
-            #     cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
-
-            ##DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
-            ##remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            ## NO DRUG SYNERGY
             if cell.type==4:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
                 cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
-                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
                 cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
             if cell.type==5:
                 cell.dict["IC50Cis"]=cisIC50_SCSG_J82
                 cell.dict["IC50Gem"]=gemIC50_SCSG_J82
-                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
                 cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
             if cell.type==6:
                 cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
                 cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
-                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
                 cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
             if cell.type==7:
-                cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197*2.5
+                cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
                 cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
-                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
                 cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
             if cell.type==8:
                 cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
                 cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
-                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
                 cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
             if cell.type==9:
                 cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
                 cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
-                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
                 cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            # **** non-synergistic 7-8-2016
             if cell.type==10:
                 cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
                 cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
-                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
             if cell.type==11:
                 cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
                 cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
-                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
+
+            # ##DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
+            # ##remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            # if cell.type==4:
+            #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
+            #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
+            # if cell.type==5:
+            #     cell.dict["IC50Cis"]=cisIC50_SCSG_J82
+            #     cell.dict["IC50Gem"]=gemIC50_SCSG_J82
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
+            # if cell.type==6:
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
+            #     cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
+            # if cell.type==7:
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197*2.5
+            #     cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
+            # if cell.type==8:
+            #     cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
+            #     cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
+            # if cell.type==9:
+            #     cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
+            #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
+            # # **** non-synergistic 7-8-2016
+            # if cell.type==10:
+            #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
+            #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
+            # if cell.type==11:
+            #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
+            #     cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
 
             # print initial dictionary vals for each cell
             # print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
@@ -642,24 +645,40 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
 
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
         if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
-
+            #cis70EndInfus
             # infusion
-            if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
+            if aggressInfusTimeDay1Cis[0] <= mcs < aggressInfusTimeDay1Cis[0] + cis70EndInfus:
                 tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
-                IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+                IVtMins = 0.11*tMins**3 - 0.83*tMins**2 + 2.2*x - 2.6e-16 # cubic fit for 3h infusion (de Jongh, 2001; max = 2.11uM)
                 print 'infusion cis IVtMins=',IVtMins
-            elif aggressInfusTimeDay1Cis[0] + drug15Mins <= mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
-                IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
-                print 'plateau cis IVtMins=',IVtMins
-            elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1]:
-            # aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set
-                tMins=((mcs - aggressInfusTimeDay1Cis[0])/CisGem1Min) - (5.742+15) # take away added infusion and plateau time so fit is correct; use floats
-                IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
-                if IVtMins < 0:
-                    IVtMins=0 # in case time frame goes past where fit becomes negative
+            elif aggressInfusTimeDay1Cis[0] + cis70EndInfus <= mcs < aggressInfusTimeDay1Cis[1]:
+                tMins=((mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min) # DO NOT SUBTRACT INFUSION TIME
+                IVtMins = 57.4124 * exp(-1.0927 * tMins) # exponential fit for post-3h infusion (de Jongh, 2001; max = 2.11uM)
                 print 'decay cis tMins=',tMins
                 print 'decay cis IVtMins= ',IVtMins
 
+            # #  cisplatin 60 mg/m^2: 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+            # if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
+            #     tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
+            #     IVtMins = 0.3725*tMins # linear fit for 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+            #     print 'infusion cis IVtMins=',IVtMins
+            # elif aggressInfusTimeDay1Cis[0] + drug15Mins <= mcs < aggressInfusTimeDay1Cis[0] + cIVFirstPoint: # plateau for 5.7m
+            #     IVtMins = 5.59 # constant for ~6 mins mins; highest and first data point after infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
+            #     print 'plateau cis IVtMins=',IVtMins
+            # elif aggressInfusTimeDay1Cis[0] + cIVFirstPoint <= mcs < aggressInfusTimeDay1Cis[1]:
+            # # aggressInfusTimeDay1Cis[0] + cEndDataSet:        # prior to end of IV data set
+            #     tMins=((mcs - aggressInfusTimeDay1Cis[0])/CisGem1Min) - (5.742+15) # take away added infusion and plateau time so fit is correct; use floats
+            #     IVtMins = -1.154e-06*tMins**3 + 0.0005737*tMins**2 - 0.09922*tMins + 5.973 # Casper, 1984
+            #     if IVtMins < 0:
+            #         IVtMins=0 # in case time frame goes past where fit becomes negative
+            #     print 'decay cis tMins=',tMins
+            #     print 'decay cis IVtMins= ',IVtMins
+
+
+                # 70mg/m^2
+                # infusion: y = 0.11*x^{3} - 0.83*x^{2} + 2.2*x - 2.6e-16
+                # post-infusion: post-infusion fit =    57.4124 * e^{-1.0927 * time}
+                # shared time point at 3h (end infusion, begin decay)
 
             # update IV conc
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
@@ -695,22 +714,24 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
                 # print 'infusion 1 gem IVtMins=',IVtMins
             elif drug30Mins <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
-                tMins=(mcs/CisGem1Min) - 30.0 # take away infusion time so fit is correct, starting at t = 0; use floats
+                tMins=mcs/CisGem1Min # DO NOT SUBTRACT INFUSION TIME
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
                 # print 'decay 1 gem IVtMins=',IVtMins
+                
             # second infusion
             elif aggressInfusTimesGem[2] <= mcs < drug30Mins + aggressInfusTimesGem[2]:
                 tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3
             elif aggressInfusTimesGem[2] + drug30Mins <= mcs < aggressInfusTimesGem[3]:
-                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min)
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
+
             # third infusion
             elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
                 tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3
             elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
-                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min) - 30.0
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min)
                 IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
 
             # update IV conc
@@ -1194,267 +1215,4 @@ class PrintCellData(SteppableBasePy):
                                                                                       #,,,,,,))
 
     def finish(self):
-        self.file.close() # close the file               
-
-
-
-                
-"""
-class CisplatinToFileSteppable(SteppableBasePy):
-    # def __init__(self,_simulator,_frequency=4650): # ten minutes of diffusion, 1 cell diameter/MCS in normal tissue
-    def __init__(self,_simulator,_frequency=1207): # one minutes of diffusion, 1 cell diameter/MCS in tumor tissue
-    # def __init__(self,_simulator,_frequency=24240): # twenty minutes of diffusion, 1 cell diameter/MCS in tumor tissue
-        SteppableBasePy.__init__(self,_simulator, _frequency)
-        self.simulator=_simulator
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-        datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
-        fileName=(datestring+'_'+ drug+'_' +size+'_' +vess+'_' +'Concentrations_')
-#        self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
-        # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
-        # self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
-        self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
-        print 'output file =',fileName
-    def start(self):
-        # self.file.write('CellID CellType CellVolume\n')
-        self.file.write('MCS CellType CellID COMx COMy COMz Cisplatin(uM)\n')
-    def step(self,mcs):
-        # print "cisplatin-concentration-to-file function is called every 4650 MCS (10 real-time minutes for Cisplatin in normal tissue)"
-        print "cisplatin-concentration-to-file function is called every 12070 MCS (10 real-time minutes for Cisplatin in tumor tissue)"
-        for cell in self.cellList:
-            comPt=CompuCell.Point3D()
-            field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-            # WORKS WHEN cell vol = 1 voxel; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual)
-            # comPt.x=int(cell.xCM)
-            # comPt.y=int(cell.yCM)
-            # comPt.z=int(cell.zCM)
-            comPt.x=int(round(cell.xCM/float(cell.volume))) # "divide by float = 0 error, 4-19-2013"
-            comPt.y=int(round(cell.yCM/float(cell.volume)))
-            comPt.z=int(round(cell.zCM/float(cell.volume)))
-            cisplatin=field.get(comPt) # get concentration at center of mass
-            # print 'cisplatin =',cisplatin
-            # self.file.write('CELL ID=%d CELL TYPE=%d volume=%d\n' %(cell.id,cell.type,cell.volume))
-            self.file.write('%d %d %d %d %d %d %f \n' %(mcs,cell.type,cell.id,comPt.x,comPt.y,comPt.z,cisplatin))
-    def finish(self):
-        # pass
         self.file.close() # close the file
-
-
-
-
-PrintAllCells(SteppableBasePy):
-
-    def __init__(self,_simulator,_frequency=1):
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-    def start(self):
-        # any code in the start function runs before MCS=0
-        pass
-    def step(self,mcs):
-        #type here the code that will run every _frequency MCS
-        for cell in self.cellList:
-            print "cell.type=", cell.type, ";","cell.id=",cell.id
-    def finish(self):
-        # Finish Function gets called after the last MCS
-        pass
-
-
-
-# INFORPRINTERSTEPPABLE
-class InfoPrinterSteppable(SteppablePy):
-    def __init__(self,_simulator,_frequency=60):
-        SteppablePy.__init__(self,_frequency)
-        self.simulator=_simulator
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-
-    def start(self):
-        print "This function (InfoPrinterSteppable) is called once before simulation"
-        # numPCancer=0
-        # numIC50Cancer=0
-        # totalVolumeECM=0
-        # totalVolumeMesothelial=0
-        # totalVolumeEndothelial=0
-    def step(self,mcs):
-#        print "This function is called every 60 MCS"
-        for cell in self.cellList:
-#            dictionaryAttrib = CompuCell.getPyAttrib(cell)
-            if cell.type==2:
-                numPCancer+=1
-#                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-#                print "CELL ID=",cell.id,"TYPE=",cell.type,"TARGET VOLUME",cell.targetVolume,"VOLUME=",cell.volume,"AGE=",dictionaryAttrib[1],"MITOTIC RATE *****",dictionaryAttrib[0]
-            if cell.type==8:
-                numIC50Cancer+=1
-#                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-#                print "CELL ID=",cell.id,"TYPE=",cell.type,"TARGET VOLUME",cell.targetVolume,"VOLUME=",cell.volume,"AGE=",dictionaryAttrib[1],"MITOTIC RATE *****",dictionaryAttrib[0]
-            # if cell.type==1:
-            #     totalVolumeMesothelial+=cell.volume
-            # if cell.type==11:
-                # totalVolumeEndothelial+=cell.volume
- #               dictionaryAttrib = CompuCell.getPyAttrib(cell)
- #               print "CELL ID=",cell.id,"TYPE=",cell.type,"TARGET VOLUME",cell.targetVolume,"VOLUME=",cell.volume,"AGE=",dictionaryAttrib[1],"MITOTIC RATE *****",dictionaryAttrib[0]
-            # if cell.type==9:
-            #     totalVolumeECM+=cell.volume
-        # print "TOTAL # PCancer cells=",numPCancer
-        # print "total ECM vol = ",totalVolumeECM
-        # print "total Mesothelium vol = ",totalVolumeMesothelial
-        # print "total new capillary (Endothelial) vol = ",totalVolumeEndothelial
-
-            # file.write("CELL ID=%d CELL TYPE=%d volume=%d\n" %(cell.id,cell.type,cell.volume))
-
-
-
-
-
-class PlotTreatedCellsSteppable(SteppableBasePy):
-# supported SVG color names at https://pythonhosted.org/ete2/reference/reference_svgcolors.html
-
-    # def __init__(self,_simulator,_frequency=4650): # once per 10 minute approx. (1/465.189 min for Cisplatin diffusion 1 cell diam in normal tissue)
-    def __init__(self,_simulator,_frequency=1207): # once per minute approx. (1/465.189 min for Cisplatin diffusion 1 cell diam in tumor tissue)
-        SteppableBasePy.__init__(self,_simulator,_frequency)
-
-    def start(self):
-            # self.pW=self.addNewPlotWindow(_title='Number of cells exposed to cumulative therapeutic drug quantity',_xAxisTitle='MonteCarlo Step (MCS) (1 MCS = 10 mins)',_yAxisTitle='Tumor cells')
-            # self.pW.addPlot('TreatedCells',_style='Dots',_color='Red',_size=5)
-            # self.pW=self.addNewPlotWindow(_title='Untreated Cells',_xAxisTitle='MonteCarlo Step (MCS) (1 MCS = 10 mins)',_yAxisTitle='Tumor cells')
-            # self.pW.addPlot('UntreatedCells',_style='Dots',_color='Blue',_size=5)
-            # self.pW=self.addNewPlotWindow(_title='Intravenous (IV) Cisplatin',_xAxisTitle='MonteCarlo Step (MCS) (1 MCS = 1/465.189 mins)',_yAxisTitle='Plasma Cisplatin (micromolar)')
-            self.pW=self.addNewPlotWindow(_title='Intravenous (IV) Cisplatin',_xAxisTitle='MonteCarlo Step (MCS) (1 MCS = 1/1207.183 mins)',_yAxisTitle='Plasma Cisplatin (micromolar)')
-            self.pW.addPlot('Cisplatin',_style='Dots',_color='MediumSpringGreen',_size=4)
-            # self.pW=self.addNewPlotWindow(_title='SKOV3 Cisplatin Accumulation',_xAxisTitle='MonteCarlo Step (MCS) (1 MCS = 10 mins)',_yAxisTitle='Plasma Cisplatin (micromolar)')
-            # self.pW.addPlot('SKOV3accumPerConc',_style='Dots',_color='MediumSpringGreen',_size=5)
-            # self.pW.addPlot('TreatedCells',_style='Dots',_color='red',_size=5)
-            # self.pW.addPlot('Cell1Vol',_style='Steps',_color='black',_size=5)
-            # self.pW.setYAxisLogScale()
-            # self.pW.set_xlim([5, 15])
-
-    def step(self,mcs):
-        # diffusion time for one cell diameter
-        # tMins=mcs/465.189 # in normal tissue
-        # tMins=mcs/1207.183 # in tumor tissue
-        tHrs=mcs/1207.183/60 # in tumor tissue
-        if 0<=mcs<cIPFirstPt2Hrs: # x-intercept (drug conc. = 0, becoming negative) > mcs > first IV data point for Cisplatin
-            cisplatinIPtHrs=1856.1*tHrs
-            self.pW.addDataPoint("Cisplatin",mcs,cisplatinIPtHrs) # name of the data series, x, y
-            self.pW.showAllPlots()
-            fileName="CisplatinIPplot"+str(mcs)+".txt"
-            self.pW.savePlotAsPNG(fileName,1000,1000) # here we specify size of the image
-        #if cIVZero>mcs>cFirst5Mins: # x-intercept (drug conc. = 0, becoming negative) > mcs > first IV data point for Cisplatin
-        else:
-            cisplatinIPtHrs=451.51*math.exp(-0.551*tHrs)
-            # field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-            # cisplatinIV=max(field[])
-            #Skov3accumperconc = -1.2e-07*cisplatin**3 + 1.3e-05*cisplatin**2 + 0.00058*cisplatin + 0.076
-            # self.pW.addDataPoint("Treated Cells",mcs,treatedCells) # name of the data series, x, y
-            # self.pW.addDataPoint("UntreatedCells",mcs,untreatedCells) # name of the data series, x, y
-            self.pW.addDataPoint("Cisplatin",mcs,cisplatinIPtHrs) # name of the data series, x, y
-            # self.pW.addDataPoint("Cisplatin",mcs,SKOV3accumPerConc) # name of the data series, x, y
-            # self.pW.addDataPoint("Cell1Vol",mcs,cell1.volume) #name of the data series, x, y
-            self.pW.showAllPlots()
-            # fileName="NumCellsIC50Cisplatin_Plot"+str(mcs)+".png"
-            fileName="CisplatinIPplot"+str(mcs)+".png"
-            self.pW.savePlotAsPNG(fileName,1000,1000) # here we specify size of the image
-            # fileName="CisplatinMax_txt"+str(mcs)+".txt"
-            # self.pW.savePlotAsData(fileName)
-            # fileName="CisplatinIVConc_txt"+str(mcs)+".txt"
-            # self.pW.savePlotAsData(fileName)
-
-
-
-class CellAccumToFileSteppable(SteppableBasePy):
-    # def __init__(self,_simulator,_frequency=4650): # ten minutes of Cisplatin diffusion, 1 cell diameter/MCS in normal tissue
-    def __init__(self,_simulator,_frequency=121): # 0.1 minute of Cisplatin diffusion, 1 cell diameter/MCS in tumor tissue
-    # def __init__(self,_simulator,_frequency=113): # 0.1 hours of IgG diffusion, 1 cell diameter/MCS in tumor tissue
-    # def __init__(self,_simulator,_frequency=1): # for testing
-        SteppableBasePy.__init__(self,_simulator, _frequency)
-        self.simulator=_simulator
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-
-        datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
-        fileName=(datestring + '_' + 'Accumulated' + drug + '_' + size + '_' + vess)
-        # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
-        self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
-        print 'output file =',fileName
-    def start(self):
-        self.file.write('MCS cell.type CisplatinConcentrationMcrmolar CisplatinAccumulatedMcrmolar\n')
-    def step(self,mcs):
-        print "cell-list-to-file function is called every 113 MCS (1 real-time minutes for IgG in tumor)"
-        for cell in self.cellList:
-            if cell.type==2:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                    # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt) # get concentration at center of mass
-                self.file.write('%d %d %f %f \n' %(mcs,cell.type,cisplatin,dictionaryAttrib[3])) # WRITE A LINE FOR EACH CELL 
-            # if cell.type==3:
-            #     dictionaryAttrib = CompuCell.getPyAttrib(cell)
-            #     self.file.write('%d %d %d \n' %(mcs,cell.type,dictionaryAttrib[4]))
-            if cell.type==8:
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                dictionaryAttrib = CompuCell.getPyAttrib(cell)
-                comPt=CompuCell.Point3D()
-                field=CompuCell.getConcentrationField(self.simulator,"Cisplatin")
-                    # WORKS WHEN cell vol = 1 voxel; changed for tiny speed-up; otherwise, use comPt.x=int(round(cell.xCM/float(cell.volume))) (int(averageCOM))(see CC3D manual
-                comPt.x=int(cell.xCM)
-                comPt.y=int(cell.yCM)
-                comPt.z=int(cell.zCM)
-                cisplatin=field.get(comPt) # get concentration at center of mass
-                self.file.write('%d %d %f %f \n' %(mcs,cell.type,cisplatin,dictionaryAttrib[3])) # WRITE A LINE FOR EACH CELL 
-    defs finish(self):
-        # pass
-        self.file.close() # close the file
-
-
-
-
-# PYTHONOUTPUTTOFILESTEPPABLE
-class CellListToFileSteppable(SteppableBasePy):
-    # def __init__(self,_simulator,_frequency=4650): # ten minutes of diffusion, 1 cell diameter/MCS in normal tissue
-    def __init__(self,_simulator,_frequency=121): # 0.1 minute of diffusion, 1 cell diameter/MCS in tumor tissue
-        SteppableBasePy.__init__(self,_simulator, _frequency)
-        self.simulator=_simulator
-        self.inventory=self.simulator.getPotts().getCellInventory()
-        self.cellList=CellList(self.inventory)
-        # 2 lines following are mentioned in the manual
-        # file=open('CellTotals.txt','a')
-        ## FILE WILL BE IN ROOT OR C DRIVE:
-        ## FILENAME "CellTotals_year-month-day_hour_minute_second.txt"
-
-        datestring=now.strftime("%Y-%m-%d_%H_%M_%S")
-        fileName=(datestring+'_'+ drug+'_' +size+'_' +vess)
-        # self.file=open('%s.txt' %fileName,'w')
-        # self.openFileInSimulationOutputDirectory('%s.txt' %fileName,'w')
-        # TO OUTPUT FILE TO SAME DIRECTORY AS SCREENSHOTS
-        self.file=open(CompuCellSetup.getScreenshotDirectoryName() + '%s.txt' %fileName,'w')
-        print 'output file =',fileName
-    def start(self):
-        #pass
-        self.file.write('MCS #UntreatedCancerCells #TreatedCancerCells\n')
-    def step(self,mcs):
-        print "cell-list-to-file function is called every 4650 MCS (10 real-time minutes for Cisplatin)"
-        numPCancer=0
-        numIC50Cancer=0
-        for cell in self.cellList:
-            if cell.type==2:
-                numPCancer+=1
-            if cell.type==8:
-                numIC50Cancer+=1
-            # self.file.write('CELL ID=%d CELL TYPE=%d volume=%d\n' %(cell.id,cell.type,cell.volume))
-        self.file.write('%d %d %d \n' %(mcs,numPCancer,numIC50Cancer)) # WRITE AFTER ALL CELLS COUNTED
-    def finish(self):
-        # pass
-        self.file.close() # close the file
-
-
-#### OTHER USEFUL CODE SNIPPETS
-            # for cell in self.cellList:
-            #     for neighbor, commonSurfaceArea in self.getCellNeighborDataList(cell):
-            #         print "commonSurfaceArea=",commonSurfaceArea
-            #         #if neighbor and (neighbor.type==self.BACTERIA) and commonSurfaceArea>=0.0:
-            #         #    NhbdBacteria.append(neighbor)
-
-"""
