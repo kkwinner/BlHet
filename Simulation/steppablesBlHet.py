@@ -648,14 +648,14 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             #cis70EndInfus
             # infusion
             if aggressInfusTimeDay1Cis[0] <= mcs < aggressInfusTimeDay1Cis[0] + cis70EndInfus:
-                tMins= (mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min # time since injection
-                IVtMins = 0.11*tMins**3 - 0.83*tMins**2 + 2.2*tMins - 2.6e-16 # cubic fit for 3h infusion (de Jongh, 2001; max = 2.11uM)
-                print 'infusion cis IVtMins=',IVtMins
+                tHrs= (mcs - aggressInfusTimeDay1Cis[0]) / (CisGem1Min * 60) # time since injection
+                IVtHrs = 0.11*tHrs**3 - 0.83*tHrs**2 + 2.2*tHrs - 2.6e-16 # cubic fit for 3h infusion (de Jongh, 2001; max = 2.11uM)
+                print 'infusion cis IVtHrs=',IVtHrs
             elif aggressInfusTimeDay1Cis[0] + cis70EndInfus <= mcs < aggressInfusTimeDay1Cis[1]:
-                tMins=((mcs - aggressInfusTimeDay1Cis[0]) / CisGem1Min) # DO NOT SUBTRACT INFUSION TIME
-                IVtMins = 57.4124 * math.exp(-1.0927 * tMins) # exponential fit for post-3h infusion (de Jongh, 2001; max = 2.11uM)
-                print 'decay cis tMins=',tMins
-                print 'decay cis IVtMins= ',IVtMins
+                tHrs=((mcs - aggressInfusTimeDay1Cis[0]) / (CisGem1Min * 60)) # DO NOT SUBTRACT INFUSION TIME
+                IVtHrs = 57.4124 * math.exp(-1.0927 * tHrs) # exponential fit for post-3h infusion (de Jongh, 2001; max = 2.11uM)
+                print 'decay cis tHrs=',tHrs
+                print 'decay cis IVtHrs= ',IVtHrs
 
             # #  cisplatin 60 mg/m^2: 15 min infusion(Casper 1984; from [C]=0.0 to [C]=~5.6muM, t=min)#(Casper 1984)
             # if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[0] + drug15Mins:
@@ -674,16 +674,9 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
             #     print 'decay cis tMins=',tMins
             #     print 'decay cis IVtMins= ',IVtMins
 
-
-                # 70mg/m^2
-                # infusion: y = 0.11*x^{3} - 0.83*x^{2} + 2.2*x - 2.6e-16
-                # post-infusion: post-infusion fit =    57.4124 * e^{-1.0927 * time}
-                # shared time point at 3h (end infusion, begin decay)
-
             # update IV conc
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
-            # print 'IVtMins=',IVtMins
-            IVxml=IVtMins             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
+            IVxml=IVtHrs             # SET VARIABLE NEEDS TO BE SAME NAME (CAN BE + OR - ALSO) AS GOTTEN VARIABLE, FOR STEERING
             self.setXMLElementValue(IVxml,['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Cisplatin'],['SecretionData'],['ConstantConcentration','Type','Vessel'])
             self.updateXML()
 
