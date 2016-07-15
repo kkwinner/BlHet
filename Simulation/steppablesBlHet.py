@@ -85,26 +85,14 @@ cFirst5Mins=5*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (
 ####
 cFirst20Mins=20*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 # cFirst5Mins=5*465.189 # five minutes worth of MCSes in normal tissue (Swabb 1974?)
-# cIVZero=math.exp(-16.094/-3.338)*1207.183 ##mcs mins, MCS scaled for diffusion in tumor tissue;Excel check, yintercept = 124.1449668
-# x-intercept of cisplatin IP-post-IV concentration function
-# cIPpostIV_zero=(0.386/0.5431)*465.... #mcs hrs, MCS scaled for diffusion in normal tissue
-# cIPpostIVZero= (0.386/0.0091)*1207.183 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after this time point (42.42mins = 51205.8mcs)#  cIPpostIVZero= 896.305 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 896.305 (Wolfram Alpha cubic polynomial solver).  Will not use because becomes zero after IV goes to zero; then soln. is zero
-#  cIVpostPZero=~ 7hrs #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 7 hrs
-#ip CISPLATIN
-# cIPFirstPt=0.2126*60*1207.183 #hrs, first time point
-# cIPFirstPt=7.386*1207.183 #7.386 min, first time point
-# cIPFirstPtPlus15=(7.386+15.0)*CisGem1Min # = mcs to get to 7.386 min, first time point in IV infusion, plus 15 mins infusion time; initialize with floats
-# cIVFirstPtPlus15=(5.742+15.0)*1207.183 # = 25039.389786 MCS = 5.742 min, first time point, plus 15 mins infusion time
-# FINAL CISPLATIN IC50 = MISTRY 1992
 cisplatinIC50=52.71 # FINAL USED FOR OVARIAN MODEL: muM (equiv to (equitoxic) 2h-IC-50 Mistry, 1992
 # cisplatinIC50=38.3 # (MATCHES 2H DRUG TIME COURSE): muM (SD=12.6, in SKOV-3, 2h exposure; Table 1, Mistry, 1992)
-# cisplatinIC50=0.0001 #test
 # cisplatinIC50=126.63 # muM (+/- 12.06 micromols/L, in SKOV3ip1, 48h exposure; Fig. 3, Xu, 2008)
 # cisplatinIC50  =3.33 # muM (Nakaro 1997, minimum effective concentration for DNA damage)
 
 
 # IV GEMCITABINE
-drug30Mins=30*CisGem1Min # = 
+drug30Mins=30*CisGem1Min # = 1970.353826 mcs
 gemZeroConcTime=240*CisGem1Min # time at final data point
 
 
@@ -114,12 +102,14 @@ gemZeroConcTime=240*CisGem1Min # time at final data point
 #        MCS end of week 1,	MCS end of gem infusion 1:8:2,
 #        MCS end of week 2,	MCS end of gem infusion 1:15:3
 #        MCS end of cycle 1, 21d
-aggressInfusTimesGem = [0, 15762.8306,
+aggressInfusTimesGem = numpy.array([0, 15762.8306,
                         662038.8854, 677801.716,
                         1324077.771, 1339840.601,
-                        1986116.656]
+                        1986116.656])
+cycletime = 21*94576.98363 # 21 days * mcs/h
+
 #aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to approximate cis = 0  for Casper 1984, 60 mg/m^2
-aggressInfusTimeDay1Cis = [15762.8306, 43347.78416]	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
+aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
 
 
 # CELLULAR PARAMETERS: IC50, ACCUMULATION OF DRUG
@@ -363,6 +353,12 @@ class IncrementClocks(SteppableBasePy):
             # if cell.id > 125:
             # if cell.type!=1:
             # print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict, 'vol=',cell.targetVolume,'volLambda=',cell.lambdaVolume
+
+        # increment cycle time if next cycle has been entered
+        if mcs > aggressInfusTimesGem[6]:
+            
+            aggressInfusTimesGem = aggressInfusTimesGem + cycleTime
+            print 'aggressInfusTimesGem plus 21',aggressInfusTimesGem
 
 
 
