@@ -16,9 +16,41 @@ import cProfile
 
 
 #STRINGS FOR OUTPUT FILES
-#drug='cisplatin'
+drug='cisplatin'
 #size='lgSphere'
 #vess='451v_0.99pctA'
+#vess='151v_2.17pctA'
+# size='smSphereIV'
+# size='smSphereIP'
+# size='smSphereIPIV'
+# size='smSphereIV'
+# size='smSphereIVinfus'
+# size='smSphereIPinfus'
+# size='R140CubeEdgeIVinfus'
+# size='R140CubeEdgeIPinfus'
+size='R140CubeCenterIVinfus'
+# size='R140CubeCenterIPinfus'
+# size='smSphereIPIV'
+# vess='18v_2.26pctA'
+# vess='17v_2.26pctA'
+# vess='16v_7.64pctA'
+# vess='11v_10.89pctA'
+# vess='11v_6.65pctA'
+# vess='11v_4.53pctA'
+# vess='10v_2.26pctA'
+# vess='8v_4.38pctA'
+# vess='6v_3.82pctA'
+# vess='3v_10.04pctA'
+# vess='2v_1.27pctA'
+
+# vess='1v_3pctvol_2pctA'
+# vess='7v_5pctvol_4pctA'
+# vess='6v_8pctvol_6pctA'
+# vess='15v_10pctvol_8pctA'
+# vess='19v_12pctvol_10pctA'
+# vess='0v_0.0pctA'
+vess='_10pctA' # for cubes
+
 
 
 #INITIALIZE COUNTING VARIABLES
@@ -41,27 +73,41 @@ phagocytosisEndTime = 24 # dead cells removed at 24 hours
 
 
 
+###CISPLATIN
 #IV CISPLATIN
-# 70 mg/m^2
 cis70EndInfus=180*CisGem1Min # end of 3-h infusion (de Jongh, 2001)
 
-# 60 mg/m^2
 drug15Mins=15*CisGem1Min # 18107.745 MCS; subtract from runtime once begin using concentration time course
 cIVFirstPoint=(5.742+15)*CisGem1Min # 6931.79 MCS; five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 cEndDataSet=(170.862*CisGem1Min)+cIVFirstPoint
+#### first five minutes (no data, linear fit from t=0, [iv]=0 to first time point
 cFirst5Mins=5*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
+####
 cFirst20Mins=20*CisGem1Min # five minutes worth of MCSes in tumor tissue in vivo (window chamber) for sodium fluorescein (~376Da,like Cisplatin,300Da (Nugent, 1984))
 # cFirst5Mins=5*465.189 # five minutes worth of MCSes in normal tissue (Swabb 1974?)
+# cIVZero=math.exp(-16.094/-3.338)*1207.183 ##mcs mins, MCS scaled for diffusion in tumor tissue;Excel check, yintercept = 124.1449668
+# x-intercept of cisplatin IP-post-IV concentration function
+# cIPpostIV_zero=(0.386/0.5431)*465.... #mcs hrs, MCS scaled for diffusion in normal tissue
+# cIPpostIVZero= (0.386/0.0091)*1207.183 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after this time point (42.42mins = 51205.8mcs)#  cIPpostIVZero= 896.305 #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 896.305 (Wolfram Alpha cubic polynomial solver).  Will not use because becomes zero after IV goes to zero; then soln. is zero
+#  cIVpostPZero=~ 7hrs #mcs mins, MCS scaled for diffusion in tumor tissue; IP will become negative after t = 7 hrs
+#ip CISPLATIN
+# cIPFirstPt=0.2126*60*1207.183 #hrs, first time point
+# cIPFirstPt=7.386*1207.183 #7.386 min, first time point
+# cIPFirstPtPlus15=(7.386+15.0)*CisGem1Min # = mcs to get to 7.386 min, first time point in IV infusion, plus 15 mins infusion time; initialize with floats
+# cIVFirstPtPlus15=(5.742+15.0)*1207.183 # = 25039.389786 MCS = 5.742 min, first time point, plus 15 mins infusion time
+# FINAL CISPLATIN IC50 = MISTRY 1992
 cisplatinIC50=52.71 # FINAL USED FOR OVARIAN MODEL: muM (equiv to (equitoxic) 2h-IC-50 Mistry, 1992
 # cisplatinIC50=38.3 # (MATCHES 2H DRUG TIME COURSE): muM (SD=12.6, in SKOV-3, 2h exposure; Table 1, Mistry, 1992)
+# cisplatinIC50=0.0001 #test
 # cisplatinIC50=126.63 # muM (+/- 12.06 micromols/L, in SKOV3ip1, 48h exposure; Fig. 3, Xu, 2008)
 # cisplatinIC50  =3.33 # muM (Nakaro 1997, minimum effective concentration for DNA damage)
+
 
 # IV GEMCITABINE
 drug30Mins=30*CisGem1Min # = 1970.353826 mcs
 gemZeroConcTime=240*CisGem1Min # time at final data point
 
-# REGIMEN TIMINGS
+
 # aggressive bladder cancer regimen time frame, NCCN regimen for metastatic bl.canc. (list)
 #MCS for each step of Gem-Cis aggressive regimen; MCS at the end of each stage of regimen cycle:day:eventsTotal; e.g. gem infusion cycle 1: day 18: 3 infusions total to this point
 #	[MCS start of gem infusion 1:1:1, end of gem infusion 1:1:1,
@@ -72,18 +118,11 @@ aggressInfusTimesGem = numpy.array([0, 15762.8306,
                         662038.8854, 677801.716,
                         1324077.771, 1339840.601,
                         1986116.656])
-cycleTime = 21.0*94576.98363 # 21 days * mcs/h
-# aggressInfusTimesGem = numpy.array([0,1,2,3,4,5,10.0]) # test
-# cycleTime = 10.0 # test
-# print 'cycleTime',cycleTime
-# print 'aggressInfusTimesGem',aggressInfusTimesGem
-# aggressInfusTimesGem = aggressInfusTimesGem + cycleTime
-# print 'aggressInfusTimesGem plus 21',aggressInfusTimesGem
+print 'aggressInfusTimesGem',aggressInfusTimesGem
+cycletime = 21*94576.98363 # 21 days * mcs/h
 
-
-aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
 #aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to approximate cis = 0  for Casper 1984, 60 mg/m^2
-
+aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
 
 
 # CELLULAR PARAMETERS: IC50, ACCUMULATION OF DRUG
@@ -102,9 +141,9 @@ aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end o
 ## ACCUMULATION RATES
 ## IC50 cells have same accumulation rate as cell line they came from (rate is carried as part of dictionary)
 ## Dead cells and LungNormal are set in the SecretionSteppables to be same as middle-of-the-road-least-sensitive line SCRG_SW780
-## Dead cells presumedly have active macrophages in their space collecting drug for 24 hours after death -- no fit to a long-tailed distribution, since proximity of macrophages to multiple cells is likely correlated (they probably all get eatn at close to the same time)
+## Dead cells presumedly have active macrophages in their space collecting drug for 24 hours after death
 ## cisplatin, platinum accumulation per cell per time step, based on IC50 of bladder cancer cell line;
-##            see paper Table for fits of IC50s to accumulations
+##            see Table for fits of IC50s to accumulations
 ## drugAccumFrac_x = concentration removed from voxel: microM/MCS, * siteConcCis(microM) in SecretionSteppable
 cispAccumFrac_SCSG_BFTC_905 = 7.98701E-05       # (sens cis and gem)	2.575477619	IC50 microM	cisplatin
 cispAccumFrac_SCSG_J82 = 7.69840E-05            # (sens cis and gem)	5.42972235	IC50 microM	cisplatin				
@@ -150,18 +189,19 @@ gemIC50_RCSG_DSH1 = 0.335738949             # (resist cis sens gem)	0.096498675	
 T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing cells from replacing pre-existing cells
-phagocytosisLambdaVolume = 1000.0
-deadLambdaVolume = 1000.0
+phagocytosisLambdaVolume = 100.0
+deadLambdaVolume = 100.0
 
 ## VASCULARITY
 vesselPercentInMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
-
 ## use if using percent vessel in total sim area to limit vessel growth; not in use as of 6-30-2016
-# totalSimCellsPossible = 20*20*1 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 20*20 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 200*200 #CHANGE WITH SIM DIMENSIONS!
+# totalSimCellsPossible = 20*20*20 #CHANGE WITH SIM DIMENSIONS!
 # print "total cells in sim =",totalSimCellsPossible
 # maxVesselCellCount = round(vesselPercentInMetastasis*totalSimCellsPossible) # used in mitosis to limit global vessel nums
-
-
+# global maxVesselCellCount
+# print "max vessels = ",maxVesselCellCount
 
 
 
@@ -200,129 +240,95 @@ class SetCellDictionaries(SteppableBasePy):
             cell.dict["gemAccum"]=0
             cell.dict["cisResistance"]=1
             cell.dict["gemResistance"]=1
-            cell.dict["IC50CisOrig"]=0
-            cell.dict["IC50GemOrig"]=0
             cell.dict["IC50Cis"]=0
             cell.dict["IC50Gem"]=0
             cell.dict["accumRtCis"]=0
             cell.dict["accumRtGem"]=0
-            # ## NO DRUG SYNERGY
-            # if cell.type==4:
-            #     cell.dict["IC50CisOrig"]=cisIC50_SCSG_BFTC_905
-            #     cell.dict["IC50GemOrig"]=gemIC50_SCSG_BFTC_905
-            #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
-            #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
-            # if cell.type==5:
-            #     cell.dict["IC50CisOrig"]=cisIC50_SCSG_J82
-            #     cell.dict["IC50GemOrig"]=gemIC50_SCSG_J82
-            #     cell.dict["IC50Cis"]=cisIC50_SCSG_J82
-            #     cell.dict["IC50Gem"]=gemIC50_SCSG_J82
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
-            # if cell.type==6:
-            #     cell.dict["IC50CisOrig"]=cisIC50_RCRG_RT4
-            #     cell.dict["IC50GemOrig"]=gemIC50_RCRG_RT4
-            #     cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
-            #     cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
-            # if cell.type==7:
-            #     cell.dict["IC50CisOrig"]=cisIC50_RCRG_HT_1197
-            #     cell.dict["IC50GemOrig"]=gemIC50_RCRG_HT_1197
-            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
-            #     cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
-            # if cell.type==8:
-            #     cell.dict["IC50CisOrig"]=cisIC50_SCRG_SW780
-            #     cell.dict["IC50GemOrig"]=gemIC50_SCRG_SW780
-            #     cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
-            #     cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
-            # if cell.type==9:
-            #     cell.dict["IC50CisOrig"]=cisIC50_SCRG_KU_19_19
-            #     cell.dict["IC50GemOrig"]=gemIC50_SCRG_KU_19_19
-            #     cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
-            #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
-            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
-            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            # if cell.type==10:
-            #     cell.dict["IC50CisOrig"]=cisIC50_RCSG_LB831_BLC
-            #     cell.dict["IC50GemOrig"]=gemIC50_RCSG_LB831_BLC
-            #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
-            #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
-            # if cell.type==11:
-            #     cell.dict["IC50CisOrig"]=cisIC50_RCSG_DSH1
-            #     cell.dict["IC50GemOrig"]=gemIC50_RCSG_DSH1
-            #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
-            #     cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
-            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
-            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
-
-            # ##DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
-            # ##remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            ## NO DRUG SYNERGY
             if cell.type==4:
-                cell.dict["IC50CisOrig"]=cisIC50_SCSG_BFTC_905
-                cell.dict["IC50GemOrig"]=gemIC50_SCSG_BFTC_905
                 cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
                 cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
-                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905
                 cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
             if cell.type==5:
-                cell.dict["IC50CisOrig"]=cisIC50_SCSG_J82
-                cell.dict["IC50GemOrig"]=gemIC50_SCSG_J82
                 cell.dict["IC50Cis"]=cisIC50_SCSG_J82
                 cell.dict["IC50Gem"]=gemIC50_SCSG_J82
-                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82
                 cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
             if cell.type==6:
-                cell.dict["IC50CisOrig"]=cisIC50_RCRG_RT4
-                cell.dict["IC50GemOrig"]=gemIC50_RCRG_RT4
                 cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
                 cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
-                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4
                 cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
             if cell.type==7:
-                cell.dict["IC50CisOrig"]=cisIC50_RCRG_HT_1197
-                cell.dict["IC50GemOrig"]=gemIC50_RCRG_HT_1197
                 cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197
                 cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
-                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197
                 cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
             if cell.type==8:
-                cell.dict["IC50CisOrig"]=cisIC50_SCRG_SW780
-                cell.dict["IC50GemOrig"]=gemIC50_SCRG_SW780
                 cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
                 cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
-                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780
                 cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
             if cell.type==9:
-                cell.dict["IC50CisOrig"]=cisIC50_SCRG_KU_19_19
-                cell.dict["IC50GemOrig"]=gemIC50_SCRG_KU_19_19
                 cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
                 cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
-                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19
                 cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            # **** non-synergistic 7-17-2016
             if cell.type==10:
-                cell.dict["IC50CisOrig"]=cisIC50_RCSG_LB831_BLC
-                cell.dict["IC50GemOrig"]=gemIC50_RCSG_LB831_BLC
                 cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
                 cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
                 cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
             if cell.type==11:
-                cell.dict["IC50CisOrig"]=cisIC50_RCSG_DSH1
-                cell.dict["IC50GemOrig"]=gemIC50_RCSG_DSH1
                 cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
                 cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
-                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
+
+            # ##DRUG SYNERGY: PRE-TREATMENT AND CO-TREATMENT WITH GEMCITABINE IMPROVES CISPLATIN EFFICACY, ~2.5X (Moufarij, 2003)
+            # ##remove "*2.5" from any cell line's cisplatin accumulation to make it non-synergistic
+            # if cell.type==4:
+            #     cell.dict["IC50Cis"]=cisIC50_SCSG_BFTC_905
+            #     cell.dict["IC50Gem"]=gemIC50_SCSG_BFTC_905
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_BFTC_905*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_BFTC_905
+            # if cell.type==5:
+            #     cell.dict["IC50Cis"]=cisIC50_SCSG_J82
+            #     cell.dict["IC50Gem"]=gemIC50_SCSG_J82
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCSG_J82*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCSG_J82
+            # if cell.type==6:
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_RT4
+            #     cell.dict["IC50Gem"]=gemIC50_RCRG_RT4
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_RT4*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_RT4
+            # if cell.type==7:
+            #     cell.dict["IC50Cis"]=cisIC50_RCRG_HT_1197*2.5
+            #     cell.dict["IC50Gem"]=gemIC50_RCRG_HT_1197
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCRG_HT_1197*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCRG_HT_1197
+            # if cell.type==8:
+            #     cell.dict["IC50Cis"]=cisIC50_SCRG_SW780
+            #     cell.dict["IC50Gem"]=gemIC50_SCRG_SW780
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_SW780*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_SW780
+            # if cell.type==9:
+            #     cell.dict["IC50Cis"]=cisIC50_SCRG_KU_19_19
+            #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
+            #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
+            # # **** non-synergistic 7-8-2016
+            # if cell.type==10:
+            #     cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
+            #     cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
+            # if cell.type==11:
+            #     cell.dict["IC50Cis"]=cisIC50_RCSG_DSH1
+            #     cell.dict["IC50Gem"]=gemIC50_RCSG_DSH1
+            #     cell.dict["accumRtCis"]=cispAccumFrac_RCSG_DSH1*2.5
+            #     cell.dict["accumRtGem"]=gemAccumFrac_RCSG_DSH1
 
             # print initial dictionary vals for each cell
             # print 'cell.type=',cell.type,'cell.id=',cell.id,'dict=',cell.dict
@@ -338,44 +344,31 @@ class SetCellDictionaries(SteppableBasePy):
 # *****************************
 # INCREMENT AGE
 # INCREMENT TIME SINCE DEATH
-# INCREMENT DRUG DELIVERY TIMES IF IN A NEW DRUG CYCLE
 class IncrementClocks(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
         self.inventory=self.simulator.getPotts().getCellInventory()
         self.cellList=CellList(self.inventory)
-        self.simulator=_simulator
 
     def start(self):
         print "This function (IncrementClocks) is called at every MCS"
 
     def step(self,mcs):
-        # # increment cycle time if next cycle has been entered
-        if mcs >= aggressInfusTimesGem[6]: # indexing starts at "0"
-            print 'last time point gem dosages array',aggressInfusTimesGem[6]
-            global aggressInfusTimesGem
-            print 'aggressInfusTimesGem',aggressInfusTimesGem
-            aggressInfusTimesGem = aggressInfusTimesGem + cycleTime
-            print 'aggressInfusTimesGem plus 21',aggressInfusTimesGem
-            print 'cycle time mcs added = ', cycleTime
-            print 'Gemcitabine 30 min infusion end mcs = ',drug30Mins
-        if mcs >= aggressInfusTimeDay1Cis[1]:
-            global aggressInfusTimeDay1Cis
-            print 'aggressInfusTimesDay1Cis',aggressInfusTimeDay1Cis
-            aggressInfusTimeDay1Cis = aggressInfusTimeDay1Cis + cycleTime
-            print 'aggressInfusTimesDay1Cis plus 21',aggressInfusTimeDay1Cis
-            print 'cycle time mcs added = ', cycleTime
-            print 'Cisplatin 3h infusion end mcs = ',cis70EndInfus
-
         self.cellList=CellList(self.inventory)
         for cell in self.cellList:
+#            print 'inside incrementAge'
+#            print 'cell.type=',cell.type,'cell.id=',cell.id
+#            print cell.dict
             cell.dict["AgeHrs"]+= MCSFractionOfHour
             if cell.type==3:
                 cell.dict["HrsSinceDeath"]+= MCSFractionOfHour
+        # for cell in self.cellList:
+            # if cell.id > 125:
             # if cell.type!=1:
             # print 'cell.id=',cell.id,'cell.type=',cell.type,' dict=',cell.dict, 'vol=',cell.targetVolume,'volLambda=',cell.lambdaVolume
-            # print cell.dict
-
+        #if mcs > aggressInfusTimesGem[6]:
+         #   aggressInfusTimesGem = aggressInfusTimesGem + cycleTime
+          #  print 'aggressInfusTimesGem plus 21',aggressInfusTimesGem
 
 
 
@@ -452,32 +445,28 @@ class MitosisSteppable(MitosisSteppableBase):
                 if cell.dict["cycleHrs"]<cell.dict["AgeHrs"]:
                 # if cell.dict["cycleHrs"]<cell.dict["AgeHrs"] and cell.dict["AgeHrs"]<cell.dict["AgeHrs"] + 1/60.0: # if IC50 age is within a minute of cycle time
                     deathChance = uniform(0,1)
-                    print 'deathChance=',deathChance
+                    # print 'deathChance=',deathChance
                     if deathChance<=0.5:
                         cell.type=3 # cell dies with 50% chance at cell division attempt
                         cell.lambdaVolume=deadLambdaVolume
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
                     else:
-                        print 'cell.type', cell.type,'cell.id', cell.id, 'will increase its resistance'
                         if cell.type==12:
                             cell.type = 14
-                            if cell.dict["cisResistance"] < 29: # Max multiple of IC50 in cell lines gaining resistance to cisplatin within 1-2yrs culturing; Vallo et al., 2015
+                            if cell.dict["cisResistance"] <= 29: # Max multiple of IC50 in cell lines gaining resistance to cisplatin within 1-2yrs culturing; Vallo et al., 2015
                                 cell.dict["cisResistance"] += 1
-                                cell.dict["IC50Cis"] = cell.dict["IC50CisOrig"] * cell.dict["cisResistance"]
-                            print 'cell.type', cell.type,'cell.id', cell.id, 'increased its cis resistance'
+                                cell.dict["IC50Cis"] = cell.dict["IC50Cis"] * cell.dict["cisResistance"]
                         if cell.type==13:
                             cell.type=15
-                            if cell.dict["gemResistance"] < 73: # Max multiple of IC50 in cell lines gaining resistance to gemcitabine within 1-2yrs culturing; Vallo et al., 2015
+                            if cell.dict["gemResistance"] <= 73: # Max multiple of IC50 in cell lines gaining resistance to gemcitabine within 1-2yrs culturing; Vallo et al., 2015
                                 cell.dict["gemResistance"] += 1
-                                cell.dict["IC50Gem"] = cell.dict["IC50GemOrig"] * cell.dict["gemResistance"]
-                                print 'cell.type', cell.type,'cell.id', cell.id, 'increased its gem resistance'
-                        cell.dict["AgeHrs"] = 0 # reset cell cycle; cells that haven't grown don't have a chance to try to divide again; would have had to have doubled size as IC50 type, before becoming current resistant type
-
+                                cell.dict["IC50Gem"] = cell.dict["IC50Gem"] * cell.dict["gemResistance"]
+                        cell.dict["AgeHrs"] = 0 # reset cell cycle; cells that haven't grown don't have a chance to 
             if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time, and only divide if they have doubled in size
                 cells_to_divide.append(cell) # if cell is already dead but doubled size, it won't divide below
             # print 'celltype',cell.type,'cellid',cell.id,'is dividing at AgeHrs',cell.dict["AgeHrs"]
         for cell in cells_to_divide:
-            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide if they are 2x volume and have lived to become resistant type)
+            if cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types divide except for Vessel, LungNormal, Dead, respectively (IC50Cis, and IC50Gem divide)
                 # to change mitosis mode leave one of the below lines uncommented
                 # print 'cells to divide increment'
                 self.divideCellRandomOrientation(cell)
@@ -662,6 +651,8 @@ class DiffusionSolverFESteeringCisplatinIV(SteppableBasePy):
 
         ##### DRUG CONCENTRATIONS AFTER IV DELIVERY:
         if aggressInfusTimeDay1Cis[0] < mcs < aggressInfusTimeDay1Cis[1]: # at correct time in regimen
+            #cis70EndInfus
+            # infusion
             if aggressInfusTimeDay1Cis[0] <= mcs < aggressInfusTimeDay1Cis[0] + cis70EndInfus:
                 tHrs= (mcs - aggressInfusTimeDay1Cis[0]) / (CisGem1Min * 60) # time since injection
                 IVtHrs = 0.11*tHrs**3 - 0.83*tHrs**2 + 2.2*tHrs - 2.6e-16 # cubic fit for 3h infusion (de Jongh, 2001; max = 2.11uM)
@@ -711,22 +702,19 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator,_frequency)
         self.simulator=_simulator
-        print 'starting DiffusionSolverFESteeringGemcitabineIV'
     def start(self):
         pass
     def step(self,mcs):
-        #print 'drug30Mins = ',drug30Mins
-        #print 'aggressInfusTimesGem[2]=',aggressInfusTimesGem[2]
-        if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
+        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
 
             # first infusion
-            if aggressInfusTimesGem[0] <= mcs < drug30Mins + aggressInfusTimesGem[0]:
-                tMins = (mcs - aggressInfusTimesGem[0])/CisGem1Min
+            if mcs < drug30Mins:
+                tMins = mcs/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3 # linear fit infusion period of 30 mins (Fan et al., 2010)
                 # print 'infusion 1 gem IVtMins=',IVtMins
-            elif drug30Mins + aggressInfusTimesGem[0] <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
-                tMins = (mcs - aggressInfusTimesGem[0])/CisGem1Min # DO NOT SUBTRACT INFUSION TIME
-                IVtMins = 101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
+            elif drug30Mins <= mcs < aggressInfusTimesGem[1]: # end of infusion to end of decay
+                tMins=mcs/CisGem1Min # DO NOT SUBTRACT INFUSION TIME
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins) # Fan, 2010
                 # print 'decay 1 gem IVtMins=',IVtMins
                 
             # second infusion
@@ -734,16 +722,16 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
                 tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3
             elif aggressInfusTimesGem[2] + drug30Mins <= mcs < aggressInfusTimesGem[3]:
-                tMins = ((mcs - aggressInfusTimesGem[2])/CisGem1Min)
-                IVtMins = 101.3452 * math.exp(- 0.0676 * tMins)
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min)
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
 
             # third infusion
             elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
-                tMins = (mcs - aggressInfusTimesGem[4])/CisGem1Min
+                tMins = (mcs - aggressInfusTimesGem[2])/CisGem1Min
                 IVtMins = 6.8*(tMins/15 - 1) + 7.3
             elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
-                tMins = ((mcs - aggressInfusTimesGem[4])/CisGem1Min)
-                IVtMins = 101.3452 * math.exp(- 0.0676 * tMins)
+                tMins=((mcs - aggressInfusTimesGem[2])/CisGem1Min)
+                IVtMins =101.3452 * math.exp(- 0.0676 * tMins)
 
             # update IV conc
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
@@ -835,7 +823,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
         print "This function (SecretionSteppableGemcitabine) is called at every MCS"
 
     def step(self,mcs):
-        if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):
+        if (mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):
              for cell in self.cellList:
                  if cell.type!=1 and cell.type!=2 and cell.type!=3:  # Vessel(no accum), LungNormal(below), Dead (below)
                      comPt=CompuCell.Point3D()
