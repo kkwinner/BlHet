@@ -1,0 +1,5 @@
+<Simulation version="3.7.5">
+   <XMLScript Type="XMLScript">Simulation/BlHet.xml</XMLScript>
+   <PythonScript Type="PythonScript">Simulation/BlHet.py</PythonScript>
+   <Resource Type="Python">Simulation/steppablesBlHet.py</Resource>
+</Simulation>

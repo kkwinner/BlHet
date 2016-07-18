@@ -1,0 +1,28 @@
+<CompuCell3DLatticeData Version="1.0">
+   <Dimensions x="20" y="20" z="1"/>
+   <Lattice Type="Square"/>
+   <Output CoreFileName="Step" Directory="/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet_cc3d_07_18_2016_10_30_30/LatticeData" Frequency="1" NumberOfSteps="11916699"/>
+   <CellType TypeId="0" TypeName="Medium"/>
+   <CellType TypeId="1" TypeName="Vessel"/>
+   <CellType TypeId="2" TypeName="LungNormal"/>
+   <CellType TypeId="3" TypeName="Dead"/>
+   <CellType TypeId="4" TypeName="SCSG_BFTC_905"/>
+   <CellType TypeId="5" TypeName="SCSG_J82"/>
+   <CellType TypeId="6" TypeName="RCRG_RT4"/>
+   <CellType TypeId="7" TypeName="RCRG_HT_1197"/>
+   <CellType TypeId="8" TypeName="SCRG_SW780"/>
+   <CellType TypeId="9" TypeName="SCRG_KU_19_19"/>
+   <CellType TypeId="10" TypeName="RCSG_LB831_BLC"/>
+   <CellType TypeId="11" TypeName="RCSG_DSH1"/>
+   <CellType TypeId="12" TypeName="IC50Cis"/>
+   <CellType TypeId="13" TypeName="IC50Gem"/>
+   <CellType TypeId="14" TypeName="CisResist"/>
+   <CellType TypeId="15" TypeName="GemResist"/>
+   <Fields>
+      <Field Name="AccumulatedCisplFractionIC50" Type="ScalarFieldCellLevel"/>
+      <Field Name="AccumulatedGemFractionIC50" Type="ScalarFieldCellLevel"/>
+      <Field Name="Cell_Field" Type="CellField"/>
+      <Field Name="Cisplatin" Type="ConField"/>
+      <Field Name="Gemcitabine" Type="ConField"/>
+   </Fields>
+</CompuCell3DLatticeData>
