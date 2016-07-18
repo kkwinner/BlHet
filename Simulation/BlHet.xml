@@ -742,47 +742,47 @@ IC50_RCSG_DSH1
 
 
   <!-- 20 x 20 x 1 TEST -->
-  <Steppable Type="UniformInitializer">
+  <!-- <Steppable Type="UniformInitializer"> -->
+  <!--   <Region> -->
+  <!--     <BoxMin x="5" y="5" z="0"/> -->
+  <!--     <BoxMax x="10" y="10" z="1"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types>SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, Vessel, Vessel, Vessel, Vessel</Types> -->
+  <!--   </Region> -->
+  <!--   <Region> -->
+  <!--     <BoxMin x="10" y="10" z="0"/> -->
+  <!--     <BoxMax x="15" y="15" z="1"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types> RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, Vessel, Vessel, Vessel, Vessel</Types> -->
+  <!--   </Region> -->
+  <!--   <Region> -->
+  <!--     <BoxMin x="10" y="5" z="0"/> -->
+  <!--     <BoxMax x="15" y="10" z="1"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types>  SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, Vessel, Vessel, Vessel, Vessel</Types> -->
+  <!--   </Region> -->
+  <!--   <Region> -->
+  <!--     <BoxMin x="5" y="10" z="0"/> -->
+  <!--     <BoxMax x="10" y="15" z="1"/> -->
+  <!--     <Gap>0</Gap> -->
+  <!--     <Width>1</Width> -->
+  <!--     <Types> RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, Vessel, Vessel, Vessel, Vessel</Types> -->
+  <!--   </Region> -->
+  <!-- </Steppable> -->
+  
+  <!-- test vessel concentration -->
+    <Steppable Type="UniformInitializer">
     <Region>
       <BoxMin x="5" y="5" z="0"/>
       <BoxMax x="10" y="10" z="1"/>
       <Gap>0</Gap>
       <Width>1</Width>
-      <Types>SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, SCSG_BFTC_905, Vessel, Vessel, Vessel, Vessel</Types>
+      <Types>Vessel,RCRG_RT4,RCRG_RT4,RCSG_LB831_BLC,RCSG_LB831_BLC</Types>
     </Region>
-    <Region>
-      <BoxMin x="10" y="10" z="0"/>
-      <BoxMax x="15" y="15" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types> RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, RCRG_RT4, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-    <Region>
-      <BoxMin x="10" y="5" z="0"/>
-      <BoxMax x="15" y="10" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types>  SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, SCRG_SW780, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-    <Region>
-      <BoxMin x="5" y="10" z="0"/>
-      <BoxMax x="10" y="15" z="1"/>
-      <Gap>0</Gap>
-      <Width>1</Width>
-      <Types> RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, RCSG_LB831_BLC, Vessel, Vessel, Vessel, Vessel</Types>
-    </Region>
-  </Steppable>
-  
-  <!-- test vessel concentration -->
-    <!-- <Steppable Type="UniformInitializer"> -->
-    <!-- <Region> -->
-    <!--   <BoxMin x="0" y="0" z="0"/> -->
-    <!--   <BoxMax x="20" y="20" z="1"/> -->
-    <!--   <Gap>0</Gap> -->
-    <!--   <Width>1</Width> -->
-    <!--   <Types>Vessel</Types> -->
-    <!-- </Region> -->
-    <!-- </Steppable> -->
+    </Steppable>
 
 
 
