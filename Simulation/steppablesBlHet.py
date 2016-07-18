@@ -314,7 +314,7 @@ class SetCellDictionaries(SteppableBasePy):
                 cell.dict["IC50GemOrig"]=gemIC50_RCSG_LB831_BLC
                 cell.dict["IC50Cis"]=cisIC50_RCSG_LB831_BLC
                 cell.dict["IC50Gem"]=gemIC50_RCSG_LB831_BLC
-                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC
+                cell.dict["accumRtCis"]=cispAccumFrac_RCSG_LB831_BLC*2.5
                 cell.dict["accumRtGem"]=gemAccumFrac_RCSG_LB831_BLC
             if cell.type==11:
                 cell.dict["IC50CisOrig"]=cisIC50_RCSG_DSH1

@@ -200,7 +200,7 @@
       <e Name="LegendEnable" Type="bool">True</e>
       <e Name="MaxRangeFixed" Type="bool">True</e>
       <e Name="MinRangeFixed" Type="bool">False</e>
-      <e Name="OutputToProjectOn" Type="bool">True</e>
+      <e Name="OutputToProjectOn" Type="bool">False</e>
       <e Name="OverlayVectorsOn" Type="bool">False</e>
       <e Name="PixelizedScalarField" Type="bool">True</e>
       <e Name="ScaleArrowsOn" Type="bool">False</e>
@@ -209,7 +209,7 @@
       <e Name="ShowHorizontalAxesLabels" Type="bool">True</e>
       <e Name="ShowPlotAxes" Type="bool">True</e>
       <e Name="ShowVerticalAxesLabels" Type="bool">True</e>
-      <e Name="UseInternalConsole" Type="bool">True</e>
+      <e Name="UseInternalConsole" Type="bool">False</e>
       <e Name="WindowColorSameAsMedium" Type="bool">True</e>
    </Settings>
    <Settings Type="strlist">
