@@ -20,13 +20,13 @@
       <e Name="Projection" Type="int">0</e>
       <e Name="SaveImageFrequency" Type="int">3941</e>
       <e Name="SaveLatticeFrequency" Type="int">3941</e>
-      <e Name="ScreenUpdateFrequency" Type="int">1</e>
+      <e Name="ScreenUpdateFrequency" Type="int">1000</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
       <e Name="TabIndex" Type="int">0</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1.0</e>
+      <e Name="ArrowLength" Type="float">1</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -48,7 +48,7 @@
       <e Name="FieldParams" Type="dict">
          <e Name="AccumulatedCisplFractionIC50" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ArrowLength" Type="float">1</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -148,8 +148,8 @@
             <e Name="planePosition" Type="int">0</e>
             <e Name="sceneName" Type="str">Cell_Field</e>
             <e Name="sceneType" Type="str">CellField</e>
-            <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">378,444</e>
+            <e Name="winPosition" Type="point">1152,0</e>
+            <e Name="winSize" Type="size">1151,1205</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
          <e Name="Cell Populations" Type="dict">
@@ -162,8 +162,8 @@
             <e Name="planePosition" Type="int">-1</e>
             <e Name="sceneName" Type="str">Cell Populations</e>
             <e Name="sceneType" Type="str"/>
-            <e Name="winPosition" Type="point">378,0</e>
-            <e Name="winSize" Type="size">377,444</e>
+            <e Name="winPosition" Type="point">0,0</e>
+            <e Name="winSize" Type="size">1152,1205</e>
             <e Name="winType" Type="str">plot</e>
          </e>
       </e>
@@ -195,12 +195,12 @@
       <e Name="FPPLinksOn" Type="bool">False</e>
       <e Name="FixedArrowColorOn" Type="bool">False</e>
       <e Name="FloatingWindows" Type="bool">False</e>
-      <e Name="ImageOutputOn" Type="bool">False</e>
-      <e Name="LatticeOutputOn" Type="bool">False</e>
+      <e Name="ImageOutputOn" Type="bool">True</e>
+      <e Name="LatticeOutputOn" Type="bool">True</e>
       <e Name="LegendEnable" Type="bool">True</e>
       <e Name="MaxRangeFixed" Type="bool">True</e>
       <e Name="MinRangeFixed" Type="bool">False</e>
-      <e Name="OutputToProjectOn" Type="bool">False</e>
+      <e Name="OutputToProjectOn" Type="bool">True</e>
       <e Name="OverlayVectorsOn" Type="bool">False</e>
       <e Name="PixelizedScalarField" Type="bool">True</e>
       <e Name="ScaleArrowsOn" Type="bool">False</e>
@@ -209,7 +209,7 @@
       <e Name="ShowHorizontalAxesLabels" Type="bool">True</e>
       <e Name="ShowPlotAxes" Type="bool">True</e>
       <e Name="ShowVerticalAxesLabels" Type="bool">True</e>
-      <e Name="UseInternalConsole" Type="bool">False</e>
+      <e Name="UseInternalConsole" Type="bool">True</e>
       <e Name="WindowColorSameAsMedium" Type="bool">True</e>
    </Settings>
    <Settings Type="strlist">

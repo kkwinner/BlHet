@@ -151,7 +151,7 @@ T24BCCellVol = 1 # bladder cancer cell volume (units = voxels)
 normalLambdaVolume = 100.0
 cellGrowthLambdaVolume = 90.0 # =90.0, others higher (100.0) to keep dividing cells from replacing pre-existing cells
 phagocytosisLambdaVolume = 1000.0
-deadLambdaVolume = 1000.0
+deadLambdaVolume = 100.0
 
 ## VASCULARITY
 vesselPercentInMetastasis = 0.146 # 0.1460592054 = fraction of vessels per area in bladder cancer metastases, estimated from CLCC ratio of metastatic MVD/primary MVD and bladder cancer primary MVD (microvessel density = MVD)
