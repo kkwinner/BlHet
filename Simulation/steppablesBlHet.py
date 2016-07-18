@@ -351,8 +351,8 @@ class IncrementClocks(SteppableBasePy):
 
     def step(self,mcs):
         # # increment cycle time if next cycle has been entered
-        print 'last time point gem dosages array',aggressInfusTimesGem[6]
         if mcs >= aggressInfusTimesGem[6]: # indexing starts at "0"
+            print 'last time point gem dosages array',aggressInfusTimesGem[6]
             global aggressInfusTimesGem
             print 'aggressInfusTimesGem',aggressInfusTimesGem
             aggressInfusTimesGem = aggressInfusTimesGem + cycleTime
