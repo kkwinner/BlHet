@@ -53,13 +53,13 @@ steppableRegistry=SteppableRegistry()
 
 
 ################################# DRUG DYNAMICS
-# from steppablesBlHet import DiffusionSolverFESteeringCisplatinIV
-# diffusionSolverFESteeringCisplatinIV=DiffusionSolverFESteeringCisplatinIV(sim)
-# steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIV)
+from steppablesBlHet import DiffusionSolverFESteeringCisplatinIV
+diffusionSolverFESteeringCisplatinIV=DiffusionSolverFESteeringCisplatinIV(sim)
+steppableRegistry.registerSteppable(diffusionSolverFESteeringCisplatinIV)
 
-from steppablesBlHet import DiffusionSolverFESteeringGemcitabineIV
-diffusionSolverFESteeringGemcitabineIV=DiffusionSolverFESteeringGemcitabineIV(sim)
-steppableRegistry.registerSteppable(diffusionSolverFESteeringGemcitabineIV)
+# from steppablesBlHet import DiffusionSolverFESteeringGemcitabineIV
+# diffusionSolverFESteeringGemcitabineIV=DiffusionSolverFESteeringGemcitabineIV(sim)
+# steppableRegistry.registerSteppable(diffusionSolverFESteeringGemcitabineIV)
 
 from steppablesBlHet import SecretionSteppableCisplatin
 secretionSteppableCisplatin=SecretionSteppableCisplatin(sim)
