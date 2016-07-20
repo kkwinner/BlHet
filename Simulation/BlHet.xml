@@ -86,6 +86,9 @@ IC50_SCRG_SW780
 IC50_SCRG_KU_19_19
 IC50_RCSG_LB831_BLC
 IC50_RCSG_DSH1
+CisResist
+GemResist
+DualResist
     -->
 
 
@@ -110,6 +113,7 @@ IC50_RCSG_DSH1
       
       <MotilityParameters CellType="CisResist" Motility="0"/>
       <MotilityParameters CellType="GemResist" Motility="0"/>
+      <MotilityParameters CellType="DualResist" Motility="0"/>
     <!--   <MotilityParameters CellType="IC50_SCSG_BFTC_905" Motility="1"/>          -->
     <!--   <MotilityParameters CellType="IC50_SCSG_J82" Motility="1"/>  -->
     <!--   <MotilityParameters CellType="IC50_RCRG_RT4" Motility="1"/>  -->
@@ -206,6 +210,7 @@ IC50_RCSG_DSH1
 
     <CellType TypeId="14" TypeName="CisResist" />
     <CellType TypeId="15" TypeName="GemResist" />
+    <CellType TypeId="16" TypeName="DualResist" />
   </Plugin> 
   
 
@@ -231,6 +236,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="Medium">0</Energy>
     <Energy Type1="CisResist" Type2="Medium">0</Energy>
     <Energy Type1="GemResist" Type2="Medium">0</Energy>
+    <Energy Type1="DualResist" Type2="Medium">0</Energy>
     <Energy Type1="Dead" Type2="Medium">0</Energy>
 
     <!-- tumor and normal lung stick to vessel with same adhesion as tumor-tumor -->
@@ -248,6 +254,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="Vessel">5</Energy>
     <Energy Type1="CisResist" Type2="Vessel">5</Energy>
     <Energy Type1="GemResist" Type2="Vessel">5</Energy>
+    <Energy Type1="DualResist" Type2="Vessel">5</Energy>
     <Energy Type1="Dead" Type2="Vessel">5</Energy>
 
     <!-- tumor sticks to normal lung with same adhesion as tumor-tumor -->
@@ -264,6 +271,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="LungNormal">5</Energy>
     <Energy Type1="CisResist" Type2="LungNormal">5</Energy>
     <Energy Type1="GemResist" Type2="LungNormal">5</Energy>
+    <Energy Type1="DualResist" Type2="LungNormal">5</Energy>
     <Energy Type1="Dead" Type2="LungNormal">5</Energy>
 
     <!-- tumor-tumor ahdesion same in all cases, dead cells stick less -->
@@ -279,6 +287,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCSG_BFTC_905">5</Energy>
     <Energy Type1="CisResist" Type2="SCSG_BFTC_905">5</Energy>
     <Energy Type1="GemResist" Type2="SCSG_BFTC_905">5</Energy>
+    <Energy Type1="DualResist" Type2="SCSG_BFTC_905">5</Energy>
     <Energy Type1="Dead" Type2="SCSG_BFTC_905">5</Energy>
 
     <Energy Type1="SCSG_J82" Type2="SCSG_J82">5</Energy>
@@ -292,6 +301,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCSG_J82">5</Energy>
     <Energy Type1="CisResist" Type2="SCSG_J82">5</Energy>
     <Energy Type1="GemResist" Type2="SCSG_J82">5</Energy>
+    <Energy Type1="DualResist" Type2="SCSG_J82">5</Energy>
     <Energy Type1="Dead" Type2="SCSG_J82">5</Energy>
 
     <Energy Type1="RCRG_RT4" Type2="RCRG_RT4">5</Energy>
@@ -304,6 +314,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="RCRG_RT4">5</Energy>
     <Energy Type1="CisResist" Type2="RCRG_RT4">5</Energy>
     <Energy Type1="GemResist" Type2="RCRG_RT4">5</Energy>
+    <Energy Type1="DualResist" Type2="RCRG_RT4">5</Energy>
     <Energy Type1="Dead" Type2="RCRG_RT4">5</Energy>
 
     <Energy Type1="RCRG_HT_1197" Type2="RCRG_HT_1197">5</Energy>
@@ -315,6 +326,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="RCRG_HT_1197">5</Energy>
     <Energy Type1="CisResist" Type2="RCRG_HT_1197">5</Energy>
     <Energy Type1="GemResist" Type2="RCRG_HT_1197">5</Energy>
+    <Energy Type1="DualResist" Type2="RCRG_HT_1197">5</Energy>
     <Energy Type1="Dead" Type2="RCRG_HT_1197">5</Energy>
     
     <Energy Type1="SCRG_SW780" Type2="SCRG_SW780">5</Energy>
@@ -325,6 +337,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCRG_SW780">5</Energy>
     <Energy Type1="CisResist" Type2="SCRG_SW780">5</Energy>
     <Energy Type1="GemResist" Type2="SCRG_SW780">5</Energy>
+    <Energy Type1="DualResist" Type2="SCRG_SW780">5</Energy>
     <Energy Type1="Dead" Type2="SCRG_SW780">5</Energy>
 
     <Energy Type1="SCRG_KU_19_19" Type2="SCRG_KU_19_19">5</Energy>
@@ -334,6 +347,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="SCRG_KU_19_19">5</Energy>
     <Energy Type1="CisResist" Type2="SCRG_KU_19_19">5</Energy>
     <Energy Type1="GemResist" Type2="SCRG_KU_19_19">5</Energy>
+    <Energy Type1="DualResist" Type2="SCRG_KU_19_19">5</Energy>
     <Energy Type1="Dead" Type2="SCRG_KU_19_19">5</Energy>
     
     <Energy Type1="RCSG_LB831_BLC" Type2="RCSG_LB831_BLC">5</Energy>
@@ -342,6 +356,7 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="RCSG_LB831_BLC">5</Energy>
     <Energy Type1="CisResist" Type2="RCSG_LB831_BLC">5</Energy>
     <Energy Type1="GemResist" Type2="RCSG_LB831_BLC">5</Energy>
+    <Energy Type1="DualResist" Type2="RCSG_LB831_BLC">5</Energy>
     <Energy Type1="Dead" Type2="RCSG_LB831_BLC">5</Energy>
     
     <Energy Type1="RCSG_DSH1" Type2="RCSG_DSH1">5</Energy>
@@ -349,25 +364,33 @@ IC50_RCSG_DSH1
     <Energy Type1="IC50Gem" Type2="RCSG_DSH1">5</Energy>
     <Energy Type1="CisResist" Type2="RCSG_DSH1">5</Energy>
     <Energy Type1="GemResist" Type2="RCSG_DSH1">5</Energy>
+    <Energy Type1="DualResist" Type2="RCSG_DSH1">5</Energy>
     <Energy Type1="Dead" Type2="RCSG_DSH1">5</Energy>
     
     <Energy Type1="IC50Cis" Type2="IC50Cis">5</Energy>
     <Energy Type1="IC50Gem" Type2="IC50Cis">5</Energy>
     <Energy Type1="CisResist" Type2="IC50Cis">5</Energy>
     <Energy Type1="GemResist" Type2="IC50Cis">5</Energy>
+    <Energy Type1="DualResist" Type2="IC50Cis">5</Energy>
     <Energy Type1="Dead" Type2="IC50Cis">5</Energy>
 
     <Energy Type1="IC50Gem" Type2="IC50Gem">5</Energy>
     <Energy Type1="CisResist" Type2="IC50Gem">5</Energy>
     <Energy Type1="GemResist" Type2="IC50Gem">5</Energy>
+    <Energy Type1="DualResist" Type2="IC50Gem">5</Energy>
     <Energy Type1="Dead" Type2="IC50Gem">5</Energy>
     
     <Energy Type1="CisResist" Type2="CisResist">5</Energy>
     <Energy Type1="GemResist" Type2="CisResist">5</Energy>
+    <Energy Type1="DualResist" Type2="CisResist">5</Energy>
     <Energy Type1="Dead" Type2="CisResist">5</Energy>    
 
     <Energy Type1="GemResist" Type2="GemResist">5</Energy>
+    <Energy Type1="DualResist" Type2="GemResist">5</Energy>
     <Energy Type1="Dead" Type2="GemResist">5</Energy>
+
+    <Energy Type1="DualResist" Type2="DualResist">5</Energy>
+    <Energy Type1="Dead" Type2="DualResist">5</Energy>
 
     <Energy Type1="Dead" Type2="Dead">5</Energy>
 
