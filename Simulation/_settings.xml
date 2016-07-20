@@ -20,7 +20,7 @@
       <e Name="Projection" Type="int">0</e>
       <e Name="SaveImageFrequency" Type="int">3941</e>
       <e Name="SaveLatticeFrequency" Type="int">3941</e>
-      <e Name="ScreenUpdateFrequency" Type="int">1000</e>
+      <e Name="ScreenUpdateFrequency" Type="int">3941</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
       <e Name="TabIndex" Type="int">0</e>
@@ -139,9 +139,9 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">54.0946059899,55.4606313936</e>
+            <e Name="cameraClippingRange" Type="floatlist">44.7062859421,45.8352325568</e>
             <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
-            <e Name="cameraPosition" Type="floatlist">10.0,10.0,54.6410161514</e>
+            <e Name="cameraPosition" Type="floatlist">10.0,10.0,45.1578645879</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
             <e Name="is3D" Type="bool">False</e>
             <e Name="planeName" Type="str">XY</e>
