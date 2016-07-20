@@ -81,7 +81,10 @@ cycleTime = 21.0*94576.98363 # 21 days * mcs/h
 # print 'aggressInfusTimesGem plus 21',aggressInfusTimesGem
 
 
-aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
+# INFUSION SIMULATANEOUSLY WITH GEM
+aggressInfusTimeDay1Cis = numpy.array([0.0, 27584.95356])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
+# INFUSION DIRECTLY AFTER GEM
+# aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
 #aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to approximate cis = 0  for Casper 1984, 60 mg/m^2
 
 
@@ -874,7 +877,7 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
 
 
 
-######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
+######################################### CELL TYPES CHANGE AT GEMCITABINE IC50 THRESHOLD
 class ChangeAtGemIC50Steppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator, _frequency)
@@ -897,7 +900,7 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
 
 
 
-######################################### CELL TYPES CHANGE AT GEMCITABINE IC50 THRESHOLD
+######################################### CELL TYPES CHANGE AT CISPLATIN IC50 THRESHOLD
 class ChangeAtCisIC50Steppable(SteppableBasePy):
     def __init__(self,_simulator,_frequency=1):
         SteppableBasePy.__init__(self,_simulator, _frequency)
@@ -911,7 +914,7 @@ class ChangeAtCisIC50Steppable(SteppableBasePy):
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
                 # print 'inside cisAcuum: print 'celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["cisAccum"] > cell.dict["IC50Cis"]:
-                    cell.type=13
+                    cell.type=12
 
 
 
