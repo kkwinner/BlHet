@@ -311,7 +311,7 @@ class SetCellDictionaries(SteppableBasePy):
             #     cell.dict["IC50Gem"]=gemIC50_SCRG_KU_19_19
             #     cell.dict["accumRtCis"]=cispAccumFrac_SCRG_KU_19_19*2.5
             #     cell.dict["accumRtGem"]=gemAccumFrac_SCRG_KU_19_19
-            # # **** non-synergistic 7-18-2016
+            # # **** non-synergistic 7-18-2016 (model has since changed, needs to be re-run)
             # if cell.type==10:
             #     cell.dict["IC50CisOrig"]=cisIC50_RCSG_LB831_BLC
             #     cell.dict["IC50GemOrig"]=gemIC50_RCSG_LB831_BLC
