@@ -68,9 +68,13 @@ gemZeroConcTime=240*CisGem1Min # time at final data point
 #        MCS end of week 1,	MCS end of gem infusion 1:8:2,
 #        MCS end of week 2,	MCS end of gem infusion 1:15:3
 #        MCS end of cycle 1, 21d
+# aggressInfusTimesGem = numpy.array([0, 15762.8306,
+#                         662038.8854, 677801.716,
+#                         1324077.771, 1339840.601,
+#                         1986116.656])
 aggressInfusTimesGem = numpy.array([0, 15762.8306,
-                        662038.8854, 677801.716,
-                        1324077.771, 1339840.601,
+                        94576.98363 ,110339.8142,
+                        189153.9673 ,204916.7979,
                         1986116.656])
 cycleTime = 21.0*94576.98363 # 21 days * mcs/h
 # aggressInfusTimesGem = numpy.array([0,1,2,3,4,5,10.0]) # test
@@ -487,10 +491,10 @@ class MitosisSteppable(MitosisSteppableBase):
                                 # cell.dict["cisResistance"] += 0 # zero gain
                                 # cell.dict["cisResistance"] += 1 # simple gain
                                 # cell.dict["cisResistance"] += 0.05 # slow gain (2 y of 30h cell cycles to max)
-                                cell.dict["cisResistance"] += 0.1 # fast gain (1 y of 30h cell cycles to max)
-                                # gain = uniform(0.05,0.1)
-                                # print 'cisGain (range 0.05 - 0.1) =',gain
-                                # cell.dict["cisResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
+                                # cell.dict["cisResistance"] += 0.1 # fast gain (1 y of 30h cell cycles to max)
+                                gain = uniform(0.05,0.1)
+                                print 'cisGain (range 0.05 - 0.1) =',gain
+                                cell.dict["cisResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
                                 cell.dict["IC50Cis"] = cell.dict["IC50CisOrig"] * cell.dict["cisResistance"]
                             print 'cell.type', cell.type,'cell.id', cell.id, 'increased its cis resistance'
                         # gemIC50
@@ -512,10 +516,10 @@ class MitosisSteppable(MitosisSteppableBase):
                                 # cell.dict["gemResistance"] += 0 # zero gain
                                 # cell.dict["gemResistance"] += 1 # simple gain
                                 # cell.dict["gemResistance"] += 0.125 # slow gain (2 y of 30h cell cycles to max)
-                                cell.dict["gemResistance"] += 0.25 # fast gain (1 y of 30h cell cycles to max)
-                                # gain = uniform(0.125,0.25)
-                                # print 'cisGain (range 0.05 - 0.1) =',gain
-                                # cell.dict["gemResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
+                                # cell.dict["gemResistance"] += 0.25 # fast gain (1 y of 30h cell cycles to max)
+                                gain = uniform(0.125,0.25)
+                                print 'gemGain (range 0.125 - 0.25) =',gain
+                                cell.dict["gemResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
                                 cell.dict["IC50Gem"] = cell.dict["IC50GemOrig"] * cell.dict["gemResistance"]
                                 print 'cell.type', cell.type,'cell.id', cell.id, 'increased its gem resistance'
                                 
