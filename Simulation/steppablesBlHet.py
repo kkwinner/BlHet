@@ -101,6 +101,10 @@ aggressInfusTimeDay1Cis = numpy.array([0.0, 27584.95356])	#MCS, 7h; end of gem i
 # TypeId="11" TypeName="RCSG_DSH1"
 # TypeId="12" TypeName="IC50Cis"
 # TypeId="13" TypeName="IC50Gem"
+# TypeId="14" TypeName="cisResistant"
+# TypeId="15" TypeName="gemResistant"
+# TypeId="16" TypeName="dualResist"
+
 
 ## ACCUMULATION RATES
 ## IC50 cells have same accumulation rate as cell line they came from (rate is carried as part of dictionary)
@@ -451,9 +455,10 @@ class MitosisSteppable(MitosisSteppableBase):
         # print "INSIDE MITOSIS STEPPABLE"
         cells_to_divide=[]
         for cell in self.cellList:
-            if cell.type==12 or cell.type==13:  # if cells are IC50Cis or IC50Gem
+            # cell death from drugs
+            # if cells are IC50Cis or IC50Gem
+            if cell.type==12 or cell.type==13:
                 if cell.dict["cycleHrs"]<cell.dict["AgeHrs"]:
-                # if cell.dict["cycleHrs"]<cell.dict["AgeHrs"] and cell.dict["AgeHrs"]<cell.dict["AgeHrs"] + 1/60.0: # if IC50 age is within a minute of cycle time
                     deathChance = uniform(0,1)
                     print 'deathChance=',deathChance
                     if deathChance<=0.5:
@@ -461,20 +466,47 @@ class MitosisSteppable(MitosisSteppableBase):
                         cell.targetVolume = cell.volume # keep cell same size as when died so it won't expand over other cells
                         cell.lambdaVolume=deadLambdaVolume
                         print 'cell.type', cell.type,'cell.id', cell.id, 'died'
-                    else:
+                    else: # become dually resistant if you a. have gained resistance to both drugs or b. you survive being IC50 to both drugs at once (2nd chance at death)
                         print 'cell.type', cell.type,'cell.id', cell.id, 'will increase its resistance'
+                        #cisIC50
                         if cell.type==12:
-                            cell.type = 14
+                            if cell.dict["gemResistance"] > 1 or (cell.dict["cisAccum"] > cell.dict["IC50Cis"] and cell.dict["gemAccum"] > cell.dict["IC50Gem"]):
+                                if (cell.dict["cisAccum"] > cell.dict["IC50Cis"] and cell.dict["gemAccum"] > cell.dict["IC50Gem"]):
+                                    deathChance = uniform(0,1)
+                                    print 'deathChance for dual IC50=',deathChance
+                                    if deathChance<=0.5:
+                                        cell.type=3 # cell dies with 50% chance at cell division attempt
+                                        cell.targetVolume = cell.volume # keep cell same size as when died so it won't expand over other cells
+                                        cell.lambdaVolume=deadLambdaVolume
+                                        print 'cell.type', cell.type,'cell.id', cell.id, 'died'
+                                else:
+                                    cell.type = 16 # dualResist
+                            else:
+                                cell.type = 14 # CisResist
                             if cell.dict["cisResistance"] < 29: # Max multiple of IC50 in cell lines gaining resistance to cisplatin within 1-2yrs culturing; Vallo et al., 2015
                                 cell.dict["cisResistance"] += 1
                                 cell.dict["IC50Cis"] = cell.dict["IC50CisOrig"] * cell.dict["cisResistance"]
                             print 'cell.type', cell.type,'cell.id', cell.id, 'increased its cis resistance'
+                        # gemIC50
                         if cell.type==13:
-                            cell.type=15
+                            if cell.dict["cisResistance"] > 1 or (cell.dict["cisAccum"] > cell.dict["IC50Cis"] and cell.dict["gemAccum"] > cell.dict["IC50Gem"]):
+                                if (cell.dict["cisAccum"] > cell.dict["IC50Cis"] and cell.dict["gemAccum"] > cell.dict["IC50Gem"]):
+                                    deathChance = uniform(0,1)
+                                    print 'deathChance for dual IC50=',deathChance
+                                    if deathChance<=0.5:
+                                        cell.type=3 # cell dies with 50% chance at cell division attempt
+                                        cell.targetVolume = cell.volume # keep cell same size as when died so it won't expand over other cells
+                                        cell.lambdaVolume=deadLambdaVolume
+                                        print 'cell.type', cell.type,'cell.id', cell.id, 'died'
+                                else:
+                                    cell.type = 16 # dualResist
+                            else:
+                                cell.type = 15 # GemResist
                             if cell.dict["gemResistance"] < 73: # Max multiple of IC50 in cell lines gaining resistance to gemcitabine within 1-2yrs culturing; Vallo et al., 2015
                                 cell.dict["gemResistance"] += 1
                                 cell.dict["IC50Gem"] = cell.dict["IC50GemOrig"] * cell.dict["gemResistance"]
                                 print 'cell.type', cell.type,'cell.id', cell.id, 'increased its gem resistance'
+                                
                         cell.dict["AgeHrs"] = 0 # reset cell cycle; cells that haven't grown don't have a chance to try to divide again; would have had to have doubled size as IC50 type, before becoming current resistant type
 
             if cell.volume==2*T24BCCellVol: # cells only double in size if they have reached their division time, and only divide if they have doubled in size
@@ -895,6 +927,7 @@ class ChangeAtGemIC50Steppable(SteppableBasePy):
             if cell.type!=0 and cell.type!=1 and cell.type!=2 and cell.type!=3: # all cell types accumulate cisplating except for Vessel, LungNormal, Dead, respectively
                 # print 'inside gemAcuum: celltype=',cell.type,', cell.dict=',cell.dict
                 if cell.dict["gemAccum"] > cell.dict["IC50Gem"]:
+                    # if cell.type == 14, cell.type = 16, else
                     cell.type=13
 
 
@@ -977,6 +1010,7 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addPlot("IC50Gem_pop",_style='Dots',_color='Blue Violet',_size=5)
         self.pW.addPlot("CisResist_pop",_style='Dots',_color='Light Sky Blue',_size=5)
         self.pW.addPlot("GemResist_pop",_style='Dots',_color='Orchid',_size=5)
+        self.pW.addPlot("DualResist_pop",_style='Dots',_color='Lavender',_size=5)
         self.pW.addPlot("LungNormal_pop",_style='Dots',_color='Deep Pink',_size=5)
         self.pW.addPlot("Vessel_pop",_style='Dots',_color='red',_size=5)
         self.pW.addPlot("Dead_pop",_style='Dots',_color='Light Slate Gray',_size=5)
@@ -1020,6 +1054,7 @@ class PlotCellPops(SteppableBasePy):
         IC50Gem_pop = float(len(self.cellListByType(self.IC50GEM)))
         CisResist_pop = float(len(self.cellListByType(self.CISRESIST)))
         GemResist_pop = float(len(self.cellListByType(self.GEMRESIST)))
+        DualResist_pop = float(len(self.cellListByType(self.DUALRESIST)))
         LungNormal_pop = float(len(self.cellListByType(self.LUNGNORMAL)))
         Vessel_pop = float(len(self.cellListByType(self.VESSEL)))
         Dead_pop = float(len(self.cellListByType(self.DEAD)))
@@ -1038,6 +1073,7 @@ class PlotCellPops(SteppableBasePy):
         self.pW.addDataPoint("IC50Gem_pop",days,IC50Gem_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("CisResist_pop",days,CisResist_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("GemResist_pop",days,GemResist_pop) # arguments are (name of the data series, x, y)
+        self.pW.addDataPoint("DualResist_pop",days,DualResist_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("LungNormal_pop",days,LungNormal_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Vessel_pop",days,Vessel_pop) # arguments are (name of the data series, x, y)
         self.pW.addDataPoint("Dead_pop",days,Dead_pop) # arguments are (name of the data series, x, y)
