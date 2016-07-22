@@ -484,7 +484,8 @@ class MitosisSteppable(MitosisSteppableBase):
                             else:
                                 cell.type = 14 # CisResist
                             if cell.dict["cisResistance"] < 29: # Max multiple of IC50 in cell lines gaining resistance to cisplatin within 1-2yrs culturing; Vallo et al., 2015
-                                cell.dict["cisResistance"] += 1
+                                cell.dict["cisResistance"] += 0
+                                # cell.dict["cisResistance"] += 1
                                 cell.dict["IC50Cis"] = cell.dict["IC50CisOrig"] * cell.dict["cisResistance"]
                             print 'cell.type', cell.type,'cell.id', cell.id, 'increased its cis resistance'
                         # gemIC50
@@ -503,7 +504,8 @@ class MitosisSteppable(MitosisSteppableBase):
                             else:
                                 cell.type = 15 # GemResist
                             if cell.dict["gemResistance"] < 73: # Max multiple of IC50 in cell lines gaining resistance to gemcitabine within 1-2yrs culturing; Vallo et al., 2015
-                                cell.dict["gemResistance"] += 1
+                                cell.dict["gemResistance"] += 0
+                                # cell.dict["gemResistance"] += 1
                                 cell.dict["IC50Gem"] = cell.dict["IC50GemOrig"] * cell.dict["gemResistance"]
                                 print 'cell.type', cell.type,'cell.id', cell.id, 'increased its gem resistance'
                                 

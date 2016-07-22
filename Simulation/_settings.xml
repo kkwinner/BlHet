@@ -20,13 +20,13 @@
       <e Name="Projection" Type="int">0</e>
       <e Name="SaveImageFrequency" Type="int">3941</e>
       <e Name="SaveLatticeFrequency" Type="int">3941</e>
-      <e Name="ScreenUpdateFrequency" Type="int">1</e>
+      <e Name="ScreenUpdateFrequency" Type="int">3941</e>
       <e Name="Screenshot_X" Type="int">600</e>
       <e Name="Screenshot_Y" Type="int">600</e>
-      <e Name="TabIndex" Type="int">0</e>
+      <e Name="TabIndex" Type="int">1</e>
    </Settings>
    <Settings Type="float">
-      <e Name="ArrowLength" Type="float">1</e>
+      <e Name="ArrowLength" Type="float">1.0</e>
       <e Name="CellGlyphScale" Type="float">1.0</e>
       <e Name="MaxRange" Type="float">1.0</e>
       <e Name="MinRange" Type="float">0.0</e>
@@ -46,9 +46,45 @@
    </Settings>
    <Settings Type="dict">
       <e Name="FieldParams" Type="dict">
+         <e Name="AccumulatedCisplFractionIC50" Type="dict">
+            <e Name="ArrowColor" Type="color">#ffffff</e>
+            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ContoursOn" Type="bool">False</e>
+            <e Name="FixedArrowColorOn" Type="bool">False</e>
+            <e Name="LegendEnable" Type="bool">True</e>
+            <e Name="MaxRange" Type="float">1.0</e>
+            <e Name="MaxRangeFixed" Type="bool">True</e>
+            <e Name="MinRange" Type="float">0.0</e>
+            <e Name="MinRangeFixed" Type="bool">False</e>
+            <e Name="NumberAccuracy" Type="int">2</e>
+            <e Name="NumberOfContourLines" Type="int">3</e>
+            <e Name="NumberOfLegendBoxes" Type="int">6</e>
+            <e Name="OverlayVectorsOn" Type="bool">False</e>
+            <e Name="ScalarIsoValues" Type="str"/>
+            <e Name="ScaleArrowsOn" Type="bool">False</e>
+            <e Name="ShowPlotAxes" Type="bool">True</e>
+         </e>
+         <e Name="AccumulatedGemFractionIC50" Type="dict">
+            <e Name="ArrowColor" Type="color">#ffffff</e>
+            <e Name="ArrowLength" Type="float">1.0</e>
+            <e Name="ContoursOn" Type="bool">False</e>
+            <e Name="FixedArrowColorOn" Type="bool">False</e>
+            <e Name="LegendEnable" Type="bool">True</e>
+            <e Name="MaxRange" Type="float">1.0</e>
+            <e Name="MaxRangeFixed" Type="bool">True</e>
+            <e Name="MinRange" Type="float">0.0</e>
+            <e Name="MinRangeFixed" Type="bool">False</e>
+            <e Name="NumberAccuracy" Type="int">2</e>
+            <e Name="NumberOfContourLines" Type="int">3</e>
+            <e Name="NumberOfLegendBoxes" Type="int">6</e>
+            <e Name="OverlayVectorsOn" Type="bool">False</e>
+            <e Name="ScalarIsoValues" Type="str"/>
+            <e Name="ScaleArrowsOn" Type="bool">False</e>
+            <e Name="ShowPlotAxes" Type="bool">True</e>
+         </e>
          <e Name="Cisplatin" Type="dict">
             <e Name="ArrowColor" Type="color">#ffffff</e>
-            <e Name="ArrowLength" Type="float">1</e>
+            <e Name="ArrowLength" Type="float">1.0</e>
             <e Name="ContoursOn" Type="bool">False</e>
             <e Name="FixedArrowColorOn" Type="bool">False</e>
             <e Name="LegendEnable" Type="bool">True</e>
@@ -92,7 +128,7 @@
          <e Name="13" Type="color">#8000ff</e>
          <e Name="14" Type="color">#66ccff</e>
          <e Name="15" Type="color">#cc66ff</e>
-         <e Name="16" Type="color">#c2c1ff</e>
+         <e Name="16" Type="color">#c5cfff</e>
          <e Name="2" Type="color">#ff6fcf</e>
          <e Name="3" Type="color">#808080</e>
          <e Name="4" Type="color">#66ffcc</e>
@@ -104,7 +140,7 @@
       </e>
       <e Name="WindowsLayout" Type="dict">
          <e Name="0" Type="dict">
-            <e Name="cameraClippingRange" Type="floatlist">44.7062859421,45.8352325568</e>
+            <e Name="cameraClippingRange" Type="floatlist">44.706285942,45.8352325567</e>
             <e Name="cameraFocalPoint" Type="floatlist">10.0,10.0,0.0</e>
             <e Name="cameraPosition" Type="floatlist">10.0,10.0,45.1578645879</e>
             <e Name="cameraViewUp" Type="floatlist">0.0,1.0,0.0</e>
@@ -113,8 +149,8 @@
             <e Name="planePosition" Type="int">0</e>
             <e Name="sceneName" Type="str">Cell_Field</e>
             <e Name="sceneType" Type="str">CellField</e>
-            <e Name="winPosition" Type="point">378,0</e>
-            <e Name="winSize" Type="size">377,444</e>
+            <e Name="winPosition" Type="point">1152,0</e>
+            <e Name="winSize" Type="size">1151,1205</e>
             <e Name="winType" Type="str">Graphics</e>
          </e>
          <e Name="Cell Populations" Type="dict">
@@ -128,7 +164,7 @@
             <e Name="sceneName" Type="str">Cell Populations</e>
             <e Name="sceneType" Type="str"/>
             <e Name="winPosition" Type="point">0,0</e>
-            <e Name="winSize" Type="size">378,444</e>
+            <e Name="winSize" Type="size">1152,1205</e>
             <e Name="winType" Type="str">plot</e>
          </e>
       </e>
@@ -137,7 +173,7 @@
       <e Name="LastVersionCheckDate" Type="str">20160630</e>
       <e Name="OutputLocation" Type="str">/Users/costellolab/CC3DWorkspace</e>
       <e Name="ProjectLocation" Type="str">/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet</e>
-      <e Name="RecentFile" Type="str">/Users/squirrel/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
+      <e Name="RecentFile" Type="str">/Users/costellolab/Dropbox/research/tumorHeterogeneity/code/BlHet/BlHet.cc3d</e>
       <e Name="ScalarIsoValues" Type="str"/>
       <e Name="Types3DInvisible" Type="str">0</e>
    </Settings>
@@ -161,10 +197,10 @@
       <e Name="FixedArrowColorOn" Type="bool">False</e>
       <e Name="FloatingWindows" Type="bool">False</e>
       <e Name="ImageOutputOn" Type="bool">True</e>
-      <e Name="LatticeOutputOn" Type="bool">False</e>
+      <e Name="LatticeOutputOn" Type="bool">True</e>
       <e Name="LegendEnable" Type="bool">True</e>
-      <e Name="MaxRangeFixed" Type="bool">False</e>
-      <e Name="MinRangeFixed" Type="bool">True</e>
+      <e Name="MaxRangeFixed" Type="bool">True</e>
+      <e Name="MinRangeFixed" Type="bool">False</e>
       <e Name="OutputToProjectOn" Type="bool">False</e>
       <e Name="OverlayVectorsOn" Type="bool">False</e>
       <e Name="PixelizedScalarField" Type="bool">True</e>
