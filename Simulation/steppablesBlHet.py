@@ -386,8 +386,8 @@ class IncrementClocks(SteppableBasePy):
 
     def step(self,mcs):
         # # increment cycle time if next cycle has been entered
-        if mcs >= aggressInfusTimesGem[6]: # indexing starts at "0"
-            print 'last time point gem dosages array',aggressInfusTimesGem[6]
+        if mcs >= aggressInfusTimesGem[-1]: # indexing starts at "0", ends at "-1"
+            print 'last time point gem dosages array',aggressInfusTimesGem[-1]
             global aggressInfusTimesGem
             print 'aggressInfusTimesGem',aggressInfusTimesGem
             aggressInfusTimesGem = aggressInfusTimesGem + cycleTimeGem
@@ -793,8 +793,8 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
     def step(self,mcs):
         #print 'drug30Mins = ',drug30Mins
         #print 'aggressInfusTimesGem[2]=',aggressInfusTimesGem[2]
-        if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
-
+        # if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
+        if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]):
             # first infusion
             if aggressInfusTimesGem[0] <= mcs < drug30Mins + aggressInfusTimesGem[0]:
                 tMins = (mcs - aggressInfusTimesGem[0])/CisGem1Min
@@ -813,13 +813,13 @@ class DiffusionSolverFESteeringGemcitabineIV(SteppableBasePy):
                 tMins = ((mcs - aggressInfusTimesGem[2])/CisGem1Min)
                 IVtMins = 101.3452 * math.exp(- 0.0676 * tMins)
 
-            # third infusion
-            elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
-                tMins = (mcs - aggressInfusTimesGem[4])/CisGem1Min
-                IVtMins = 6.8*(tMins/15 - 1) + 7.3
-            elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
-                tMins = ((mcs - aggressInfusTimesGem[4])/CisGem1Min)
-                IVtMins = 101.3452 * math.exp(- 0.0676 * tMins)
+            # # third infusion
+            # elif aggressInfusTimesGem[4] <= mcs < drug30Mins + aggressInfusTimesGem[4]:
+            #     tMins = (mcs - aggressInfusTimesGem[4])/CisGem1Min
+            #     IVtMins = 6.8*(tMins/15 - 1) + 7.3
+            # elif aggressInfusTimesGem[4] + drug30Mins <= mcs < aggressInfusTimesGem[5]:
+            #     tMins = ((mcs - aggressInfusTimesGem[4])/CisGem1Min)
+            #     IVtMins = 101.3452 * math.exp(- 0.0676 * tMins)
 
             # update IV conc
             IVxml=float(self.getXMLElementValue(['Steppable','Type','DiffusionSolverFE'],['DiffusionField','Name','Gemcitabine'],['SecretionData'],['ConstantConcentration','Type','Vessel']))
@@ -911,7 +911,8 @@ class SecretionSteppableGemcitabine(SecretionBasePy,SteppableBasePy):
         print "This function (SecretionSteppableGemcitabine) is called at every MCS"
 
     def step(self,mcs):
-        if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):
+        # if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]) or (aggressInfusTimesGem[4] < mcs < aggressInfusTimesGem[5]):  # FLOATS; USE CONDITIONALS WITHOUT "="
+        if (aggressInfusTimesGem[0] < mcs < aggressInfusTimesGem[1]) or (aggressInfusTimesGem[2] < mcs < aggressInfusTimesGem[3]):
              for cell in self.cellList:
                  if cell.type!=1 and cell.type!=2 and cell.type!=3:  # Vessel(no accum), LungNormal(below), Dead (below)
                      comPt=CompuCell.Point3D()
