@@ -515,10 +515,10 @@ class MitosisSteppable(MitosisSteppableBase):
                                 # cell.dict["cisResistance"] += 0 # zero gain
                                 # cell.dict["cisResistance"] += 1 # simple gain
                                 # cell.dict["cisResistance"] += 0.05 # slow gain (2 y of 30h cell cycles to max)
-                                # cell.dict["cisResistance"] += 0.1 # fast gain (1 y of 30h cell cycles to max)
-                                gain = uniform(0.05,0.1)
-                                print 'cisGain (range 0.05 - 0.1) =',gain
-                                cell.dict["cisResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
+                                cell.dict["cisResistance"] += 0.1 # fast gain (1 y of 30h cell cycles to max)
+                                # gain = uniform(0.05,0.1)
+                                # print 'cisGain (range 0.05 - 0.1) =',gain
+                                # cell.dict["cisResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
                                 cell.dict["IC50Cis"] = cell.dict["IC50CisOrig"] * cell.dict["cisResistance"]
                             print 'cell.type', cell.type,'cell.id', cell.id, 'increased its cis resistance'
                         # gemIC50
@@ -540,10 +540,10 @@ class MitosisSteppable(MitosisSteppableBase):
                                 # cell.dict["gemResistance"] += 0 # zero gain
                                 # cell.dict["gemResistance"] += 1 # simple gain
                                 # cell.dict["gemResistance"] += 0.125 # slow gain (2 y of 30h cell cycles to max)
-                                # cell.dict["gemResistance"] += 0.25 # fast gain (1 y of 30h cell cycles to max)
-                                gain = uniform(0.125,0.25)
-                                print 'gemGain (range 0.125 - 0.25) =',gain
-                                cell.dict["gemResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
+                                cell.dict["gemResistance"] += 0.25 # fast gain (1 y of 30h cell cycles to max)
+                                # gain = uniform(0.125,0.25)
+                                # print 'gemGain (range 0.125 - 0.25) =',gain
+                                # cell.dict["gemResistance"] += gain # uniform betw slow and fast gain (1 to 2 y of 30h cell cycles to max)
                                 cell.dict["IC50Gem"] = cell.dict["IC50GemOrig"] * cell.dict["gemResistance"]
                                 print 'cell.type', cell.type,'cell.id', cell.id, 'increased its gem resistance'
                                 
