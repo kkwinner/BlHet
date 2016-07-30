@@ -68,15 +68,33 @@ gemZeroConcTime=240*CisGem1Min # time at final data point
 #        MCS end of week 1,	MCS end of gem infusion 1:8:2,
 #        MCS end of week 2,	MCS end of gem infusion 1:15:3
 #        MCS end of cycle 1, 21d
+aggressInfusTimesGem = numpy.array([0, 15762.8306,
+                        662038.8854, 677801.716,
+                        1986116.656])#	[MCS start of gem infusion 1:1:1, end of gem infusion 1:1:1,
+#        MCS end of week 1,	MCS end of gem infusion 1:8:2,
+#        MCS end of week 2,	MCS end of gem infusion 1:15:3
+#        MCS end of cycle 1, 21d
 # aggressInfusTimesGem = numpy.array([0, 15762.8306,
 #                         662038.8854, 677801.716,
 #                         1324077.771, 1339840.601,
 #                         1986116.656])
-aggressInfusTimesGem = numpy.array([0, 15762.8306,
-                        94576.98363 ,110339.8142,
-                        189153.9673 ,204916.7979,
-                        1986116.656])
-cycleTime = 21.0*94576.98363 # 21 days * mcs/h
+#	[MCS start of gem infusion 1:1:1, end of gem infusion 1:1:1,
+#        MCS end of day 1,	MCS end of gem infusion 1:2:2,
+#        MCS end of day 2,	MCS end of gem infusion 1:3:3
+#        MCS end of cycle 1, 21d
+# aggressInfusTimesGem = numpy.array([0, 15762.8306,
+#                         94576.98363 ,110339.8142,
+#                         189153.9673 ,204916.7979,
+#                         1986116.656])
+#	[MCS start of gem infusion 1:1:1, end of gem infusion 1:1:1,
+#        MCS end of day 1,	MCS end of gem infusion 1:2:2,
+#        MCS end of day 2,	MCS end of gem infusion 1:3:3
+#        MCS end of cycle 1, 3d
+# aggressInfusTimesGem = numpy.array([0, 15762.8306,
+#                         94576.98363 ,110339.8142,
+#                         189153.9673 ,204916.7979,
+#                         283730.9509])
+
 # aggressInfusTimesGem = numpy.array([0,1,2,3,4,5,10.0]) # test
 # cycleTime = 10.0 # test
 # print 'cycleTime',cycleTime
@@ -87,10 +105,16 @@ cycleTime = 21.0*94576.98363 # 21 days * mcs/h
 
 # INFUSION SIMULATANEOUSLY WITH GEM
 aggressInfusTimeDay1Cis = numpy.array([0.0, 27584.95356])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
+
 # INFUSION DIRECTLY AFTER GEM
 # aggressInfusTimeDay1Cis = numpy.array([15762.8306, 43347.78416])	#MCS, 7h; end of gem infusion 1:1:1 to approximate cis = 0(last data point at 6h, exponential fit should approach 0 between 6 and 7 h) for de Jongh 2001, 70 mg/m^2
 #aggressInfusTimeDay1Cis = [15762.8306, 28531.83993]	#MCS, end of gem infusion 1:1:1 to approximate cis = 0  for Casper 1984, 60 mg/m^2
 
+# TIME ADDED AT START OF EACH CYCLE
+cycleTimeGem = 21.0*94576.98363 # 21 days * mcs/24h
+# cycleTimeGem = 3.0*94576.98363 # 3 days * mcs/24h
+cycleTimeCis = 21.0*94576.98363 # 21 days * mcs/24h
+# cycleTimeCis = 3.0*94576.98363 # 3 days * mcs/24h
 
 
 # CELLULAR PARAMETERS: IC50, ACCUMULATION OF DRUG
@@ -366,16 +390,16 @@ class IncrementClocks(SteppableBasePy):
             print 'last time point gem dosages array',aggressInfusTimesGem[6]
             global aggressInfusTimesGem
             print 'aggressInfusTimesGem',aggressInfusTimesGem
-            aggressInfusTimesGem = aggressInfusTimesGem + cycleTime
+            aggressInfusTimesGem = aggressInfusTimesGem + cycleTimeGem
             print 'aggressInfusTimesGem plus 21',aggressInfusTimesGem
-            print 'cycle time mcs added = ', cycleTime
+            print 'cycle time mcs added = ', cycleTimeGem
             print 'Gemcitabine 30 min infusion end mcs = ',drug30Mins
         if mcs >= aggressInfusTimeDay1Cis[1]:
             global aggressInfusTimeDay1Cis
             print 'aggressInfusTimesDay1Cis',aggressInfusTimeDay1Cis
-            aggressInfusTimeDay1Cis = aggressInfusTimeDay1Cis + cycleTime
+            aggressInfusTimeDay1Cis = aggressInfusTimeDay1Cis + cycleTimeCis
             print 'aggressInfusTimesDay1Cis plus 21',aggressInfusTimeDay1Cis
-            print 'cycle time mcs added = ', cycleTime
+            print 'cycle time mcs added = ', cycleTimeCis
             print 'Cisplatin 3h infusion end mcs = ',cis70EndInfus
 
         self.cellList=CellList(self.inventory)
